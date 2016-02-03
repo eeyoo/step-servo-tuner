@@ -36,6 +36,7 @@
 #include "ui_mainwindow.h"
 #include "console.h"
 #include "settingsdialog.h"
+#include "form.h"
 
 #include <QMessageBox>
 #include <QLabel>
@@ -49,8 +50,10 @@ MainWindow::MainWindow(QWidget *parent) :
 //! [0]
     ui->setupUi(this);
     console = new Console;
-    console->setEnabled(false);
-    setCentralWidget(console);
+    //console->setEnabled(false);
+    //setCentralWidget(console);
+    form = new Form();
+    setCentralWidget(form);
 //! [1]
     serial = new QSerialPort(this);
 //! [1]
@@ -59,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionConnect->setEnabled(true);
     ui->actionDisconnect->setEnabled(false);
     ui->actionQuit->setEnabled(true);
-    ui->actionConfigure->setEnabled(true);
+    //ui->actionConfigure->setEnabled(true);
 
     status = new QLabel;
     ui->statusBar->addWidget(status);
@@ -73,6 +76,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 //! [2]
     connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
+
+    connect(form, SIGNAL(closeMe()), this, SLOT(close()));
 //! [3]
 }
 //! [3]
@@ -171,3 +176,4 @@ void MainWindow::showStatusMessage(const QString &message)
 {
     status->setText(message);
 }
+

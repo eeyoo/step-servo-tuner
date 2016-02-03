@@ -44,6 +44,7 @@
 QT_BEGIN_NAMESPACE
 
 class QLabel;
+class Form;
 
 namespace Ui {
 class MainWindow;
@@ -61,6 +62,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
 
 private slots:
     void openSerialPort();
@@ -82,6 +84,7 @@ private:
     Console *console;
     SettingsDialog *settings;
     QSerialPort *serial;
+    Form *form;
 };
 
 #endif // MAINWINDOW_H
