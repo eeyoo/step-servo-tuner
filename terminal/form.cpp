@@ -11,7 +11,16 @@ Form::Form(QWidget *parent) :
     //main = new MainWindow();
 
     //connect(ui->pbStart, SIGNAL(clicked()), this, SLOT());
-    connect(ui->pbStart, SIGNAL(clicked(bool)), this, SIGNAL(closeMe()));
+    //connect(ui->pbStart, SIGNAL(clicked(bool)), this, SIGNAL(closeMe()));
+
+    ui->elecGear->addItem(QWidget::tr("高"));
+    ui->elecGear->addItem(QWidget::tr("低"));
+
+    ui->backHomeDirection->addItem(QWidget::tr("正向"));
+    ui->backHomeDirection->addItem(QWidget::tr("反向"));
+
+    ui->backHomeGear->addItem(QWidget::tr("快档"));
+    ui->backHomeGear->addItem(QWidget::tr("慢档"));
 }
 
 Form::~Form()

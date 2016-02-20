@@ -54,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //setCentralWidget(console);
     form = new Form();
     setCentralWidget(form);
+    setWindowTitle(QWidget::tr("步进电机快速调试程序"));
 //! [1]
     serial = new QSerialPort(this);
 //! [1]
@@ -61,8 +62,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->actionConnect->setEnabled(true);
     ui->actionDisconnect->setEnabled(false);
-    ui->actionQuit->setEnabled(true);
-    //ui->actionConfigure->setEnabled(true);
+    //ui->actionQuit->setEnabled(true);
+    ui->actionConfigure->setEnabled(true);
+    ui->actionQuit_2->setEnabled(true);
 
     status = new QLabel;
     ui->statusBar->addWidget(status);
@@ -78,6 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
 
     connect(form, SIGNAL(closeMe()), this, SLOT(close()));
+
 //! [3]
 }
 //! [3]
@@ -104,13 +107,13 @@ void MainWindow::openSerialPort()
         ui->actionConnect->setEnabled(false);
         ui->actionDisconnect->setEnabled(true);
         ui->actionConfigure->setEnabled(false);
-        showStatusMessage(tr("Connected to %1 : %2, %3, %4, %5, %6")
+        showStatusMessage(tr("连接 %1 : 波特率 %2, %3, %4, %5, %6")
                           .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
                           .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
     } else {
         QMessageBox::critical(this, tr("Error"), serial->errorString());
 
-        showStatusMessage(tr("Open error"));
+        showStatusMessage(tr("连接错误"));
     }
 }
 //! [4]
@@ -124,7 +127,7 @@ void MainWindow::closeSerialPort()
     ui->actionConnect->setEnabled(true);
     ui->actionDisconnect->setEnabled(false);
     ui->actionConfigure->setEnabled(true);
-    showStatusMessage(tr("Disconnected"));
+    showStatusMessage(tr("断开连接"));
 }
 //! [5]
 
@@ -165,11 +168,12 @@ void MainWindow::initActionsConnections()
 {
     connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
     connect(ui->actionDisconnect, SIGNAL(triggered()), this, SLOT(closeSerialPort()));
-    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+    //connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionConfigure, SIGNAL(triggered()), settings, SLOT(show()));
     connect(ui->actionClear, SIGNAL(triggered()), console, SLOT(clear()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
-    connect(ui->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    //connect(ui->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    connect(ui->actionQuit_2, SIGNAL(triggered()), this, SLOT(close()));
 }
 
 void MainWindow::showStatusMessage(const QString &message)

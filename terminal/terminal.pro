@@ -23,3 +23,6 @@ FORMS += \
 
 RESOURCES += \
     terminal.qrc
+
+DISTFILES += \
+    readme.txt

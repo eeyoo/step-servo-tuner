@@ -27,47 +27,34 @@
    </property>
    <widget class="QMenu" name="menuCalls">
     <property name="title">
-     <string>Calls</string>
+     <string>操作</string>
     </property>
     <addaction name="actionConnect"/>
     <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
-    <addaction name="actionQuit"/>
+    <addaction name="actionQuit_2"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
-     <string>Tools</string>
+     <string>工具</string>
     </property>
     <addaction name="actionConfigure"/>
     <addaction name="actionClear"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Help</string>
+     <string>帮助</string>
     </property>
     <addaction name="actionAbout"/>
-    <addaction name="actionAboutQt"/>
    </widget>
    <addaction name="menuCalls"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-   <addaction name="actionConnect"/>
-   <addaction name="actionDisconnect"/>
-   <addaction name="actionConfigure"/>
-   <addaction name="actionClear"/>
-  </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionAbout">
    <property name="text">
-    <string>&amp;About</string>
+    <string>关于</string>
    </property>
    <property name="toolTip">
     <string>About program</string>
@@ -87,10 +74,13 @@
      <normaloff>:/images/connect.png</normaloff>:/images/connect.png</iconset>
    </property>
    <property name="text">
-    <string>C&amp;onnect</string>
+    <string>连接</string>
    </property>
    <property name="toolTip">
-    <string>Connect to serial port</string>
+    <string>连接</string>
+   </property>
+   <property name="statusTip">
+    <string>开启串口通信</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -102,10 +92,13 @@
      <normaloff>:/images/disconnect.png</normaloff>:/images/disconnect.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Disconnect</string>
+    <string>断开</string>
    </property>
    <property name="toolTip">
-    <string>Disconnect from serial port</string>
+    <string>断开</string>
+   </property>
+   <property name="statusTip">
+    <string>断开串口通信</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
@@ -117,7 +110,7 @@
      <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Configure</string>
+    <string>配置</string>
    </property>
    <property name="toolTip">
     <string>Configure serial port</string>
@@ -132,7 +125,7 @@
      <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
    </property>
    <property name="text">
-    <string>C&amp;lear</string>
+    <string>清空缓存</string>
    </property>
    <property name="toolTip">
     <string>Clear data</string>
@@ -141,16 +134,13 @@
     <string>Alt+L</string>
    </property>
   </action>
-  <action name="actionQuit">
+  <action name="actionQuit_2">
    <property name="icon">
     <iconset resource="terminal.qrc">
      <normaloff>:/images/application-exit.png</normaloff>:/images/application-exit.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Quit</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Q</string>
+    <string>退出</string>
    </property>
   </action>
  </widget>
