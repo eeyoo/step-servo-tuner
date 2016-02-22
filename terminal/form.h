@@ -7,7 +7,7 @@ namespace Ui {
 class Form;
 }
 
-class MainWindow;
+//class MainWindow;
 
 class Form : public QWidget
 {
