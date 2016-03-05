@@ -1,18 +1,39 @@
 #include "form.h"
 #include "ui_form.h"
 
-#include "mainwindow.h"
+#include "command.h"
+
+#include <QtCore/QDebug>
 
 Form::Form(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Form)
 {
     ui->setupUi(this);
-    //main = new MainWindow();
+    comm = new Command;
+    /*
+    console = new Console();
+    console->setEnabled(false);
+    QHBoxLayout *layout = new QHBoxLayout;
+    layout->addWidget(console);
+    ui->tab_terminal->setLayout(layout);
+    */
+    initUI();
+    initConnect();
+}
 
-    //connect(ui->pbStart, SIGNAL(clicked()), this, SLOT());
-    //connect(ui->pbStart, SIGNAL(clicked(bool)), this, SIGNAL(closeMe()));
+Form::~Form()
+{
+    delete ui;
+}
 
+void Form::about()
+{
+
+}
+
+void Form::initUI()
+{
     ui->elecGear->addItem(QWidget::tr("高"));
     ui->elecGear->addItem(QWidget::tr("低"));
 
@@ -23,12 +44,17 @@ Form::Form(QWidget *parent) :
     ui->backHomeGear->addItem(QWidget::tr("慢档"));
 }
 
-Form::~Form()
+void Form::emergencyStop()
 {
-    delete ui;
+
+    QByteArray data = "abcd";
+
+    emit getData(data);
+    qDebug() << "Form send command " + QString(data);
 }
 
-void Form::about() {
-    //Ui::MainWindow *main = new MainWindow();
-
+void Form::initConnect()
+{
+    connect(ui->emergencyButton, SIGNAL(clicked()), SLOT(emergencyStop()));
+    //connect(ui->emergencyButton, SIGNAL(clicked()), SIGNAL(getData(QByteArray)));
 }

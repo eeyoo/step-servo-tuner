@@ -7,8 +7,7 @@ namespace Ui {
 class Form;
 }
 
-//class MainWindow;
-
+class Command;
 class Form : public QWidget
 {
     Q_OBJECT
@@ -19,14 +18,19 @@ public:
 
 private slots:
     void about();
+    void emergencyStop();
 
 signals:
     void closeMe();
+    void getData(const QByteArray &data);
+
+private:
+    void initUI();
+    void initConnect();
 
 private:
     Ui::Form *ui;
-    //MainWindow *main;
-
+    Command *comm;
 };
 
 #endif // FORM_H

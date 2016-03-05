@@ -42,17 +42,15 @@
 #include <QtSerialPort/QSerialPort>
 
 QT_BEGIN_NAMESPACE
-
-class QLabel;
-class Form;
-
 namespace Ui {
 class MainWindow;
 }
 
 QT_END_NAMESPACE
 
-class Console;
+class QLabel;
+class Form;
+class Command;
 class SettingsDialog;
 
 class MainWindow : public QMainWindow
@@ -81,10 +79,10 @@ private:
 
     Ui::MainWindow *ui;
     QLabel *status;
-    Console *console;
     SettingsDialog *settings;
     QSerialPort *serial;
     Form *form;
+    Command *comm;
 };
 
 #endif // MAINWINDOW_H
