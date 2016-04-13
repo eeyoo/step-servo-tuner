@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    comm = new Command;
+    //comm = new Command;
 
     form = new Form;
     setCentralWidget(form);

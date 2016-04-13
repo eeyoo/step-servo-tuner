@@ -9,14 +9,16 @@ SOURCES += \
     settingsdialog.cpp \
     console.cpp \
     form.cpp \
-    command.cpp
+    command.cpp \
+    hexstring.cpp
 
 HEADERS += \
     mainwindow.h \
     settingsdialog.h \
     console.h \
     form.h \
-    command.h
+    command.h \
+    hexstring.h
 
 FORMS += \
     mainwindow.ui \

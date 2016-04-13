@@ -82,7 +82,7 @@ private:
     SettingsDialog *settings;
     QSerialPort *serial;
     Form *form;
-    Command *comm;
+    //Command *comm;
 };
 
 #endif // MAINWINDOW_H
