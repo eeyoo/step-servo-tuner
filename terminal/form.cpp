@@ -60,7 +60,7 @@ void Form::initUI()
 
 void Form::emergencyStop()
 {
-
+/*
     quint32 elecLevel = ui->motorLevel->currentIndex(); //电机细分等级
     quint32 volLevel = ui->volLevel->currentIndex(); //参考电压
     quint32 elecCtrl = ui->elecContrl->currentIndex(); //智能电流控制
@@ -96,7 +96,6 @@ void Form::emergencyStop()
     //结构体指令数据
     //Cmd c1, c2, c3, c4, c5, c6, c7;
 
-    /*
     char c1[10] = {0x00,0x00,SETMOTDIVCMD_ID,0x00,0x00,pEL[0],pEL[1],pEL[2],pEL[3],0xaa};
     char c2[10] = {0x00,0x00,SETCUGEARCMD_ID,0x00,0x00,pEG[0],pEG[1],pEG[2],pEG[3],0x00};
     char c3[10] = {0x00,0x00,SETACCDURCMD_ID,0x00,0x00,pAT[0],pAT[1],pAT[2],pAT[3],0x00};
@@ -104,7 +103,7 @@ void Form::emergencyStop()
     char c5[10] = {0x00,0x00,SETREFVOLCMD_ID,0x00,0x00,pVL[0],pVL[1],pVL[2],pVL[3],0x00};
     char c6[10] = {0x00,0x00,SETSMARTCURR_ID,0x00,0x00,pEC[0],pEC[1],pEC[2],pEC[3],0x00};
     char c7[10] = {0x00,0x00,SETMAXPOSCMD_ID,0x00,0x00,pMP[0],pMP[1],pMP[2],pMP[3],0x00};
-    */
+
     //结构体转换为QByteArray
     //QByteArray qa1 = QByteArray::fromRawData(c1, sizeof(c1));
     //QByteArray qa2 = raw(c2, 10);
@@ -265,6 +264,7 @@ void Form::emergencyStop()
     qDebug() << data;
     //emit getData(data);
     //qDebug() << qa1;
+    */
 }
 
 void Form::on_pbPush_clicked()
@@ -303,29 +303,29 @@ void Form::on_pbPush_clicked()
     //参考电压
     QByteArray qVL = raw(convert4bytes(volLevel), DATANUMBER);
     quint8 vl[] = {0x02,0x00,SETREFVOLCMD,0x00,0x02,qVL[0],qVL[1],qVL[2],qVL[3],0x00};
-
+    //电流档位
     QByteArray qEG = raw(convert4bytes(elecGrade), DATANUMBER);
     quint8 eg[] = {0x02,0x00,SETCUGEARCMD,0x00,0x03,qEG[0],qEG[1],qEG[2],qEG[3],0x00};
-
+    //电机细分等级
     QByteArray qEL = raw(convert4bytes(elecLevel), DATANUMBER);
     quint8 el[] = {0x02,0x00,SETMOTDIVCMD,0x00,0x04,qEL[0],qEL[1],qEL[2],qEL[3],0x00};
-
+    //逻辑编码方向
     QByteArray qCT = raw(convert4bytes(codeType), DATANUMBER);
     quint8 ct[] = {0x02,0x00,SETCODELOGDI,0x00,0x05,qCT[0],qCT[1],qCT[2],qCT[3],0x00};
-
+    //脉冲控制方式
     QByteArray qPT = raw(convert4bytes(plusType), DATANUMBER);
     quint8 pt[] = {0x02,0x00,SETPLUSCTRLT,0x00,0x06,qPT[0],qPT[1],qPT[2],qPT[3],0x00};
-
+    //负向最大允许位移
     QByteArray qMN = raw(convert4bytes(maxN), DATANUMBER);
     quint8 mn[] = {0x02,0x00,SETNEGMAXPOS,0x00,0x07,qMN[0],qMN[1],qMN[2],qMN[3],0x00};
-
+    //正向最大允许位移
     QByteArray qMP = raw(convert4bytes(maxP), DATANUMBER);
     quint8 mp[] = {0x02,0x00,SETPOSMAXPOS,0x00,0x08,qMP[0],qMP[1],qMP[2],qMP[3],0x00};
-
+    //减速时间
     QByteArray qDT = raw(convert4bytes(decTime), DATANUMBER);
     quint8 dt[] = {0x02,0x00,SETDECDURCMD,0x00,0x09,qDT[0],qDT[1],qDT[2],qDT[3],0x00};
-
-    QByteArray qAT = raw(convert4bytes(maxP), DATANUMBER);
+    //加速时间
+    QByteArray qAT = raw(convert4bytes(accTime), DATANUMBER);
     quint8 at[] = {0x02,0x00,SETACCDURCMD,0x00,0x0a,qAT[0],qAT[1],qAT[2],qAT[3],0x00};
 
     QByteArray qa1 = raw(head, BATCHCMDNUMB);
@@ -341,9 +341,12 @@ void Form::on_pbPush_clicked()
     QByteArray qa11 = raw(at, BATCHCMDNUMB);
 
     QByteArray data;
-    data.append(qa1).append(qa8);
+    //data.append(qa1).append(qa11).append(qa10).append(qa9).append(qa8).append(qa7)
+    //        .append(qa6).append(qa5).append(qa4).append(qa3).append(qa2);
+    data.append(qa10);
 
     qDebug() << data.toHex().toUpper();
+    //emit getData(data);
 }
 
 QByteArray Form::raw(quint8 *p, int size)
@@ -408,6 +411,8 @@ QByteArray Form::convert(const Cmd &cmd)
 
 void Form::on_pbPull_clicked()
 {
+    /*
     QByteArray array = raw(convert4bytes(10000000), 4);
     qDebug() << array;
+    */
 }
