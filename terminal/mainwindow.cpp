@@ -146,7 +146,8 @@ void MainWindow::readData()
 {
     QByteArray data = serial->readAll();
     //QByteArray line = serial->readLine();
-    qDebug() << "serial port receive all data " + data;
+    //qDebug() << "serial port receive all data " + data;
+    showStatusMessage(tr("返回数据 ") + data.toHex());
 }
 
 void MainWindow::handleError(QSerialPort::SerialPortError error)

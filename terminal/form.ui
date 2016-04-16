@@ -59,6 +59,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="emergencyButton">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="statusTip">
          <string>紧急停止</string>
         </property>
@@ -67,6 +70,9 @@
         </property>
         <property name="text">
          <string>急停</string>
+        </property>
+        <property name="default">
+         <bool>false</bool>
         </property>
         <property name="flat">
          <bool>false</bool>
@@ -283,6 +289,13 @@
            </layout>
           </item>
           <item>
+           <widget class="Line" name="line_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <layout class="QVBoxLayout" name="verticalLayout_10">
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_28" stretch="0,1">
@@ -294,7 +307,11 @@
                </widget>
               </item>
               <item>
-               <widget class="QSpinBox" name="servoAccTime"/>
+               <widget class="QSpinBox" name="servoAccTime">
+                <property name="statusTip">
+                 <string>1-99</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -308,7 +325,11 @@
                </widget>
               </item>
               <item>
-               <widget class="QSpinBox" name="servoDecTime"/>
+               <widget class="QSpinBox" name="servoDecTime">
+                <property name="statusTip">
+                 <string>1-99</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>

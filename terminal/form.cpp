@@ -276,7 +276,7 @@ void Form::on_pbPush_clicked()
     quint32 codeType = ui->codeLogicDirect->currentIndex(); //逻辑编码方向
     quint32 plusType = ui->plusType->currentIndex(); //脉冲控制方式
     quint32 maxN = ui->maximumNegative->text().toUInt(); //负向最大允许位移
-    qDebug() << maxN;
+    //qDebug() << elecCtrl;
     quint32 maxP = ui->maximumPositive->text().toUInt(); //正向最大允许位移
     quint32 decTime = ui->servoDecTime->text().toUInt(); //减速时间
     quint32 accTime = ui->servoAccTime->text().toUInt(); //加速时间
@@ -307,7 +307,7 @@ void Form::on_pbPush_clicked()
     QByteArray qEG = raw(convert4bytes(elecGrade), DATANUMBER);
     quint8 eg[] = {0x02,0x00,SETCUGEARCMD,0x00,0x03,qEG[0],qEG[1],qEG[2],qEG[3],0x00};
     //电机细分等级
-    QByteArray qEL = raw(convert4bytes(elecLevel), DATANUMBER);
+    QByteArray qEL = raw(convert4bytes(power(elecLevel)), DATANUMBER);
     quint8 el[] = {0x02,0x00,SETMOTDIVCMD,0x00,0x04,qEL[0],qEL[1],qEL[2],qEL[3],0x00};
     //逻辑编码方向
     QByteArray qCT = raw(convert4bytes(codeType), DATANUMBER);
@@ -328,25 +328,25 @@ void Form::on_pbPush_clicked()
     QByteArray qAT = raw(convert4bytes(accTime), DATANUMBER);
     quint8 at[] = {0x02,0x00,SETACCDURCMD,0x00,0x0a,qAT[0],qAT[1],qAT[2],qAT[3],0x00};
 
-    QByteArray qa1 = raw(head, BATCHCMDNUMB);
-    QByteArray qa2 = raw(ec, BATCHCMDNUMB);
-    QByteArray qa3 = raw(vl, BATCHCMDNUMB);
-    QByteArray qa4 = raw(eg, BATCHCMDNUMB);
-    QByteArray qa5 = raw(el, BATCHCMDNUMB);
-    QByteArray qa6 = raw(ct, BATCHCMDNUMB);
-    QByteArray qa7 = raw(pt, BATCHCMDNUMB);
-    QByteArray qa8 = raw(mn, BATCHCMDNUMB);
-    QByteArray qa9 = raw(mp, BATCHCMDNUMB);
-    QByteArray qa10 = raw(dt, BATCHCMDNUMB);
-    QByteArray qa11 = raw(at, BATCHCMDNUMB);
+    QByteArray hd = raw(head, BATCHCMDNUMB);
+    QByteArray qa1 = raw(ec, BATCHCMDNUMB);
+    QByteArray qa2 = raw(vl, BATCHCMDNUMB);
+    QByteArray qa3 = raw(eg, BATCHCMDNUMB);
+    QByteArray qa4 = raw(el, BATCHCMDNUMB);
+    QByteArray qa5 = raw(ct, BATCHCMDNUMB);
+    QByteArray qa6 = raw(pt, BATCHCMDNUMB);
+    QByteArray qa7 = raw(mn, BATCHCMDNUMB);
+    QByteArray qa8 = raw(mp, BATCHCMDNUMB);
+    QByteArray qa9 = raw(dt, BATCHCMDNUMB);
+    QByteArray qa10 = raw(at, BATCHCMDNUMB);
 
     QByteArray data;
-    //data.append(qa1).append(qa11).append(qa10).append(qa9).append(qa8).append(qa7)
-    //        .append(qa6).append(qa5).append(qa4).append(qa3).append(qa2);
-    data.append(qa10);
+    data.append(hd).append(qa10).append(qa9).append(qa8).append(qa7).append(qa6)
+            .append(qa5).append(qa4).append(qa3).append(qa2).append(qa1);
+    //data.append(qa2);
 
-    qDebug() << data.toHex().toUpper();
-    //emit getData(data);
+    //qDebug() << data.toHex().toUpper();
+    emit getData(data);
 }
 
 QByteArray Form::raw(quint8 *p, int size)
