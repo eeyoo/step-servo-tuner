@@ -1,6 +1,6 @@
 QT += widgets serialport
 
-TARGET = terminal
+TARGET = tuner
 TEMPLATE = app
 
 SOURCES += \
@@ -10,7 +10,8 @@ SOURCES += \
     console.cpp \
     form.cpp \
     command.cpp \
-    hexstring.cpp
+    hexstring.cpp \
+    configdialog.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -18,15 +19,14 @@ HEADERS += \
     console.h \
     form.h \
     command.h \
-    hexstring.h
+    hexstring.h \
+    configdialog.h
 
 FORMS += \
     mainwindow.ui \
     settingsdialog.ui \
-    form.ui
+    form.ui \
+    configdialog.ui
 
 RESOURCES += \
-    terminal.qrc
-
-DISTFILES += \
-    readme.txt
+    tuner.qrc

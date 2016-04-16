@@ -5,9 +5,12 @@
 
 #define ABS_MOVE_CMD 0x01 //绝对运动
 #define REL_MOVE_CMD 0x02 //相对运动
-#define SETSPPED_CMD 0x03 //设置目标速度
+#define SETMOVESPCMD 0x03 //目标速度
+
 #define OPERATEPARAM 0x31 //操作参数命令 1)++  2)-- 3)query
 #define COMPAREPARAM 0x32 //比较参数值 1)> 2)= 3<
+
+
 #define SETACCDURCMD 0xa1 //设置加速时间(单位ms)
 #define SETDECDURCMD 0xa2 //设置减速时间(单位ms)
 #define SETPOSMAXPOS 0xa3 //设置正向最大允许位置(单位mm)
@@ -24,6 +27,8 @@
 #define CMDDATANUM   0x0a //命令字节数
 #define DATANUMBER   0x04 //数据字节数
 
+#define EQUIPID      0x02 //设备ID
+
 
 namespace Ui {
 class Form;
@@ -39,7 +44,6 @@ typedef struct {
 
 } Cmd;
 
-class Command;
 class Form : public QWidget
 {
     Q_OBJECT
@@ -47,31 +51,34 @@ class Form : public QWidget
 public:
     explicit Form(QWidget *parent = 0);
     ~Form();
+    void receiveData(const QByteArray &data);
 
-private slots:
+public slots:
     void about();
-    void emergencyStop();
 
-    void on_pbPush_clicked();
+private slots: 
+    //绝对运动
+    void on_absoluteMove_clicked();
 
-    void on_pbPull_clicked();
+    void on_relativeMove_clicked();
+
+    void on_stopMove_clicked();
 
 signals:
-    void closeMe();
-    void getData(const QByteArray &data);
+    void sendData(const QByteArray &data);
 
 private:
     void initUI();
     void initConnect();
     quint8* convert4bytes(quint32); //quint32 -> quint8[4]
-    quint8* convert2bytes(quint16); //quint16 -> quint8[2]
-    quint32 power(int index); //2^index
+    quint8* convert2bytes(quint32); //quint32 -> quint8[2]
+    quint32 power(int index); //return 2^index
     QByteArray convert(const Cmd &cmd); //Cmd -> QByteArray
-    QByteArray raw(quint8 *p, int size);
+    QByteArray raw(quint8 *p, int size); //quint8[] -> QByteArray
 
 private:
     Ui::Form *ui;
-    Command *comm;
+    QByteArray echo; //串口返回数据
 };
 
 #endif // FORM_H

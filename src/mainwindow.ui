@@ -65,6 +65,7 @@
    <addaction name="actionDisconnect"/>
    <addaction name="separator"/>
    <addaction name="actionConfigure"/>
+   <addaction name="actionSysConfig"/>
   </widget>
   <action name="actionAbout">
    <property name="text">
@@ -127,7 +128,7 @@
     <string>配置</string>
    </property>
    <property name="toolTip">
-    <string>Configure serial port</string>
+    <string>配置串口参数</string>
    </property>
    <property name="shortcut">
     <string>Alt+C</string>
@@ -142,7 +143,7 @@
     <string>清空缓存</string>
    </property>
    <property name="toolTip">
-    <string>Clear data</string>
+    <string>清空缓存</string>
    </property>
    <property name="shortcut">
     <string>Alt+L</string>
@@ -155,6 +156,18 @@
    </property>
    <property name="text">
     <string>退出</string>
+   </property>
+  </action>
+  <action name="actionSysConfig">
+   <property name="icon">
+    <iconset resource="terminal.qrc">
+     <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
+   </property>
+   <property name="text">
+    <string>配置参数</string>
+   </property>
+   <property name="toolTip">
+    <string>配置控制器参数</string>
    </property>
   </action>
  </widget>

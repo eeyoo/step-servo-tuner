@@ -7,6 +7,7 @@
  * @brief 指令基类
  */
 
+/*
 #define ABS_MOVE_CMD_ID 0x01 //绝对运动
 #define REL_MOVE_CMD_ID 0x02 //相对运动
 #define SETSPPED_CMD_ID 0x03 //设置目标速度
@@ -20,7 +21,7 @@
 #define SETREFVOLCMD_ID 0xb3 //设置参考电压 0 - 低 1 - 高
 #define SETSMARTCURR_ID 0xb4 //设置智能电流控制值 0 - 设置电流值1/2; 1 - 设置电流值1/4
 
-/*
+
 typedef struct {
     quint8 id[2];      //命令ID
     quint8 master;     //命令码

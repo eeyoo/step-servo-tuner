@@ -52,6 +52,7 @@ class QLabel;
 class Form;
 class Command;
 class SettingsDialog;
+class ConfigDialog;
 
 class MainWindow : public QMainWindow
 {
@@ -82,6 +83,7 @@ private:
     SettingsDialog *settings;
     QSerialPort *serial;
     Form *form;
+    ConfigDialog *config;
     //Command *comm;
 };
 
