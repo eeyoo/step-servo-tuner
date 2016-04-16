@@ -1,0 +1,6 @@
+如何将QString数据类型转换为QByteArray数据类型
+
+QString支持Unicode
+
+
+QByteArray 从原生数据

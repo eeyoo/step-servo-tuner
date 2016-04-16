@@ -38,6 +38,7 @@
 #include "settingsdialog.h"
 #include "form.h"
 #include "command.h"
+#include "configdialog.h"
 
 #include <QMessageBox>
 #include <QLabel>
@@ -52,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    comm = new Command;
+    //comm = new Command;
 
     form = new Form;
     setCentralWidget(form);
@@ -61,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     serial = new QSerialPort(this);
 
     settings = new SettingsDialog;
+    config = new ConfigDialog;
 
     ui->actionConnect->setEnabled(true);
     ui->actionDisconnect->setEnabled(false);
@@ -78,15 +80,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 
-    //connect(comm, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
+    connect(form, SIGNAL(sendData(QByteArray)), this, SLOT(writeData(QByteArray)));
 
-    //connect(form, SIGNAL(closeMe()), this, SLOT(close()));
-    connect(form, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
+    connect(config, SIGNAL(sendData(QByteArray)), this, SLOT(writeData(QByteArray)));
 }
 
 MainWindow::~MainWindow()
 {
     delete settings;
+    delete config;
+    delete form;
     delete ui;
 }
 
@@ -104,7 +107,7 @@ void MainWindow::openSerialPort()
         ui->actionConnect->setEnabled(false);
         ui->actionDisconnect->setEnabled(true);
         ui->actionConfigure->setEnabled(false);
-        showStatusMessage(tr("连接 %1 : 波特率 %2, %3, %4, %5, %6")
+        showStatusMessage(tr("连接 %1 : 波特率 %2, %3位, 校验%4, 停止位%5, 控制流%6")
                           .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
                           .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
     } else {
@@ -138,15 +141,18 @@ void MainWindow::about()
 void MainWindow::writeData(const QByteArray &data)
 {
     //qDebug() << "write serial port with data: " + QString(data);
+    //串口发送数据 - 缓存写数据
     serial->write(data);
-    //qDebug() << "write serial port with data: " + QString(data);
+
 }
 
 void MainWindow::readData()
 {
+    //缓存读数据 - 串口接收数据
     QByteArray data = serial->readAll();
-    //QByteArray line = serial->readLine();
-    qDebug() << "serial port receive all data " + data;
+    form->receiveData(data);
+
+    showStatusMessage(tr("返回数据: ") + data.toHex().toUpper());
 }
 
 void MainWindow::handleError(QSerialPort::SerialPortError error)
@@ -162,7 +168,9 @@ void MainWindow::initActionsConnections()
     connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
     connect(ui->actionDisconnect, SIGNAL(triggered()), this, SLOT(closeSerialPort()));
     connect(ui->actionConfigure, SIGNAL(triggered()), settings, SLOT(show()));
-    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
+    connect(ui->actionSysConfig, SIGNAL(triggered()), config, SLOT(show()));
+    //connect(ui->actionClear, SIGNAL(triggered(bool)), serial, SLOT(clear()));
+    connect(ui->actionAbout, SIGNAL(triggered()), form, SLOT(about()));
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 }
