@@ -1,6 +1,11 @@
 #include "configdialog.h"
 #include "ui_configdialog.h"
 
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
+
 #include <QtCore/QDebug>
 
 ConfigDialog::ConfigDialog(QWidget *parent) :
@@ -15,15 +20,29 @@ ConfigDialog::ConfigDialog(QWidget *parent) :
     ui->elecContrl->addItem(QWidget::tr("1/2电流值"));
     ui->elecContrl->addItem(QWidget::tr("1/4电流值"));
 
-    QStringList list;
-    list << "1" << "2" << "4" << "8" << "16" << "32" << "64" << "128" << "256";
-    ui->motorLevel->addItems(list);
+    QStringList divList;
+    divList << "1" << "2" << "4" << "8" << "16" << "32" << "64" << "128" << "256";
+    ui->motorLevel->addItems(divList);
 
     ui->plusType->addItem(QWidget::tr("内部脉冲控制"));
     ui->plusType->addItem(QWidget::tr("外部脉冲控制"));
 
     ui->codeLogicDirect->addItem(QWidget::tr("负向"));
     ui->codeLogicDirect->addItem(QWidget::tr("正向"));
+
+    QStringList rsBaudList;
+    rsBaudList << "115200" << "38400" << "19200" << "9600" << "4800";
+    ui->rs485Baud->addItems(rsBaudList);
+
+    QStringList canBaudList;
+    canBaudList << "1000K" << "500K" << "250K" << "125K" << "100K" << "50K";
+    ui->canBaud->addItems(canBaudList);
+
+    //ui->val1->setText("300");
+    //ui->val2->setText("50");
+    //ui->val3->setText("5000");
+    //默认读取JSON配置文件
+    loadConfigFile(Json);
 }
 
 ConfigDialog::~ConfigDialog()
@@ -49,6 +68,10 @@ void ConfigDialog::on_pushBtn_clicked()
     quint32 maxP = ui->maximumPositive->text().toUInt(); //正向最大允许位移
     quint32 decTime = ui->servoDecTime->text().toUInt(); //减速时间
     quint32 accTime = ui->servoAccTime->text().toUInt(); //加速时间
+
+    quint32 rsBaud = ui->rs485Baud->currentIndex() + 1; //RS485波特率
+    quint32 canBaud = ui->canBaud->currentIndex() + 1;  //CAN波特率
+    quint32 deviceID = ui->deviceID->text().toUInt();   //设备ID
 
     //整型数据如何转换为字节数组
     /*
@@ -161,4 +184,114 @@ QByteArray ConfigDialog::raw(quint8 *p, int size)
 void ConfigDialog::receiveDate(const QByteArray &data)
 {
     qDebug() << data;
+}
+
+void ConfigDialog::on_write2file_clicked()
+{
+    //获取界面输入参数字符串
+    int val1 = ui->val1->text().toInt();
+    int val2 = ui->val2->text().toInt();
+    int val3 = ui->val3->text().toInt();
+    //写入文件便于采用
+    configDatas["circle_len"] = val1;
+    configDatas["step_len"] = val2;
+    configDatas["ctrl_feq"] = val3;
+
+    bool ret = saveConfigFile(Json);
+    if(ret) {
+        qDebug() << "save config file successful.";
+        close();
+    } else
+        qDebug() << "can't save config file.";
+
+}
+
+bool ConfigDialog::saveConfigFile(SaveFormat saveFormat) const
+{
+    QFile saveFile(saveFormat == Json
+                   ? QStringLiteral("save.json")
+                   : QStringLiteral("save.dat"));
+    if(!saveFile.open(QIODevice::WriteOnly)) {
+        qWarning("不能打开文件!");
+        return false;
+    }
+
+    QJsonObject configObject;
+    write(configObject);
+    QJsonDocument saveDoc(configObject);
+    saveFile.write(saveFormat == Json
+                   ? saveDoc.toJson()
+                   : saveDoc.toBinaryData());
+    return true;
+}
+
+void ConfigDialog::write(QJsonObject &json) const
+{
+    QJsonArray configArray;
+    QMapIterator<QString, int> i(configDatas);
+    while(i.hasNext()) {
+        i.next();
+        QJsonObject obj;
+        obj["name"] = i.key();
+        obj["value"] = i.value();
+        configArray.append(obj);
+    }
+
+    json["configs"] = configArray;
+}
+
+void ConfigDialog::on_read4file_clicked()
+{
+    //读取磁盘文件
+    bool ret = loadConfigFile(Json);
+    if (ret) {
+        qDebug() << "write to json file successful.";
+    } else {
+        qDebug() << "write to json file failed.";
+    }
+
+
+}
+
+bool ConfigDialog::loadConfigFile(SaveFormat saveFormat)
+{
+    QFile loadFile(saveFormat == Json
+                   ? QStringLiteral("save.json")
+                   : QStringLiteral("save.dat"));
+    if(!loadFile.open(QIODevice::ReadOnly)) {
+        qWarning("不能打开文件!");
+        return false;
+    }
+
+    QByteArray saveData = loadFile.readAll();
+
+    QJsonDocument loadDoc(saveFormat == Json
+                          ? QJsonDocument::fromJson(saveData)
+                          : QJsonDocument::fromBinaryData(saveData));
+
+    read(loadDoc.object()); //解析QJsonDocument文件
+
+    return true;
+}
+
+void ConfigDialog::read(const QJsonObject &json)
+{
+    //JSON格式文件解析出来
+    QJsonArray configArray = json["configs"].toArray();
+
+    //ui->val1->setText(configArray[]);
+
+    for (int i=0; i < configArray.size(); i++) {
+        QJsonObject obj = configArray[i].toObject();
+        QString name = obj["name"].toString();
+        int value = obj["value"].toInt();
+        configDatas.insert(name, value);
+        //configDatas.key(obj["name"]);
+        //configDatas.value(obj["value"]);
+    }
+    //界面显示出来
+    ui->val1->setText(QString::number(configDatas["circle_len"]));
+    ui->val2->setText(QString::number(configDatas["step_len"]));
+    ui->val3->setText(QString::number(configDatas["ctrl_feq"]));
+
 }

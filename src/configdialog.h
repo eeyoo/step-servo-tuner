@@ -2,7 +2,8 @@
 #define CONFIGDIALOG_H
 
 #include <QDialog>
-
+#include <QJsonObject>
+#include <QMap>
 
 #define SETACCDURCMD 0xa1 //设置加速时间(单位ms)
 #define SETDECDURCMD 0xa2 //设置减速时间(单位ms)
@@ -35,6 +36,13 @@ public:
     ~ConfigDialog();
     void receiveDate(const QByteArray &data);
 
+    enum SaveFormat {
+        Json, Binary
+    };
+
+    bool loadConfigFile(SaveFormat saveFormat);
+    bool saveConfigFile(SaveFormat saveFormat) const;
+
 signals:
     void sendData(const QByteArray &data);
 
@@ -43,14 +51,21 @@ private slots:
 
     void on_pushBtn_clicked();
 
+    void on_write2file_clicked();
+
+    void on_read4file_clicked();
+
 private:
     quint8* convert4bytes(const quint32); //quint32 -> quint8[4]
     quint8* convert2bytes(const quint32); //quint32 -> quint8[2]
     quint32 power(int index); //return 2^index
     QByteArray raw(quint8 *p, int size); //quint8[] -> QByteArray
 
+    void read(const QJsonObject &json); //读取json文件
+    void write(QJsonObject &json) const; //写入json文件
 private:
     Ui::ConfigDialog *ui;
+    QMap<QString, int> configDatas;
 };
 
 #endif // CONFIGDIALOG_H

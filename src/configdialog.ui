@@ -6,314 +6,519 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>479</width>
-    <height>348</height>
+    <width>550</width>
+    <height>430</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="2,2,0">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="groupBoxServo">
-     <property name="title">
-      <string>电机配置</string>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>1</number>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,2">
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>控制器配置</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QGroupBox" name="groupBoxServo">
+         <property name="title">
+          <string>电机配置</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QLabel" name="label_4">
-            <property name="statusTip">
-             <string>1, 2, 4, 8, 16, 32, 64, 128, 256</string>
-            </property>
-            <property name="text">
-             <string>电机细分等级</string>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,2">
+              <item>
+               <widget class="QLabel" name="label_4">
+                <property name="statusTip">
+                 <string>1, 2, 4, 8, 16, 32, 64, 128, 256</string>
+                </property>
+                <property name="text">
+                 <string>电机细分等级</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="motorLevel">
+                <property name="toolTip">
+                 <string/>
+                </property>
+                <property name="statusTip">
+                 <string>细分等级分别为1, 2, 4, 8, 16, 32, 64, 128, 256</string>
+                </property>
+                <property name="editable">
+                 <bool>false</bool>
+                </property>
+                <property name="currentText">
+                 <string/>
+                </property>
+                <property name="maxVisibleItems">
+                 <number>5</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,2">
+              <item>
+               <widget class="QLabel" name="label_5">
+                <property name="text">
+                 <string>电流档位</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="elecGrade">
+                <property name="statusTip">
+                 <string>分为1至32等级</string>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>32</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="motorLevel">
-            <property name="toolTip">
-             <string/>
-            </property>
-            <property name="statusTip">
-             <string>细分等级分别为1, 2, 4, 8, 16, 32, 64, 128, 256</string>
-            </property>
-            <property name="editable">
-             <bool>false</bool>
-            </property>
-            <property name="currentText">
-             <string/>
-            </property>
-            <property name="maxVisibleItems">
-             <number>5</number>
-            </property>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,2">
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="text">
+                 <string>参考电压边界</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="volLevel">
+                <property name="toolTip">
+                 <string/>
+                </property>
+                <property name="statusTip">
+                 <string/>
+                </property>
+                <property name="editable">
+                 <bool>false</bool>
+                </property>
+                <property name="currentText">
+                 <string/>
+                </property>
+                <property name="maxVisibleItems">
+                 <number>2</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,2">
+              <property name="spacing">
+               <number>6</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>智能电流控制</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="elecContrl">
+                <property name="toolTip">
+                 <string/>
+                </property>
+                <property name="statusTip">
+                 <string/>
+                </property>
+                <property name="editable">
+                 <bool>false</bool>
+                </property>
+                <property name="currentText">
+                 <string/>
+                </property>
+                <property name="maxVisibleItems">
+                 <number>2</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
           </item>
          </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,2">
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxSpeed">
+         <property name="title">
+          <string>初始化参数</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="1,0,1">
           <item>
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>电流档位</string>
+           <layout class="QVBoxLayout" name="verticalLayout_11">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <item>
+               <widget class="QLabel" name="label_3">
+                <property name="text">
+                 <string>正向最大允许位置(mm)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="maximumPositive"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_26" stretch="0,0">
+              <item>
+               <widget class="QLabel" name="label_16">
+                <property name="text">
+                 <string>负向最大允许位置(mm)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="maximumNegative"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_27" stretch="1,2">
+              <item>
+               <widget class="QLabel" name="label_6">
+                <property name="text">
+                 <string>脉冲方式</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="plusType"/>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="elecGrade">
-            <property name="statusTip">
-             <string>分为1至32等级</string>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>32</number>
-            </property>
-           </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_10">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_28" stretch="0,1">
+              <item>
+               <widget class="QLabel" name="label_18">
+                <property name="text">
+                 <string>加速度时间(ms)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="servoAccTime">
+                <property name="statusTip">
+                 <string>1-99</string>
+                </property>
+                <property name="maximum">
+                 <number>999999</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_29" stretch="0,1">
+              <item>
+               <widget class="QLabel" name="label_19">
+                <property name="text">
+                 <string>减速度时间(ms)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="servoDecTime">
+                <property name="statusTip">
+                 <string>1-99</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_33" stretch="1,2">
+              <item>
+               <widget class="QLabel" name="label_23">
+                <property name="text">
+                 <string>编码逻辑方向</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="codeLogicDirect"/>
+              </item>
+             </layout>
+            </item>
+           </layout>
           </item>
          </layout>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="Line" name="line">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_5">
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_12">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <item>
+            <widget class="QLabel" name="label_7">
+             <property name="statusTip">
+              <string>1, 2, 4, 8, 16, 32, 64, 128, 256</string>
+             </property>
+             <property name="text">
+              <string>RS485波特率</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="rs485Baud">
+             <property name="toolTip">
+              <string/>
+             </property>
+             <property name="statusTip">
+              <string>细分等级分别为1, 2, 4, 8, 16, 32, 64, 128, 256</string>
+             </property>
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="currentText">
+              <string/>
+             </property>
+             <property name="maxVisibleItems">
+              <number>5</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <item>
+            <widget class="QLabel" name="label_8">
+             <property name="statusTip">
+              <string>1, 2, 4, 8, 16, 32, 64, 128, 256</string>
+             </property>
+             <property name="text">
+              <string>CAN波特率</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="canBaud">
+             <property name="toolTip">
+              <string/>
+             </property>
+             <property name="statusTip">
+              <string>细分等级分别为1, 2, 4, 8, 16, 32, 64, 128, 256</string>
+             </property>
+             <property name="editable">
+              <bool>false</bool>
+             </property>
+             <property name="currentText">
+              <string/>
+             </property>
+             <property name="maxVisibleItems">
+              <number>5</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>设备ID</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="deviceID">
+             <property name="statusTip">
+              <string>分为1至32等级</string>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>100</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushBtn">
+           <property name="text">
+            <string>下载</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pullBtn">
+           <property name="text">
+            <string>读取配置</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="cancelBtn">
+           <property name="text">
+            <string>取消</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>机械参数配置</string>
+      </attribute>
+      <widget class="QWidget" name="layoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>100</y>
+         <width>291</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_14">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,2">
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>参考电压边界</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="volLevel">
-            <property name="toolTip">
-             <string/>
-            </property>
-            <property name="statusTip">
-             <string/>
-            </property>
-            <property name="editable">
-             <bool>false</bool>
-            </property>
-            <property name="currentText">
-             <string/>
-            </property>
-            <property name="maxVisibleItems">
-             <number>2</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,2">
-          <property name="spacing">
-           <number>6</number>
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>电机步长(mm)</string>
           </property>
-          <item>
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>智能电流控制</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="elecContrl">
-            <property name="toolTip">
-             <string/>
-            </property>
-            <property name="statusTip">
-             <string/>
-            </property>
-            <property name="editable">
-             <bool>false</bool>
-            </property>
-            <property name="currentText">
-             <string/>
-            </property>
-            <property name="maxVisibleItems">
-             <number>2</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="val2"/>
         </item>
        </layout>
-      </item>
-     </layout>
+      </widget>
+      <widget class="QWidget" name="layoutWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>150</y>
+         <width>291</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_15">
+        <item>
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>电机频率(Hz)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="val3"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="layoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>50</y>
+         <width>291</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_13">
+        <item>
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>电机周长(mm)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="val1"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>350</y>
+         <width>201</width>
+         <height>25</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_16">
+        <item>
+         <widget class="QPushButton" name="write2file">
+          <property name="text">
+           <string>写入配置文件</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="read4file">
+          <property name="text">
+           <string>读取配置文件</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBoxSpeed">
-     <property name="title">
-      <string>初始化参数</string>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_9">
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_11">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <item>
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>正向最大允许位置(mm)</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="maximumPositive"/>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_26" stretch="0,0">
-          <item>
-           <widget class="QLabel" name="label_16">
-            <property name="text">
-             <string>负向最大允许位置(mm)</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="maximumNegative"/>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_27" stretch="1,2">
-          <item>
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>脉冲方式</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="plusType"/>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="Line" name="line_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_10">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_28" stretch="0,1">
-          <item>
-           <widget class="QLabel" name="label_18">
-            <property name="text">
-             <string>加速度时间(ms)</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="servoAccTime">
-            <property name="statusTip">
-             <string>1-99</string>
-            </property>
-            <property name="maximum">
-             <number>999999</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_29" stretch="0,1">
-          <item>
-           <widget class="QLabel" name="label_19">
-            <property name="text">
-             <string>减速度时间(ms)</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="servoDecTime">
-            <property name="statusTip">
-             <string>1-99</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_33" stretch="1,2">
-          <item>
-           <widget class="QLabel" name="label_23">
-            <property name="text">
-             <string>编码逻辑方向</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="codeLogicDirect"/>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushBtn">
-       <property name="text">
-        <string>下载</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pullBtn">
-       <property name="text">
-        <string>读取配置</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="cancelBtn">
-       <property name="text">
-        <string>取消</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </item>
   </layout>
  </widget>
