@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -83,6 +83,9 @@
                  <number>1</number>
                 </property>
                 <property name="maximum">
+                 <number>32</number>
+                </property>
+                <property name="value">
                  <number>32</number>
                 </property>
                </widget>
@@ -186,7 +189,11 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="maximumPositive"/>
+               <widget class="QLineEdit" name="maximumPositive">
+                <property name="text">
+                 <string>1000</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -200,7 +207,11 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="maximumNegative"/>
+               <widget class="QLineEdit" name="maximumNegative">
+                <property name="text">
+                 <string>1000</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -244,7 +255,10 @@
                  <string>1-99</string>
                 </property>
                 <property name="maximum">
-                 <number>999999</number>
+                 <number>10000</number>
+                </property>
+                <property name="value">
+                 <number>2000</number>
                 </property>
                </widget>
               </item>
@@ -263,6 +277,12 @@
                <widget class="QSpinBox" name="servoDecTime">
                 <property name="statusTip">
                  <string>1-99</string>
+                </property>
+                <property name="maximum">
+                 <number>10000</number>
+                </property>
+                <property name="value">
+                 <number>2000</number>
                 </property>
                </widget>
               </item>
@@ -289,6 +309,9 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_12">
+         <property name="spacing">
+          <number>12</number>
+         </property>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_11">
            <item>
@@ -356,7 +379,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0">
            <item>
             <widget class="QLabel" name="label_9">
              <property name="text">
@@ -370,10 +393,10 @@
               <string>分为1至32等级</string>
              </property>
              <property name="minimum">
-              <number>1</number>
+              <number>2</number>
              </property>
              <property name="maximum">
-              <number>100</number>
+              <number>100000</number>
              </property>
             </widget>
            </item>
@@ -410,13 +433,6 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="cancelBtn">
-           <property name="text">
-            <string>取消</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
       </layout>
@@ -443,7 +459,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="val2"/>
+         <widget class="QLineEdit" name="val2">
+          <property name="text">
+           <string>55</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -465,7 +485,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="val3"/>
+         <widget class="QLineEdit" name="val3">
+          <property name="text">
+           <string>5000</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -487,11 +511,15 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="val1"/>
+         <widget class="QLineEdit" name="val1">
+          <property name="text">
+           <string>300</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>310</x>

@@ -11,7 +11,9 @@ SOURCES += \
     form.cpp \
     command.cpp \
     hexstring.cpp \
-    configdialog.cpp
+    configdialog.cpp \
+    movedialog.cpp \
+    filedialog.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -20,13 +22,20 @@ HEADERS += \
     form.h \
     command.h \
     hexstring.h \
-    configdialog.h
+    configdialog.h \
+    movedialog.h \
+    filedialog.h
 
 FORMS += \
     mainwindow.ui \
     settingsdialog.ui \
     form.ui \
-    configdialog.ui
+    configdialog.ui \
+    movedialog.ui \
+    filedialog.ui
 
 RESOURCES += \
     tuner.qrc
+
+DISTFILES += \
+    ../doc/todo.txt

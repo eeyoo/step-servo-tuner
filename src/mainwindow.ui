@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>610</width>
-    <height>409</height>
+    <width>831</width>
+    <height>552</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>610</width>
+     <width>831</width>
      <height>23</height>
     </rect>
    </property>
@@ -85,7 +85,7 @@
   </action>
   <action name="actionConnect">
    <property name="icon">
-    <iconset resource="terminal.qrc">
+    <iconset resource="tuner.qrc">
      <normaloff>:/images/connect.png</normaloff>:/images/connect.png</iconset>
    </property>
    <property name="text">
@@ -103,7 +103,7 @@
   </action>
   <action name="actionDisconnect">
    <property name="icon">
-    <iconset resource="terminal.qrc">
+    <iconset resource="tuner.qrc">
      <normaloff>:/images/disconnect.png</normaloff>:/images/disconnect.png</iconset>
    </property>
    <property name="text">
@@ -121,7 +121,7 @@
   </action>
   <action name="actionConfigure">
    <property name="icon">
-    <iconset resource="terminal.qrc">
+    <iconset resource="tuner.qrc">
      <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
    </property>
    <property name="text">
@@ -136,7 +136,7 @@
   </action>
   <action name="actionClear">
    <property name="icon">
-    <iconset resource="terminal.qrc">
+    <iconset resource="tuner.qrc">
      <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
    </property>
    <property name="text">
@@ -151,7 +151,7 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="terminal.qrc">
+    <iconset resource="tuner.qrc">
      <normaloff>:/images/application-exit.png</normaloff>:/images/application-exit.png</iconset>
    </property>
    <property name="text">
@@ -160,7 +160,7 @@
   </action>
   <action name="actionSysConfig">
    <property name="icon">
-    <iconset resource="terminal.qrc">
+    <iconset resource="tuner.qrc">
      <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
    </property>
    <property name="text">
@@ -170,10 +170,18 @@
     <string>配置控制器参数</string>
    </property>
   </action>
+  <action name="actionFileIn">
+   <property name="text">
+    <string>读取配置文件</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+F</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="terminal.qrc"/>
+  <include location="tuner.qrc"/>
  </resources>
  <connections/>
 </ui>

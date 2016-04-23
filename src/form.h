@@ -34,15 +34,6 @@ namespace Ui {
 class Form;
 }
 
-typedef struct {
-    quint8 id[2];      //命令ID
-    quint8 master;     //命令码
-    quint8 slave;      //子命令
-    quint8 reserve;    //保留
-    quint8 data[4];    //数据
-    quint8 check;      //校验
-
-} Cmd;
 
 class Form : public QWidget
 {
@@ -58,11 +49,16 @@ public slots:
 
 private slots: 
     //绝对运动
-    void on_absoluteMove_clicked();
+    //void on_absoluteMove_clicked();
 
-    void on_relativeMove_clicked();
+    //void on_relativeMove_clicked();
 
-    void on_stopMove_clicked();
+    //void on_stopMove_clicked();
+    void on_absAddBtn_clicked();
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *event); //拖动事件
+    void dropEvent(QDropEvent *event); //放置事件
 
 signals:
     void sendData(const QByteArray &data);
@@ -70,11 +66,6 @@ signals:
 private:
     void initUI();
     void initConnect();
-    quint8* convert4bytes(quint32); //quint32 -> quint8[4]
-    quint8* convert2bytes(quint32); //quint32 -> quint8[2]
-    quint32 power(int index); //return 2^index
-    QByteArray convert(const Cmd &cmd); //Cmd -> QByteArray
-    QByteArray raw(quint8 *p, int size); //quint8[] -> QByteArray
 
 private:
     Ui::Form *ui;

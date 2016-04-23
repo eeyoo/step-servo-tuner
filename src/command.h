@@ -20,7 +20,7 @@
 #define SETCUGEARCMD_ID 0xb2 //设置电机电流档位 1-32
 #define SETREFVOLCMD_ID 0xb3 //设置参考电压 0 - 低 1 - 高
 #define SETSMARTCURR_ID 0xb4 //设置智能电流控制值 0 - 设置电流值1/2; 1 - 设置电流值1/4
-
+*/
 
 typedef struct {
     quint8 id[2];      //命令ID
@@ -30,7 +30,7 @@ typedef struct {
     quint8 data[4];    //数据
     quint8 check;      //校验
 } Cmd;
-*/
+
 
 class Command : public QObject
 {
@@ -38,13 +38,21 @@ class Command : public QObject
 
 public:
     explicit Command();
+    ~Command();
+    //不同构造方法
+    Command(int id, quint8 master, quint8 slave, quint8 reserve, int data, quint8 check);
+    Command(quint32 id, quint8 master, quint8 slave, quint8 reserve, quint32 data, quint8 check);
 
-    //void putData(const QByteArray &data);
-    virtual QByteArray getData() const = 0;  //纯虚函数仅用于子类实现
-protected:
-    //Cmd *mCmd;
+    void setIndex(int index); //设置指令编号
+    void compact();  //指令打包
+    QByteArray data() const; //指令转换为字符数据
+
 private:
-    //Cmd *mCmd;
+    quint8* convert(const int data, int size);
+    QByteArray raw(quint8 *p, int size); //quint8[] -> QByteArray
+
+private:
+    Cmd *mCmd;
 };
 
 #endif // COMMAND_H

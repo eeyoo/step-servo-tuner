@@ -53,6 +53,7 @@ class Form;
 class Command;
 class SettingsDialog;
 class ConfigDialog;
+class File;
 
 class MainWindow : public QMainWindow
 {
@@ -69,6 +70,7 @@ private slots:
     void about();
     void writeData(const QByteArray &data);
     void readData();
+    void configFromFile();
 
     void handleError(QSerialPort::SerialPortError error);
 
@@ -80,10 +82,11 @@ private:
 
     Ui::MainWindow *ui;
     QLabel *status;
-    SettingsDialog *settings;
+    SettingsDialog *settings;  //串口设置界面
     QSerialPort *serial;
     Form *form;
-    ConfigDialog *config;
+    ConfigDialog *config;   //程序初始化设置界面
+    //File *fileName;
     //Command *comm;
 };
 

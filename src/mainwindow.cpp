@@ -43,6 +43,8 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QtSerialPort/QSerialPort>
+#include <QFile>
+#include <QFileDialog>
 
 #include <QtCore/QDebug>
 
@@ -138,6 +140,17 @@ void MainWindow::about()
                           "using Qt, with a menu bar, toolbars, and a status bar."));
 }
 
+void MainWindow::configFromFile()
+{
+    //弹出文件对话框
+    //提示用户选择合适格式文件
+    //读取用户选择文件内容
+    //解析文件内容写入配置数据至内存和磁盘
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("选择配置文件"), "c:\\tmp", tr("图片文件 (*png, *bmp, *.jpg)"));
+    qDebug() << fileName;
+}
+
 void MainWindow::writeData(const QByteArray &data)
 {
     //qDebug() << "write serial port with data: " + QString(data);
@@ -171,6 +184,7 @@ void MainWindow::initActionsConnections()
     connect(ui->actionSysConfig, SIGNAL(triggered()), config, SLOT(show()));
     //connect(ui->actionClear, SIGNAL(triggered(bool)), serial, SLOT(clear()));
     connect(ui->actionAbout, SIGNAL(triggered()), form, SLOT(about()));
+    connect(ui->actionFileIn, SIGNAL(triggered(bool)), this, SLOT(configFromFile()));
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 }

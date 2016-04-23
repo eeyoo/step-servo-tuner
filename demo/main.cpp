@@ -39,27 +39,32 @@ QByteArray raw(quint8 *p, int size)
 }
 */
 
+typedef struct {
+    int a;
+    int b[3];
+} strct;
+
+typedef struct {
+    quint8 id[2];      //命令ID
+    quint8 master;     //命令码
+    quint8 slave;      //子命令
+    quint8 reserve;    //保留
+    quint8 data[4];    //数据
+    quint8 check;      //校验
+} Cmd;
+
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-    /*
-    quint32 in = 10000000;
-    //quint8 *data = convert(in);
-    quint8 *data = reverse(in);
-    qDebug() << *data << " "
-             << *(data+1) << " "
-             << *(data+2) << " "
-             << *(data+3);
-    */
-    quint8 data[4] = {0x65, 0x66, 0x67, 0x68};
-    HelloWorld hello;
-    //QByteArray array = raw(data, 4);
-    QByteArray array1;
-    array1.append(data[0]).append(data[1]).append(data[2]).append(data[3]);
-    QByteArray array = hello.raw(data, 4);
-    qDebug() << array;
-    qDebug() << array1;
+    QCoreApplication app(argc, argv);
 
-    return a.exec();
+    Cmd cmd = {1,2,3,4,5,6,7,8,9,10};
+    quint8 *a = cmd.data;
+    qDebug() << a[0] << " " << a[1] << " " << a[2] << " " << a[3];
+
+    quint8 *p = &cmd;
+
+    qDebug() << p[0];
+
+    return app.exec();
 }
 

@@ -11,6 +11,10 @@
 #define SETNEGMAXPOS 0xa4 //设置负向最大允许位置(单位mm)
 #define SETPLUSCTRLT 0xa5 //设置脉冲控制方式,0x01--外部脉冲控制; 其他:内部脉冲控制
 #define SETCODELOGDI 0xa6 //设置编码器逻辑方向 1-正向 0-负向
+#define SETSERBAUDRT 0xa7 //RS485波特率
+#define SETCANBAUDRT 0xa8 //CAN波特率
+#define SETDEVICEID  0xa9 //设备ID - CAN
+
 #define SETMOTDIVCMD 0xb1 //设置电机细分 1,2,4,8,32,64,128,256
 #define SETCUGEARCMD 0xb2 //设置电机电流档位 1-32
 #define SETREFVOLCMD 0xb3 //设置参考电压 0 - 低 1 - 高
@@ -47,8 +51,6 @@ signals:
     void sendData(const QByteArray &data);
 
 private slots:
-    void on_cancelBtn_clicked();
-
     void on_pushBtn_clicked();
 
     void on_write2file_clicked();
@@ -57,12 +59,18 @@ private slots:
 
 private:
     quint8* convert4bytes(const quint32); //quint32 -> quint8[4]
+    quint8* convert4bytes4negative(const int); //int -> quint8[4]
     quint8* convert2bytes(const quint32); //quint32 -> quint8[2]
     quint32 power(int index); //return 2^index
     QByteArray raw(quint8 *p, int size); //quint8[] -> QByteArray
 
     void read(const QJsonObject &json); //读取json文件
     void write(QJsonObject &json) const; //写入json文件
+
+private:
+    void initUI();
+    void initConnect();
+
 private:
     Ui::ConfigDialog *ui;
     QMap<QString, int> configDatas;
