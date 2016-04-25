@@ -7,18 +7,20 @@
 #include <QMessageBox>
 
 #include <QFileSystemModel>
+#include <QStandardItemModel>
 
 #include <QtCore/QDebug>
 
 Form::Form(QWidget *parent) :
-    QWidget(parent),
+    QWidget(parent),row(0),
     ui(new Ui::Form)
 {
     ui->setupUi(this);
+    model = new QStandardItemModel();
 
     initUI();
     initConnect();
-    ui->tableWidget->setAcceptDrops(false);
+    //ui->tableWidget->setAcceptDrops(false);
 
 }
 
@@ -35,7 +37,10 @@ void Form::about()
 
 void Form::initUI()
 {
-
+    QStringList header;
+    header << tr("指令名称") << tr("指令内容");
+    model->setHorizontalHeaderLabels(header);
+    ui->tableView->setModel(model);
 }
 
 void Form::initConnect()
@@ -70,19 +75,81 @@ void Form::on_absAddBtn_clicked()
 //    newItem->setIcon(QIcon(QPixmap(":/images/clear.png")));
 //    ui->tableWidget->setItem(1,1,newItem);
 
-    ui->tableWidget = new QTableWidget(5,2,this);
-    QTableWidgetItem *horzhead = new QTableWidgetItem();
-    ui->tableWidget->setHorizontalHeaderItem(1, horzhead);
 
-    for(int row=0; row < 5; row++) {
-        for(int colum=0; colum < 3; colum++) {
-            qDebug() << (row+1)*(colum+1);
-            QTableWidgetItem *item = new QTableWidgetItem(tr("%1").arg((row+1)*(colum+1)));
-            item->setText("h");
-            ui->tableWidget->setItem(row, colum, item);
-        }
-    }
+    //ui->tableWidget->setHorizontalHeaderLabels(header);
+    //ui->tableWidget->setItem(0,0, new QTableWidgetItem("John"));
+    //ui->tableWidget->setItem(1,0, new QTableWidgetItem("Mars"));
+    //ui->tableWidget->setItem(2,0, new QTableWidgetItem("Hero"));
 
-    QFileSystemModel *model = new QFileSystemModel;
     //ui->tableWidget->setModel(model);
+    //model->setHorizontalHeaderLabels(header);
+
+    quint32 pos = ui->absMoveDistance->text().toUInt();
+    quint32 spd = ui->absRunSpd->value();
+
+    QStringList list;
+    list << tr("绝对运动指令") << QString(tr("绝对运行距离 %1mm， 运行速度档位 %2\%")).arg(pos).arg(spd);
+    QStandardItem *item = new QStandardItem(list.at(0));
+    model->setItem(row,0, item);
+
+    QStandardItem *item1 = new QStandardItem(list.at(1));
+    //item->setText(QString::number(spd));
+    model->setItem(row,1,item1);
+
+    row++;
+
+    ui->tableView->setModel(model);
+}
+
+void Form::on_relaAddBtn_clicked()
+{
+    int pos = ui->relMoveDistance->text().toInt();
+    quint32 spd = ui->relRunSpd->value();
+
+    QStringList list;
+    list << tr("相对运动指令") << QString(tr("相对运行距离 %1mm， 运行速度档位 %2\%")).arg(pos).arg(spd);
+    //QStandardItem *item = new QStandardItem(list.at(0));
+    //model->setItem(row,0, item);
+    //QStandardItem *item1 = new QStandardItem(list.at(1));
+    //model->setItem(row,1,item1);
+    QList<QStandardItem*> items;
+    //items->append(new QStandardItem(list.at(0)));
+    //items->append(new QStandardItem(list.at(1)));
+    items << new QStandardItem(list.at(0)) << new QStandardItem(list.at(1));
+    model->appendRow(items);
+
+    row++;
+
+    ui->tableView->setModel(model);
+
+}
+
+void Form::on_resetBtn_clicked()
+{
+    row = 0;
+    model->clear();
+    QStringList header;
+    header << tr("指令名称") << tr("指令内容");
+    model->setHorizontalHeaderLabels(header);
+    ui->tableView->setModel(model);
+}
+
+void Form::on_autoAct_clicked()
+{
+    //指令自动执行
+    //指令是打包发，还是一条一条发
+    //指令model需要改写
+    //增加定时器触发事件
+    //增加串口数据发送和接收事件
+
+}
+
+void Form::on_deleteBtn_clicked()
+{
+    //ui->tableView->selectRow();
+    //删除选中行
+    if (!row--)
+        row = 0;
+    model->removeRow(row);
+    qDebug() << "row value is " << row;
 }

@@ -35,7 +35,7 @@
        <item>
         <widget class="QToolBox" name="moveToolBox">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="absPage">
           <property name="geometry">
@@ -62,7 +62,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit"/>
+                <widget class="QLineEdit" name="absMoveDistance">
+                 <property name="text">
+                  <string>100</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -76,12 +80,15 @@
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="spinBox">
+                <widget class="QSpinBox" name="absRunSpd">
                  <property name="minimum">
                   <number>1</number>
                  </property>
                  <property name="maximum">
                   <number>100</number>
+                 </property>
+                 <property name="value">
+                  <number>20</number>
                  </property>
                 </widget>
                </item>
@@ -116,7 +123,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>259</width>
+            <width>224</width>
             <height>384</height>
            </rect>
           </property>
@@ -134,7 +141,11 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_2"/>
+              <widget class="QLineEdit" name="relMoveDistance">
+               <property name="text">
+                <string>100</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -148,7 +159,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_2">
+              <widget class="QSpinBox" name="relRunSpd">
                <property name="minimum">
                 <number>1</number>
                </property>
@@ -157,6 +168,9 @@
                </property>
                <property name="singleStep">
                 <number>1</number>
+               </property>
+               <property name="value">
+                <number>10</number>
                </property>
               </widget>
              </item>
@@ -193,7 +207,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>277</width>
+        <width>242</width>
         <height>454</height>
        </rect>
       </property>
@@ -206,7 +220,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>277</width>
+        <width>242</width>
         <height>454</height>
        </rect>
       </property>
@@ -219,7 +233,7 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_5">
      <item>
-      <widget class="QTableWidget" name="tableWidget"/>
+      <widget class="QTableView" name="tableView"/>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">

@@ -34,7 +34,7 @@ namespace Ui {
 class Form;
 }
 
-
+class QStandardItemModel;
 class Form : public QWidget
 {
     Q_OBJECT
@@ -56,6 +56,14 @@ private slots:
     //void on_stopMove_clicked();
     void on_absAddBtn_clicked();
 
+    void on_relaAddBtn_clicked();
+
+    void on_resetBtn_clicked();
+
+    void on_autoAct_clicked();
+
+    void on_deleteBtn_clicked();
+
 protected:
     void dragEnterEvent(QDragEnterEvent *event); //拖动事件
     void dropEvent(QDropEvent *event); //放置事件
@@ -70,6 +78,9 @@ private:
 private:
     Ui::Form *ui;
     QByteArray echo; //串口返回数据
+    //QStandardItemModel *header;
+    QStandardItemModel *model;
+    int row;
 };
 
 #endif // FORM_H
