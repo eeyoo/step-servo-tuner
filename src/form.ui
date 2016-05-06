@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
+    <width>831</width>
     <height>550</height>
    </rect>
   </property>
@@ -24,7 +24,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>242</width>
+        <width>269</width>
         <height>454</height>
        </rect>
       </property>
@@ -42,8 +42,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>224</width>
-            <height>384</height>
+            <width>140</width>
+            <height>105</height>
            </rect>
           </property>
           <attribute name="label">
@@ -123,7 +123,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>224</width>
+            <width>251</width>
             <height>384</height>
            </rect>
           </property>
@@ -207,8 +207,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>242</width>
-        <height>454</height>
+        <width>98</width>
+        <height>28</height>
        </rect>
       </property>
       <attribute name="label">
@@ -220,8 +220,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>242</width>
-        <height>454</height>
+        <width>98</width>
+        <height>28</height>
        </rect>
       </property>
       <attribute name="label">
@@ -279,9 +279,16 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="autoAct">
+        <widget class="QPushButton" name="forwardAct">
          <property name="text">
-          <string>自动</string>
+          <string>正向</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="backwardAct">
+         <property name="text">
+          <string>逆向</string>
          </property>
         </widget>
        </item>
