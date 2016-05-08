@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #include <QMap>
 
+/*
 #define SETACCDURCMD 0xa1 //设置加速时间(单位ms)
 #define SETDECDURCMD 0xa2 //设置减速时间(单位ms)
 #define SETPOSMAXPOS 0xa3 //设置正向最大允许位置(单位mm)
@@ -26,7 +27,7 @@
 #define DATANUMBER   0x04 //数据字节数
 
 #define EQUIPID      0x02 //设备ID
-
+*/
 namespace Ui {
 class ConfigDialog;
 }
@@ -47,15 +48,32 @@ public:
     bool loadConfigFile(SaveFormat saveFormat);
     bool saveConfigFile(SaveFormat saveFormat) const;
 
+    struct Configs {
+        int elecCtrl; //智能电流控制
+        int volLevel; //参考电压
+        int elecGrade; //电流档位
+        unsigned int motortDiv; //电机细分等级
+        int coderDirect; //逻辑编码方向
+        int plusType;  //脉冲方向
+        int maxN; //负向最大允许位移
+        int maxP; //正向最大允许位移
+        int decTime; //减速时间
+        int accTime; //加速时间
+        int rsBaud;  //RS485波特率
+        int canBaud; //CAN波特率
+        int deviceId; //设备ID
+        int motorDirect; //电机逻辑正方向 0-顺时针，1-逆时针
+    };
+
 signals:
     void sendData(const QByteArray &data);
 
 private slots:
-    void on_pushBtn_clicked();
+    void on_writeConfigBtn_clicked();
 
-    void on_write2file_clicked();
+    void on_saveConfigBtn_clicked();
 
-    void on_read4file_clicked();
+    void on_readConfigBtn_clicked();
 
 private:
     quint8* convert4bytes(const quint32); //quint32 -> quint8[4]
@@ -64,8 +82,13 @@ private:
     quint32 power(int index); //return 2^index
     QByteArray raw(quint8 *p, int size); //quint8[] -> QByteArray
 
+    void convert(int data, quint8 *p, int size); //convert int to quint8* with size
+    void compact(quint8 *p, QByteArray &data, int size); //convert quint8* to QByteArray with size
+
     void read(const QJsonObject &json); //读取json文件
     void write(QJsonObject &json) const; //写入json文件
+
+    void data(const Configs *configs, QByteArray &qa); //配置结构转换为QByteArray
 
 private:
     void initUI();
@@ -74,6 +97,7 @@ private:
 private:
     Ui::ConfigDialog *ui;
     QMap<QString, int> configDatas;
+    Configs currentConfigs;
 };
 
 #endif // CONFIGDIALOG_H

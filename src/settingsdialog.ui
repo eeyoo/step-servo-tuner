@@ -6,128 +6,132 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>281</width>
-    <height>262</height>
+    <width>395</width>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
-   <item row="0" column="1">
-    <widget class="QGroupBox" name="parametersBox">
-     <property name="title">
-      <string>Select Parameters</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QLabel" name="baudRateLabel">
-        <property name="text">
-         <string>BaudRate:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="baudRateBox"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="dataBitsLabel">
-        <property name="text">
-         <string>Data bits:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="dataBitsBox"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="parityLabel">
-        <property name="text">
-         <string>Parity:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="parityBox"/>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="stopBitsLabel">
-        <property name="text">
-         <string>Stop bits:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QComboBox" name="stopBitsBox"/>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="flowControlLabel">
-        <property name="text">
-         <string>Flow control:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QComboBox" name="flowControlBox"/>
-      </item>
-     </layout>
-    </widget>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QGroupBox" name="selectBox">
+       <property name="title">
+        <string>选择串口</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QComboBox" name="serialPortInfoListBox"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="descriptionLabel">
+          <property name="text">
+           <string>描述:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="manufacturerLabel">
+          <property name="text">
+           <string>厂家:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="serialNumberLabel">
+          <property name="text">
+           <string>串口端口:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="locationLabel">
+          <property name="text">
+           <string>地址:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="vidLabel">
+          <property name="text">
+           <string>制造商ID:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="pidLabel">
+          <property name="text">
+           <string>产品ID:</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="parametersBox">
+       <property name="title">
+        <string>串口参数配置</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2" columnminimumwidth="0,1">
+        <item row="0" column="0">
+         <widget class="QLabel" name="baudRateLabel">
+          <property name="text">
+           <string>波特率:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="baudRateBox"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="dataBitsLabel">
+          <property name="text">
+           <string>数据位数:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="dataBitsBox"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="parityLabel">
+          <property name="text">
+           <string>奇偶校验:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="parityBox"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="stopBitsLabel">
+          <property name="text">
+           <string>停止位数:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="stopBitsBox"/>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="flowControlLabel">
+          <property name="text">
+           <string>控制流:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QComboBox" name="flowControlBox"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="0" column="0">
-    <widget class="QGroupBox" name="selectBox">
-     <property name="title">
-      <string>Select Serial Port</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QComboBox" name="serialPortInfoListBox"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="descriptionLabel">
-        <property name="text">
-         <string>Description:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="manufacturerLabel">
-        <property name="text">
-         <string>Manufacturer:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="serialNumberLabel">
-        <property name="text">
-         <string>Serial number:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="locationLabel">
-        <property name="text">
-         <string>Location:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="vidLabel">
-        <property name="text">
-         <string>Vendor ID:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="pidLabel">
-        <property name="text">
-         <string>Product ID:</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
+   <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <spacer name="horizontalSpacer">
@@ -145,30 +149,11 @@
      <item>
       <widget class="QPushButton" name="applyButton">
        <property name="text">
-        <string>Apply</string>
+        <string>确定</string>
        </property>
       </widget>
      </item>
     </layout>
-   </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QGroupBox" name="additionalOptionsGroupBox">
-     <property name="title">
-      <string>Additional options</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QCheckBox" name="localEchoCheckBox">
-        <property name="text">
-         <string>Local echo</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
    </item>
   </layout>
  </widget>

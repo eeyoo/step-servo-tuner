@@ -17,7 +17,7 @@
    <item>
     <widget class="QToolBox" name="parentToolBox">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="movePage">
       <property name="geometry">
@@ -35,64 +35,36 @@
        <item>
         <widget class="QToolBox" name="moveToolBox">
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="absPage">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>251</width>
-            <height>384</height>
+            <width>238</width>
+            <height>320</height>
            </rect>
           </property>
           <attribute name="label">
            <string>绝对位置运动</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1">
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1">
-               <item>
-                <widget class="QLabel" name="label">
-                 <property name="text">
-                  <string>运行距离(mm)</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="absMoveDistance">
-                 <property name="text">
-                  <string>100</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>运行距离(mm)</string>
+               </property>
+              </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1">
-               <item>
-                <widget class="QLabel" name="label_2">
-                 <property name="text">
-                  <string>速度档位(%)</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QSpinBox" name="absRunSpd">
-                 <property name="minimum">
-                  <number>1</number>
-                 </property>
-                 <property name="maximum">
-                  <number>100</number>
-                 </property>
-                 <property name="value">
-                  <number>20</number>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+              <widget class="QLineEdit" name="absMoveDistance">
+               <property name="text">
+                <string>100</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -124,7 +96,7 @@
             <x>0</x>
             <y>0</y>
             <width>238</width>
-            <height>346</height>
+            <height>320</height>
            </rect>
           </property>
           <attribute name="label">
@@ -150,33 +122,6 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1">
-             <item>
-              <widget class="QLabel" name="label_3">
-               <property name="text">
-                <string>速度档位(%)</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="relRunSpd">
-               <property name="minimum">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <number>100</number>
-               </property>
-               <property name="singleStep">
-                <number>1</number>
-               </property>
-               <property name="value">
-                <number>10</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
             <spacer name="verticalSpacer_2">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -191,6 +136,57 @@
            </item>
            <item>
             <widget class="QPushButton" name="relaAddBtn">
+             <property name="text">
+              <string>加入</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="page_8">
+          <attribute name="label">
+           <string>速度档位设置</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>速度档位(%)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="setRunSpd">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
+               <property name="value">
+                <number>10</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_9">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>242</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="setSpdBtn">
              <property name="text">
               <string>加入</string>
              </property>
@@ -331,7 +327,7 @@
             <x>0</x>
             <y>0</y>
             <width>238</width>
-            <height>372</height>
+            <height>320</height>
            </rect>
           </property>
           <attribute name="label">
@@ -387,7 +383,7 @@
             <x>0</x>
             <y>0</y>
             <width>238</width>
-            <height>346</height>
+            <height>320</height>
            </rect>
           </property>
           <attribute name="label">
@@ -457,6 +453,27 @@
             </layout>
            </item>
            <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_14">
+               <property name="text">
+                <string>跳转至行数</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_9">
+               <property name="maximum">
+                <number>20</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
             <spacer name="verticalSpacer_5">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -478,11 +495,105 @@
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="page_7">
+          <attribute name="label">
+           <string>IO条件跳转</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_14">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="0,1,0">
+             <item>
+              <widget class="QLabel" name="label_12">
+               <property name="text">
+                <string>端口编号</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_8">
+               <property name="maximum">
+                <number>20</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboBox_3">
+               <property name="currentText">
+                <string>高电平</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>高电平</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>低电平</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_13">
+               <property name="text">
+                <string>跳转至行数</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBox_7">
+               <property name="maximum">
+                <number>20</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_8">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>214</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_6">
+             <property name="text">
+              <string>加入</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="page_4">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>256</width>
+        <height>416</height>
+       </rect>
+      </property>
       <attribute name="label">
        <string>IO指令</string>
       </attribute>
@@ -581,8 +692,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>238</width>
-            <height>346</height>
+            <width>136</width>
+            <height>103</height>
            </rect>
           </property>
           <attribute name="label">
@@ -715,23 +826,16 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="forwardAct">
-         <property name="text">
-          <string>正向</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="backwardAct">
-         <property name="text">
-          <string>逆向</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="stopAct">
          <property name="text">
           <string>停止</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="forwardAct">
+         <property name="text">
+          <string>下载</string>
          </property>
         </widget>
        </item>

@@ -140,21 +140,11 @@ void MainWindow::about()
                           "using Qt, with a menu bar, toolbars, and a status bar."));
 }
 
-void MainWindow::configFromFile()
-{
-    //弹出文件对话框
-    //提示用户选择合适格式文件
-    //读取用户选择文件内容
-    //解析文件内容写入配置数据至内存和磁盘
-
-    QString fileName = QFileDialog::getOpenFileName(this, tr("选择配置文件"), "c:\\tmp", tr("图片文件 (*png, *bmp, *.jpg)"));
-    qDebug() << fileName;
-}
-
 void MainWindow::writeData(const QByteArray &data)
 {
-    //qDebug() << "write serial port with data: " + QString(data);
     //串口发送数据 - 缓存写数据
+
+    //showStatusMessage(tr("发送指令数据：") + data.toHex());
     serial->write(data);
 
 }
@@ -163,9 +153,8 @@ void MainWindow::readData()
 {
     //缓存读数据 - 串口接收数据
     QByteArray data = serial->readAll();
+    showStatusMessage(tr("接收指令数据：") + data.toHex());
     form->receiveData(data);
-
-    showStatusMessage(tr("返回数据: ") + data.toHex().toUpper());
 }
 
 void MainWindow::handleError(QSerialPort::SerialPortError error)
@@ -181,10 +170,8 @@ void MainWindow::initActionsConnections()
     connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
     connect(ui->actionDisconnect, SIGNAL(triggered()), this, SLOT(closeSerialPort()));
     connect(ui->actionConfigure, SIGNAL(triggered()), settings, SLOT(show()));
-    connect(ui->actionSysConfig, SIGNAL(triggered()), config, SLOT(show()));
-    //connect(ui->actionClear, SIGNAL(triggered(bool)), serial, SLOT(clear()));
+    connect(ui->actionSystem, SIGNAL(triggered()), config, SLOT(show()));
     connect(ui->actionAbout, SIGNAL(triggered()), form, SLOT(about()));
-    connect(ui->actionFileIn, SIGNAL(triggered(bool)), this, SLOT(configFromFile()));
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 }
@@ -192,4 +179,5 @@ void MainWindow::initActionsConnections()
 void MainWindow::showStatusMessage(const QString &message)
 {
     status->setText(message);
+    //statusBar()->showMessage(message, 1000);
 }

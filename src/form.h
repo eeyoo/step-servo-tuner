@@ -22,7 +22,6 @@ public:
 
 public slots:
     void about();
-    void run();
 
 private slots: 
     //绝对运动
@@ -43,15 +42,14 @@ signals:
 
 private slots:
     void forward();
-    void backward();
 
     void on_stopAct_clicked();
 
-    void on_backwardAct_clicked(); //逆向回退
-
-    void on_forwardAct_clicked(); //正向前进
+    void on_forwardAct_clicked(); //打包下载
 
     void on_stepAct_clicked(); //单步运行
+
+    void on_setSpdBtn_clicked();
 
 private:
     void initUI();
@@ -70,8 +68,8 @@ private:
     //QStringList *m_list;
     int row;   //行位置
     int index; //指令序列位置
+    long position; //绝对位置
     QTimer *ford_timer; //正向计时器
-    QTimer *back_timer; //逆向计时器
     bool status;
     QList<QByteArray> *cmd_list; //指令列表
 };

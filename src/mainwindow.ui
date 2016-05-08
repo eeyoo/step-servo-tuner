@@ -39,6 +39,7 @@
      <string>工具</string>
     </property>
     <addaction name="actionConfigure"/>
+    <addaction name="actionSystem"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -65,7 +66,7 @@
    <addaction name="actionDisconnect"/>
    <addaction name="separator"/>
    <addaction name="actionConfigure"/>
-   <addaction name="actionSysConfig"/>
+   <addaction name="actionSystem"/>
   </widget>
   <action name="actionAbout">
    <property name="text">
@@ -125,28 +126,13 @@
      <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
    </property>
    <property name="text">
-    <string>配置</string>
+    <string>串口配置</string>
    </property>
    <property name="toolTip">
     <string>配置串口参数</string>
    </property>
    <property name="shortcut">
     <string>Alt+C</string>
-   </property>
-  </action>
-  <action name="actionClear">
-   <property name="icon">
-    <iconset resource="tuner.qrc">
-     <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
-   </property>
-   <property name="text">
-    <string>清空缓存</string>
-   </property>
-   <property name="toolTip">
-    <string>清空缓存</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+L</string>
    </property>
   </action>
   <action name="actionQuit">
@@ -158,24 +144,16 @@
     <string>退出</string>
    </property>
   </action>
-  <action name="actionSysConfig">
+  <action name="actionSystem">
    <property name="icon">
     <iconset resource="tuner.qrc">
      <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
    </property>
    <property name="text">
-    <string>配置参数</string>
-   </property>
-   <property name="toolTip">
-    <string>配置控制器参数</string>
-   </property>
-  </action>
-  <action name="actionFileIn">
-   <property name="text">
-    <string>读取配置文件</string>
+    <string>系统配置</string>
    </property>
    <property name="shortcut">
-    <string>Alt+F</string>
+    <string>Alt+S</string>
    </property>
   </action>
  </widget>

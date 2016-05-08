@@ -10,10 +10,7 @@ SOURCES += \
     console.cpp \
     form.cpp \
     command.cpp \
-    hexstring.cpp \
-    configdialog.cpp \
-    movedialog.cpp \
-    filedialog.cpp
+    configdialog.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -21,18 +18,13 @@ HEADERS += \
     console.h \
     form.h \
     command.h \
-    hexstring.h \
-    configdialog.h \
-    movedialog.h \
-    filedialog.h
+    configdialog.h
 
 FORMS += \
     mainwindow.ui \
     settingsdialog.ui \
     form.ui \
-    configdialog.ui \
-    movedialog.ui \
-    filedialog.ui
+    configdialog.ui
 
 RESOURCES += \
     tuner.qrc
