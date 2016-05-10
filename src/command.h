@@ -11,9 +11,12 @@
 #define SETMOVESPCMD 0x03 //目标速度
 #define EMSTOP_CMD   0x0f //停止
 
-#define OPERATEPARAM 0x31 //操作参数命令 1)++  2)-- 3)query
-#define COMPAREPARAM 0x32 //比较参数值 1)> 2)= 3<
-
+#define OPERATEPARAM 0x31 //操作参数命令 1)++  2)--
+#define JMP_CMD      0x32 //无条件跳转
+#define CMP_CMD      0x33 //有条件跳转 1)> 2)== 3<
+#define IOJUMP_CMD   0x34 //IO条件跳转 0-低电平 1-高电平
+#define INPUT_CMD    0x35 //输入IO端口等待指令
+#define OUTPUT_CMD   0x36 //输出IO端口等待指令
 
 #define SETACCDURCMD 0xa1 //设置加速时间(单位ms)
 #define SETDECDURCMD 0xa2 //设置减速时间(单位ms)

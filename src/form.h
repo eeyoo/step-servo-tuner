@@ -51,12 +51,24 @@ private slots:
 
     void on_setSpdBtn_clicked();
 
+    void on_opAddBtn_clicked();
+
+    void on_jmpAddBtn_clicked();
+
+    void on_cmpAddBtn_clicked();
+
+    void on_jumpAddBtn_clicked();
+
+    void on_inputAddBtn_clicked();
+
+    void on_outputAddBtn_clicked();
+
 private:
     void initUI();
     void initConnect();
     void initModel();
 
-    void convert(quint8 *buf, int data); //int -> quint8[4]
+    void convert(quint8 *buf, int data, int size); //int -> quint8[4]
     void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
 
 private:
@@ -68,6 +80,8 @@ private:
     //QStringList *m_list;
     int row;   //行位置
     int index; //指令序列位置
+    int jmp_from;   //无条件跳转起始行
+    int jmp_to;    //无条件跳转目标行
     long position; //绝对位置
     QTimer *ford_timer; //正向计时器
     bool status;

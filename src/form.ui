@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>791</width>
-    <height>538</height>
+    <width>816</width>
+    <height>552</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,15 +17,15 @@
    <item>
     <widget class="QToolBox" name="parentToolBox">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="movePage">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>256</width>
-        <height>416</height>
+        <width>264</width>
+        <height>430</height>
        </rect>
       </property>
       <attribute name="label">
@@ -42,8 +42,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>238</width>
-            <height>320</height>
+            <width>137</width>
+            <height>75</height>
            </rect>
           </property>
           <attribute name="label">
@@ -95,8 +95,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>238</width>
-            <height>320</height>
+            <width>137</width>
+            <height>75</height>
            </rect>
           </property>
           <attribute name="label">
@@ -144,6 +144,14 @@
           </layout>
          </widget>
          <widget class="QWidget" name="page_8">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>246</width>
+            <height>334</height>
+           </rect>
+          </property>
           <attribute name="label">
            <string>速度档位设置</string>
           </attribute>
@@ -203,8 +211,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>256</width>
-        <height>416</height>
+        <width>264</width>
+        <height>430</height>
        </rect>
       </property>
       <attribute name="label">
@@ -221,41 +229,14 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>238</width>
-            <height>372</height>
+            <width>246</width>
+            <height>386</height>
            </rect>
           </property>
           <attribute name="label">
            <string>操作参数</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_7">
-           <item>
-            <widget class="QComboBox" name="comboBox">
-             <property name="currentText">
-              <string>操作类型</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>操作类型</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>自增</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>自减</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>查询</string>
-              </property>
-             </item>
-            </widget>
-           </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,1">
              <item>
@@ -266,13 +247,41 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox">
+              <widget class="QSpinBox" name="opParam">
                <property name="maximum">
                 <number>20</number>
                </property>
                <property name="value">
                 <number>1</number>
                </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>操作类型</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="opType">
+               <property name="currentText">
+                <string>自增</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>自增</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>自减</string>
+                </property>
+               </item>
               </widget>
              </item>
             </layout>
@@ -291,7 +300,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="opAddBtn">
              <property name="text">
               <string>加入</string>
              </property>
@@ -308,8 +317,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>256</width>
-        <height>416</height>
+        <width>264</width>
+        <height>430</height>
        </rect>
       </property>
       <attribute name="label">
@@ -319,15 +328,15 @@
        <item>
         <widget class="QToolBox" name="toolBox_2">
          <property name="currentIndex">
-          <number>1</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="page_2">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>238</width>
-            <height>320</height>
+            <width>246</width>
+            <height>334</height>
            </rect>
           </property>
           <attribute name="label">
@@ -344,7 +353,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_2">
+              <widget class="QSpinBox" name="jmpLine">
                <property name="maximum">
                 <number>20</number>
                </property>
@@ -369,7 +378,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="jmpAddBtn">
              <property name="text">
               <string>加入</string>
              </property>
@@ -382,8 +391,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>238</width>
-            <height>320</height>
+            <width>246</width>
+            <height>334</height>
            </rect>
           </property>
           <attribute name="label">
@@ -400,7 +409,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_3">
+              <widget class="QSpinBox" name="cmpParam">
                <property name="maximum">
                 <number>20</number>
                </property>
@@ -412,17 +421,19 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,1">
+            <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,0,1">
              <item>
-              <widget class="QComboBox" name="comboBox_2">
-               <property name="currentText">
+              <widget class="QLabel" name="label_15">
+               <property name="text">
                 <string>判断类型</string>
                </property>
-               <item>
-                <property name="text">
-                 <string>判断类型</string>
-                </property>
-               </item>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="cmpType">
+               <property name="currentText">
+                <string>&gt;</string>
+               </property>
                <item>
                 <property name="text">
                  <string>&gt;</string>
@@ -441,7 +452,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_4">
+              <widget class="QSpinBox" name="cmpVal">
                <property name="maximum">
                 <number>20</number>
                </property>
@@ -462,7 +473,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_9">
+              <widget class="QSpinBox" name="cmpLine">
                <property name="maximum">
                 <number>20</number>
                </property>
@@ -487,7 +498,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_3">
+            <widget class="QPushButton" name="cmpAddBtn">
              <property name="text">
               <string>加入</string>
              </property>
@@ -496,6 +507,14 @@
           </layout>
          </widget>
          <widget class="QWidget" name="page_7">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>246</width>
+            <height>334</height>
+           </rect>
+          </property>
           <attribute name="label">
            <string>IO条件跳转</string>
           </attribute>
@@ -510,7 +529,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_8">
+              <widget class="QSpinBox" name="jumpParam">
                <property name="maximum">
                 <number>20</number>
                </property>
@@ -520,18 +539,18 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_3">
+              <widget class="QComboBox" name="ioState">
                <property name="currentText">
-                <string>高电平</string>
+                <string>低电平</string>
                </property>
                <item>
                 <property name="text">
-                 <string>高电平</string>
+                 <string>低电平</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>低电平</string>
+                 <string>高电平</string>
                 </property>
                </item>
               </widget>
@@ -548,7 +567,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_7">
+              <widget class="QSpinBox" name="jumpLine">
                <property name="maximum">
                 <number>20</number>
                </property>
@@ -573,7 +592,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_6">
+            <widget class="QPushButton" name="jumpAddBtn">
              <property name="text">
               <string>加入</string>
              </property>
@@ -590,8 +609,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>256</width>
-        <height>416</height>
+        <width>264</width>
+        <height>430</height>
        </rect>
       </property>
       <attribute name="label">
@@ -608,8 +627,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>238</width>
-            <height>346</height>
+            <width>246</width>
+            <height>360</height>
            </rect>
           </property>
           <attribute name="label">
@@ -626,7 +645,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_5">
+              <widget class="QSpinBox" name="inputParam">
                <property name="maximum">
                 <number>20</number>
                </property>
@@ -642,23 +661,23 @@
              <item>
               <widget class="QLabel" name="label_11">
                <property name="text">
-                <string>高低电平</string>
+                <string>电平状态</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_5">
+              <widget class="QComboBox" name="inputState">
                <property name="currentText">
-                <string>高电平</string>
+                <string>低电平</string>
                </property>
                <item>
                 <property name="text">
-                 <string>高电平</string>
+                 <string>低电平</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>低电平</string>
+                 <string>高电平</string>
                 </property>
                </item>
               </widget>
@@ -679,7 +698,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_4">
+            <widget class="QPushButton" name="inputAddBtn">
              <property name="text">
               <string>加入</string>
              </property>
@@ -692,8 +711,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>136</width>
-            <height>103</height>
+            <width>246</width>
+            <height>360</height>
            </rect>
           </property>
           <attribute name="label">
@@ -710,7 +729,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="spinBox_6">
+              <widget class="QSpinBox" name="outputParam">
                <property name="maximum">
                 <number>20</number>
                </property>
@@ -726,23 +745,23 @@
              <item>
               <widget class="QLabel" name="label_10">
                <property name="text">
-                <string>高低电平</string>
+                <string>电平状态</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="comboBox_4">
+              <widget class="QComboBox" name="outputState">
                <property name="currentText">
-                <string>高电平</string>
+                <string>低电平</string>
                </property>
                <item>
                 <property name="text">
-                 <string>高电平</string>
+                 <string>低电平</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>低电平</string>
+                 <string>高电平</string>
                 </property>
                </item>
               </widget>
@@ -763,7 +782,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_5">
+            <widget class="QPushButton" name="outputAddBtn">
              <property name="text">
               <string>加入</string>
              </property>

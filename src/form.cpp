@@ -16,6 +16,7 @@
 Form::Form(QWidget *parent) :
     QWidget(parent),row(0),
     index(0), position(0),status(false),
+    jmp_from(0), jmp_to(0),
     ui(new Ui::Form)
 {
     ui->setupUi(this);
@@ -87,7 +88,7 @@ void Form::on_absAddBtn_clicked()
     position = ui->absMoveDistance->text().toInt();
 
     quint8 qpos[4];
-    convert(qpos, position);
+    convert(qpos, position, 4);
 
     quint8 qPos[10] = {0x02,0x00,ABS_MOVE_CMD,0x01,0x00,qpos[0],qpos[1],qpos[2],qpos[3],0x00};
     //quint8 qSpd[10] = {0x02,0x00,SETMOVESPCMD,0x01,0x00,qspd[0],qspd[1],qspd[2],qspd[3],0x00};
@@ -119,7 +120,7 @@ void Form::on_relaAddBtn_clicked()
     position += pos;
 
     quint8 qpos[4];
-    convert(qpos, position);
+    convert(qpos, position, 4);
     //quint8 qspd[4];
     //convert(qspd, spd);
 
@@ -149,7 +150,7 @@ void Form::on_setSpdBtn_clicked()
 {
     int spd = ui->setRunSpd->value();
     quint8 qspd[4];
-    convert(qspd, spd);
+    convert(qspd, spd, 4);
 
     quint8 qSpd[10] = {0x02,0x00,SETMOVESPCMD,0x01,0x00,qspd[0],qspd[1],qspd[2],qspd[3],0x00};
     QByteArray qa;
@@ -186,20 +187,18 @@ void Form::on_deleteBtn_clicked()
         row = 0;
     }
 
+    if(row == jmp_from)
+        jmp_to = 0;
 
     model->removeRow(row, QModelIndex());
     cmd_list->removeAt(row);
-
-
 }
 
 
 void Form::on_stepAct_clicked()
 {
-    qDebug() << "row = " << row << " index = " << index;
-
-    if(index > row-1)
-        index = 0;
+    //if(index == row)
+    //    index = 0;
 
     if((index >= 0) && (index < row)) {
         emit sendData(cmd_list->at(index));
@@ -207,15 +206,17 @@ void Form::on_stepAct_clicked()
         index++;
     }
 
+    if(index == jmp_from)
+        index = jmp_to;
+
+    qDebug() << "row = " << row << " index = " << index;
 
 }
 
-void Form::convert(quint8 *buf, int data)
+void Form::convert(quint8 *buf, int data, int size)
 {
-    buf[0] = data;
-    buf[1] = data >> 8;
-    buf[2] = data >> 16;
-    buf[3] = data >> 24;
+    for(int i=0; i<size; i++)
+        buf[i] = data >> (8*i);
 }
 
 void Form::array2qa(QByteArray &data, quint8 *buf, int size)
@@ -263,7 +264,7 @@ void Form::on_forwardAct_clicked()
     */
     int len = cmd_list->count();
     quint8 qlen[4];
-    convert(qlen, len);
+    convert(qlen, len, 4);
 
     quint8 qHead[10] = {0x02,0x00,CMDBATCHHEAD,0x01,0x00,qlen[0],qlen[1],qlen[2],qlen[3],0x00};
     QByteArray qa;
@@ -279,3 +280,181 @@ void Form::on_forwardAct_clicked()
 
 }
 
+
+void Form::on_opAddBtn_clicked()
+{
+    int param = ui->opParam->value();
+    int opType = ui->opType->currentIndex() + 1; //1-自增 2-自减
+    quint8 pop[4];
+    convert(pop,opType,4);
+    quint8 op[] = {0x02,0x00,OPERATEPARAM,param,0x00,pop[0],pop[1],pop[2],pop[3],0x00};
+    QByteArray qa;
+    array2qa(qa, op, 10);
+    cmd_list->append(qa);
+
+    QStringList list;
+    if(opType == 1)
+        list << tr("操作参数指令") << QString(tr("编号 %1 参数 ++")).arg(param);
+    else if(opType == 2)
+        list << tr("操作参数指令") << QString(tr("编号 %1 参数 --")).arg(param);
+
+    model->insertRow(row, QModelIndex());
+    model->setData(model->index(row, 0), list.value(0));
+    model->setData(model->index(row, 1), list.value(1));
+
+    row++;
+
+    ui->tableView->setModel(model);
+
+}
+
+void Form::on_jmpAddBtn_clicked()
+{
+    int line = ui->jmpLine->value();
+
+    jmp_to = line-1;
+
+    quint8 pln[4];
+    convert(pln,line,4);
+    quint8 ln[] = {0x02,0x00,JMP_CMD,0x00,0x00,pln[0],pln[1],pln[2],pln[3],0x00};
+    QByteArray qa;
+    array2qa(qa, ln, 10);
+    cmd_list->append(qa);
+
+    QStringList list;
+    list << tr("无条件跳转指令") << QString(tr("无条件跳转至 %1行指令")).arg(line);
+
+    model->insertRow(row, QModelIndex());
+    model->setData(model->index(row, 0), list.value(0));
+    model->setData(model->index(row, 1), list.value(1));
+
+    row++;
+    jmp_from = row;
+
+    ui->tableView->setModel(model);
+}
+
+void Form::on_cmpAddBtn_clicked()
+{
+    int line = ui->cmpLine->value();
+    int param = ui->cmpParam->value();
+    int type = ui->cmpType->currentIndex() + 1;
+    int value = ui->cmpVal->value();
+
+    jmp_to = line-1;
+
+    quint8 pln[4];
+    convert(pln,line,3);
+    quint8 ln[] = {0x02,0x00,CMP_CMD,param,type,value,pln[0],pln[1],pln[2],0x00};
+    QByteArray qa;
+    array2qa(qa, ln, 10);
+    cmd_list->append(qa);
+
+    QStringList list;
+    list << tr("有条件跳转指令");
+    if(type == 1)
+        list << QString(tr("编号 %1 参数大于 %2 跳转至 %3行指令")).arg(param).arg(value).arg(line);
+    if(type == 2)
+        list << QString(tr("编号 %1 参数等于 %2 跳转至 %3行指令")).arg(param).arg(value).arg(line);
+    if(type == 3)
+        list << QString(tr("编号 %1 参数小于 %2 跳转至 %3行指令")).arg(param).arg(value).arg(line);
+
+    model->insertRow(row, QModelIndex());
+    model->setData(model->index(row, 0), list.value(0));
+    model->setData(model->index(row, 1), list.value(1));
+
+    row++;
+    jmp_from = row;
+
+    ui->tableView->setModel(model);
+}
+
+void Form::on_jumpAddBtn_clicked()
+{
+    int line = ui->jumpLine->value();
+    int param = ui->jumpParam->value();
+    int state = ui->ioState->currentIndex();
+
+    jmp_to = line-1;
+
+    quint8 pln[4];
+    convert(pln,line,3);
+    quint8 ln[] = {0x02,0x00,IOJUMP_CMD,param,0x00,state,pln[0],pln[1],pln[2],0x00};
+    QByteArray qa;
+    array2qa(qa, ln, 10);
+    cmd_list->append(qa);
+
+    QStringList list;
+    list << tr("IO条件跳转指令");
+    if(!state)
+        list << QString(tr("编号 %1 IO端口高电平跳转至 %2行指令")).arg(param).arg(line);
+    else
+        list << QString(tr("编号 %1 IO端口低电平跳转至 %2行指令")).arg(param).arg(line);
+
+    model->insertRow(row, QModelIndex());
+    model->setData(model->index(row, 0), list.value(0));
+    model->setData(model->index(row, 1), list.value(1));
+
+    row++;
+    jmp_from = row;
+
+    ui->tableView->setModel(model);
+}
+
+void Form::on_inputAddBtn_clicked()
+{
+    int param = ui->inputParam->value();
+    int state = ui->inputState->currentIndex();
+
+    //jmp_to = line-1;
+
+    quint8 ln[] = {0x02,0x00,INPUT_CMD,param,0x00,state,0x00,0x00,0x00,0x00,0x00};
+    QByteArray qa;
+    array2qa(qa, ln, 10);
+    cmd_list->append(qa);
+
+    QStringList list;
+    list << tr("输入IO状态等待指令");
+    if(!state)
+        list << QString(tr("编号 %1 输入端口低电平等待")).arg(param);
+    else
+        list << QString(tr("编号 %1 输入端口高电平等待")).arg(param);
+
+    model->insertRow(row, QModelIndex());
+    model->setData(model->index(row, 0), list.value(0));
+    model->setData(model->index(row, 1), list.value(1));
+
+    row++;
+    //jmp_from = row;
+
+    ui->tableView->setModel(model);
+}
+
+void Form::on_outputAddBtn_clicked()
+{
+    int param = ui->outputParam->value();
+    int state = ui->outputState->currentIndex();
+
+    //jmp_to = line-1;
+
+    quint8 ln[] = {0x02,0x00,INPUT_CMD,param,0x00,state,0x00,0x00,0x00,0x00};
+    QByteArray qa;
+    array2qa(qa, ln, 10);
+    cmd_list->append(qa);
+
+    QStringList list;
+    list << tr("输出IO状态等待指令");
+    if(!state)
+        list << QString(tr("编号 %1 输出端口低电平等待")).arg(param);
+    else
+        list << QString(tr("编号 %1 输出端口高电平等待")).arg(param);
+
+    model->insertRow(row, QModelIndex());
+    model->setData(model->index(row, 0), list.value(0));
+    model->setData(model->index(row, 1), list.value(1));
+
+    row++;
+    //jmp_from = row;
+
+    ui->tableView->setModel(model);
+}
