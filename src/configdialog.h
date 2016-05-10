@@ -52,8 +52,8 @@ public:
         int elecCtrl; //智能电流控制
         int volLevel; //参考电压
         int elecGrade; //电流档位
-        unsigned int motortDiv; //电机细分等级
-        int coderDirect; //逻辑编码方向
+        int elecLevel; //电机细分等级
+        int codeType; //逻辑编码方向
         int plusType;  //脉冲方向
         int maxN; //负向最大允许位移
         int maxP; //正向最大允许位移
@@ -69,18 +69,14 @@ signals:
     void sendData(const QByteArray &data);
 
 private slots:
-    void on_writeConfigBtn_clicked();
+    void on_writeSerialBtn_clicked();
 
     void on_saveConfigBtn_clicked();
 
     void on_readConfigBtn_clicked();
 
 private:
-    quint8* convert4bytes(const quint32); //quint32 -> quint8[4]
-    quint8* convert4bytes4negative(const int); //int -> quint8[4]
-    quint8* convert2bytes(const quint32); //quint32 -> quint8[2]
     quint32 power(int index); //return 2^index
-    QByteArray raw(quint8 *p, int size); //quint8[] -> QByteArray
 
     void convert(int data, quint8 *p, int size); //convert int to quint8* with size
     void compact(quint8 *p, QByteArray &data, int size); //convert quint8* to QByteArray with size

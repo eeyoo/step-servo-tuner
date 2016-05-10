@@ -21,77 +21,137 @@ ConfigDialog::~ConfigDialog()
     delete ui;
 }
 
-void ConfigDialog::on_writeConfigBtn_clicked()
+void ConfigDialog::on_writeSerialBtn_clicked()
 {
     int elecCtrl = ui->elecContrl->currentIndex(); //智能电流控制
     int volLevel = ui->volLevel->currentIndex(); //参考电压
-    int elecGrade = ui->elecGrade->text().toInt(); //电流档位
+    int elecGrade = ui->elecGrade->value(); //电流档位
     int elecLevel = ui->motorLevel->currentIndex(); //电机细分等级
     int codeType = ui->codeLogicDirect->currentIndex(); //逻辑编码方向
     int plusType = ui->plusType->currentIndex(); //脉冲控制方式
-    int maxN = ui->maximumNegative->text().toInt(); //负向最大允许位移
-    int maxP = ui->maximumPositive->text().toUInt(); //正向最大允许位移
-    int decTime = ui->servoDecTime->text().toUInt(); //减速时间
-    int accTime = ui->servoAccTime->text().toUInt(); //加速时间
+    int maxN = ui->maximumNegative->value(); //负向最大允许位移
+    int maxP = ui->maximumPositive->value(); //正向最大允许位移
+    int decTime = ui->servoDecTime->value(); //减速时间
+    int accTime = ui->servoAccTime->value(); //加速时间
 
-    int rsBaud = ui->rs485Baud->currentIndex() + 1; //RS485波特率
-    int canBaud = ui->canBaud->currentIndex() + 1;  //CAN波特率
-    int deviceID = ui->deviceID->text().toUInt();   //设备ID
+    int rsBaud = ui->rs485Baud->currentIndex(); //RS485波特率
+    int canBaud = ui->canBaud->currentIndex();  //CAN波特率
+    int deviceID = ui->deviceID->value();   //设备ID
     int motorDirect = ui->motorDirect->currentIndex();  //电机逻辑正方向
+    /*
+    currentConfigs.elecCtrl = elecCtrl;
+    currentConfigs.volLevel = volLevel;
+    currentConfigs.elecGrade = elecGrade;
+    currentConfigs.elecLevel = elecLevel;
 
-
+    configDatas["elec_ctrl"] = elecCtrl;
+    configDatas["vol_level"] = volLevel;
+    configDatas["elec_grade"] = elecGrade;
+    configDatas["elec_level"] = elecLevel;
+    configDatas["code_type"] = codeType;
+    configDatas["plus_type"] = plusType;
+    configDatas["negative_max"] = maxN;
+    configDatas["positive_max"] = maxP;
+    configDatas["dec_time"] = decTime;
+    configDatas["acc_time"] = accTime;
+    configDatas["rs485_baud"] = rsBaud;
+    configDatas["can_baud"] = canBaud;
+    configDatas["device_id"] = deviceID;
+    configDatas["motor_direct"] = motorDirect;
+    */
     //QByteArray data;
     quint8 id[2];
     convert(deviceID, id, 2);
     //智能电流控制
-    QByteArray qEC = raw(convert4bytes(elecCtrl), DATANUMBER);
-    quint8 ec[] = {id[0],id[1],SETSMARTCURR,0x00,0x01,qEC[0],qEC[1],qEC[2],qEC[3],0x00};
+    quint8 pec[4];
+    convert(elecCtrl,pec,4);
+    quint8 ec[] = {id[0],id[1],SETSMARTCURR,0x00,0x01,pec[0],pec[1],pec[2],pec[3],0x00};
+    QByteArray qEC;
+    compact(ec, qEC, 10);
     //参考电压
-    QByteArray qVL = raw(convert4bytes(volLevel), DATANUMBER);
-    quint8 vl[] = {id[0],id[1],SETREFVOLCMD,0x00,0x02,qVL[0],qVL[1],qVL[2],qVL[3],0x00};
+    quint8 pvl[4];
+    convert(volLevel, pvl, 4);
+    quint8 vl[] = {id[0],id[1],SETREFVOLCMD,0x00,0x02,pvl[0],pvl[1],pvl[2],pvl[3],0x00};
+    QByteArray qVL;
+    compact(vl, qVL, 10);
     //电流档位
-    QByteArray qEG = raw(convert4bytes(elecGrade), DATANUMBER);
-    quint8 eg[] = {id[0],id[1],SETCUGEARCMD,0x00,0x03,qEG[0],qEG[1],qEG[2],qEG[3],0x00};
+    quint8 peg[4];
+    convert(elecGrade, peg, 4);
+    quint8 eg[] = {id[0],id[1],SETCUGEARCMD,0x00,0x03,peg[0],peg[1],peg[2],peg[3],0x00};
+    QByteArray qEG;
+    compact(eg, qEG, 10);
     //电机细分等级
-    QByteArray qEL = raw(convert4bytes(power(elecLevel)), DATANUMBER);
-    quint8 el[] = {id[0],id[1],SETMOTDIVCMD,0x00,0x04,qEL[0],qEL[1],qEL[2],qEL[3],0x00};
+    int els[9] = {1,2,4,8,16,32,64,128,256};
+    quint8 pel[4];
+    convert(els[elecLevel], pel, 4);
+    QByteArray qEL;
+    quint8 el[] = {id[0],id[1],SETMOTDIVCMD,0x00,0x04,pel[0],pel[1],pel[2],pel[3],0x00};
+    compact(el, qEL, 10);
     //电机逻辑方向
     quint8 pmd[4];
     convert(motorDirect, pmd, 4);
-    quint8 pMD[] = {id[0],id[1],SETMOTORDIRE,0x01,0x05,pmd[0],pmd[1],pmd[2],pmd[3],0x00};
-    QByteArray qmd;
-    compact(pMD, qmd, 10);
+    quint8 md[] = {id[0],id[1],SETMOTORDIRE,0x01,0x05,pmd[0],pmd[1],pmd[2],pmd[3],0x00};
+    QByteArray qMD;
+    compact(md, qMD, 10);
     //配置设备ID
-    QByteArray qID = raw(convert4bytes(deviceID), DATANUMBER);
-    quint8 did[] = {id[0],id[1],SETDEVICEID,0x00,0x06,qID[0],qID[1],qID[2],qID[3],0x00};
+    quint8 pid[4];
+    convert(deviceID, pid, 4);
+    QByteArray qID;
+    quint8 did[] = {id[0],id[1],SETDEVICEID,0x00,0x06,pid[0],pid[1],pid[2],pid[3],0x00};
+    compact(did, qID, 10);
     //CAN
-    QByteArray qCAN = raw(convert4bytes(canBaud), DATANUMBER);
-    quint8 can[] = {id[0],id[1],SETCANBAUDRT,0x00,0x07,qCAN[0],qCAN[1],qCAN[2],qCAN[3],0x00};
+    quint8 pcan[4];
+    convert(canBaud+1, pcan, 4);
+    QByteArray qCAN;
+    quint8 can[] = {id[0],id[1],SETCANBAUDRT,0x00,0x07,pcan[0],pcan[1],pcan[2],pcan[3],0x00};
+    compact(can, qCAN, 10);
     //RS485
-    QByteArray qRS = raw(convert4bytes(rsBaud), DATANUMBER);
-    quint8 rs[] = {id[0],id[1],SETSERBAUDRT,0x00,0x08,qRS[0],qRS[1],qRS[2],qRS[3],0x00};
+    quint8 prs[4];
+    convert(rsBaud+1,prs,4);
+    QByteArray qRS;
+    quint8 rs[] = {id[0],id[1],SETSERBAUDRT,0x00,0x08,prs[0],prs[1],prs[2],prs[3],0x00};
+    compact(rs,qRS,10);
     //逻辑编码方向
-    QByteArray qCT = raw(convert4bytes(codeType), DATANUMBER);
-    quint8 ct[] = {id[0],id[1],SETCODELOGDI,0x00,0x09,qCT[0],qCT[1],qCT[2],qCT[3],0x00};
+    quint8 pct[4];
+    convert(codeType,pct,4);
+    QByteArray qCT;
+    quint8 ct[] = {id[0],id[1],SETCODELOGDI,0x00,0x09,pct[0],pct[1],pct[2],pct[3],0x00};
+    compact(ct,qCT,10);
     //脉冲控制方式
-    QByteArray qPT = raw(convert4bytes(plusType), DATANUMBER);
-    quint8 pt[] = {id[0],id[1],SETPLUSCTRLT,0x00,0x0a,qPT[0],qPT[1],qPT[2],qPT[3],0x00};
-
+    quint8 ppt[4];
+    convert(plusType,ppt,4);
+    QByteArray qPT;
+    quint8 pt[] = {id[0],id[1],SETPLUSCTRLT,0x00,0x0a,ppt[0],ppt[1],ppt[2],ppt[3],0x00};
+    compact(pt,qPT,10);
     //负向最大允许位移
-    QByteArray qMN = raw(convert4bytes4negative(-maxN), DATANUMBER);
-    quint8 mn[] = {id[0],id[1],SETNEGMAXPOS,0x00,0x0b,qMN[0],qMN[1],qMN[2],qMN[3],0x00};
+    quint8 pmn[4];
+    convert(maxN,pmn,4);
+    QByteArray qMN;
+    quint8 mn[] = {id[0],id[1],SETNEGMAXPOS,0x00,0x0b,pmn[0],pmn[1],pmn[2],pmn[3],0x00};
+    compact(mn,qMN,10);
     //正向最大允许位移
-    QByteArray qMP = raw(convert4bytes(maxP), DATANUMBER);
-    quint8 mp[] = {id[0],id[1],SETPOSMAXPOS,0x00,0x0c,qMP[0],qMP[1],qMP[2],qMP[3],0x00};
+    quint8 pmp[4];
+    convert(maxP,pmp,4);
+    QByteArray qMP;
+    quint8 mp[] = {id[0],id[1],SETPOSMAXPOS,0x00,0x0c,pmp[0],pmp[1],pmp[2],pmp[3],0x00};
+    compact(mp,qMP,10);
     //减速时间
-    QByteArray qDT = raw(convert4bytes(decTime), DATANUMBER);
-    quint8 dt[] = {id[0],id[1],SETDECDURCMD,0x00,0x0d,qDT[0],qDT[1],qDT[2],qDT[3],0x00};
+    quint8 pdt[4];
+    convert(decTime,pdt,4);
+    QByteArray qDT;
+    quint8 dt[] = {id[0],id[1],SETDECDURCMD,0x00,0x0d,pdt[0],pdt[1],pdt[2],pdt[3],0x00};
+    compact(dt,qDT,10);
     //加速时间
-    QByteArray qAT = raw(convert4bytes(accTime), DATANUMBER);
-    quint8 at[] = {id[0],id[1],SETACCDURCMD,0x00,0x0e,qAT[0],qAT[1],qAT[2],qAT[3],0x00};
+    quint8 pat[4];
+    convert(accTime,pat,4);
+    QByteArray qAT;
+    quint8 at[] = {id[0],id[1],SETACCDURCMD,0x00,0x0e,pat[0],pat[1],pat[2],pat[3],0x00};
+    compact(at,qAT,10);
     //组合指令数据
-    quint8 head[] = {id[0],id[1],BATCHCONFCMD,0x00,0x01,0x0f,0x00,0x00,0x00,0x00};
-
+    QByteArray qHD;
+    quint8 hd[] = {id[0],id[1],BATCHCONFCMD,0x00,0x01,0x0f,0x00,0x00,0x00,0x00};
+    compact(hd,qHD,10);
+    /*
     QByteArray qa1 = raw(ec, BATCHCMDNUMB);
     QByteArray qa2 = raw(vl, BATCHCMDNUMB);
     QByteArray qa3 = raw(eg, BATCHCMDNUMB);
@@ -106,22 +166,17 @@ void ConfigDialog::on_writeConfigBtn_clicked()
     QByteArray qa12 = raw(dt, BATCHCMDNUMB);
     QByteArray qa13 = raw(at, BATCHCMDNUMB);
     QByteArray hd = raw(head, BATCHCMDNUMB);
-
+    */
     QByteArray data;
-    data.append(hd).append(qa13).append(qa12).append(qa11).append(qa10).append(qa9)
-            .append(qa8).append(qa7).append(qa6)
-            .append(qa5).append(qmd).append(qa4).append(qa3).append(qa2).append(qa1);
+    data.append(qHD).append(qAT).append(qDT).append(qMP).append(qMN).append(qPT)
+            .append(qCT).append(qRS).append(qCAN)
+            .append(qID).append(qMD).append(qEL).append(qEG).append(qVL).append(qEC);
 
     //data.append(qmd);
 
     qDebug() << data.toHex().toUpper();
     emit sendData(data);
     close();
-}
-
-void ConfigDialog::data(const Configs *configs, QByteArray &qa)
-{
-
 }
 
 quint32 ConfigDialog::power(int index)
@@ -131,17 +186,6 @@ quint32 ConfigDialog::power(int index)
         ret = ret * 2;
     }
     return ret;
-}
-
-quint8* ConfigDialog::convert4bytes(const quint32 n)
-{
-    static quint8 temp[4];
-    temp[0] = n;
-    temp[1] = (n >> 8);
-    temp[2] = (n >> 16);
-    temp[3] = (n >> 24);
-
-    return temp;
 }
 
 void ConfigDialog::convert(int data, quint8 *p, int size)
@@ -158,36 +202,6 @@ void ConfigDialog::compact(quint8 *p, QByteArray &data, int size)
     }
 }
 
-quint8* ConfigDialog::convert4bytes4negative(const int n)
-{
-    static quint8 temp[4];
-    temp[0] = n;
-    temp[1] = (n >> 8);
-    temp[2] = (n >> 16);
-    temp[3] = (n >> 24);
-
-    return temp;
-}
-
-quint8* ConfigDialog::convert2bytes(const quint32 n)
-{
-    static quint8 temp[2];
-    temp[0] = n;
-    temp[1] = (n >> 8);
-
-    return temp;
-}
-
-QByteArray ConfigDialog::raw(quint8 *p, int size)
-{
-    QByteArray qa;
-    for(int i=0; i<size; i++)
-    {
-        qa[i] = p[i];
-    }
-    return qa;
-}
-
 void ConfigDialog::receiveDate(const QByteArray &data)
 {
     qDebug() << data;
@@ -195,11 +209,60 @@ void ConfigDialog::receiveDate(const QByteArray &data)
 
 void ConfigDialog::on_saveConfigBtn_clicked()
 {
-    //获取界面输入参数字符串
+    //串口下载参数
+    int elecCtrl = ui->elecContrl->currentIndex(); //智能电流控制
+    int volLevel = ui->volLevel->currentIndex(); //参考电压
+    int elecGrade = ui->elecGrade->value(); //电流档位
+    int elecLevel = ui->motorLevel->currentIndex(); //电机细分等级
+    int codeType = ui->codeLogicDirect->currentIndex(); //逻辑编码方向
+    int plusType = ui->plusType->currentIndex(); //脉冲控制方式
+    int maxN = ui->maximumNegative->value(); //负向最大允许位移
+    int maxP = ui->maximumPositive->value(); //正向最大允许位移
+    int decTime = ui->servoDecTime->value(); //减速时间
+    int accTime = ui->servoAccTime->value(); //加速时间
+    int rsBaud = ui->rs485Baud->currentIndex(); //RS485波特率
+    int canBaud = ui->canBaud->currentIndex();  //CAN波特率
+    int deviceID = ui->deviceID->value();   //设备ID
+    int motorDirect = ui->motorDirect->currentIndex();  //电机逻辑正方向
+
+    //保存下载参数
+    currentConfigs.elecCtrl = elecCtrl;
+    currentConfigs.volLevel = volLevel;
+    currentConfigs.elecGrade = elecGrade;
+    currentConfigs.elecLevel = elecLevel;
+    currentConfigs.codeType = codeType;
+    currentConfigs.plusType = plusType;
+    currentConfigs.maxN = maxN;
+    currentConfigs.maxP = maxP;
+    currentConfigs.decTime = decTime;
+    currentConfigs.accTime = accTime;
+    currentConfigs.rsBaud = rsBaud;
+    currentConfigs.canBaud = canBaud;
+    currentConfigs.deviceId = deviceID;
+    currentConfigs.motorDirect = motorDirect;
+
+    //不需下载参数
     int val1 = ui->val1->text().toInt();
     int val2 = ui->val2->text().toInt();
     int val3 = ui->val3->text().toInt();
-    //写入文件便于采用
+
+
+    configDatas["elec_ctrl"] = elecCtrl;
+    configDatas["vol_level"] = volLevel;
+    configDatas["elec_grade"] = elecGrade;
+    //int els[9] = {1,2,4,8,16,32,64,128,256};
+    configDatas["elec_level"] = elecLevel;
+    configDatas["code_type"] = codeType;
+    configDatas["plus_type"] = plusType;
+    configDatas["negative_max"] = maxN;
+    configDatas["positive_max"] = maxP;
+    configDatas["dec_time"] = decTime;
+    configDatas["acc_time"] = accTime;
+    configDatas["rs485_baud"] = rsBaud;
+    configDatas["can_baud"] = canBaud;
+    configDatas["device_id"] = deviceID;
+    configDatas["motor_direct"] = motorDirect;
+
     configDatas["circle_len"] = val1;
     configDatas["step_len"] = val2;
     configDatas["ctrl_feq"] = val3;
@@ -257,7 +320,24 @@ void ConfigDialog::on_readConfigBtn_clicked()
         qDebug() << "read json file failed.";
     }
 
+    //界面显示出来
+    ui->val1->setText(QString::number(configDatas["circle_len"]));
+    ui->val2->setText(QString::number(configDatas["step_len"]));
+    ui->val3->setText(QString::number(configDatas["ctrl_feq"]));
 
+    ui->deviceID->setValue(configDatas["device_id"]);
+    ui->rs485Baud->setCurrentIndex(configDatas["rs485_baud"]);
+    ui->canBaud->setCurrentIndex(configDatas["can_baud"]);
+    ui->elecContrl->setCurrentIndex(configDatas["elec_ctrl"]);
+    ui->volLevel->setCurrentIndex(configDatas["vol_level"]);
+    ui->motorLevel->setCurrentIndex(configDatas["elec_level"]);
+    ui->codeLogicDirect->setCurrentIndex(configDatas["code_type"]);
+    ui->plusType->setCurrentIndex(configDatas["plus_type"]);
+    ui->elecGrade->setValue(configDatas["elec_grade"]);
+    ui->maximumNegative->setValue(configDatas["negative_max"]);
+    ui->maximumPositive->setValue(configDatas["positive_max"]);
+    ui->servoAccTime->setValue(configDatas["acc_time"]);
+    ui->servoDecTime->setValue(configDatas["dec_time"]);
 }
 
 bool ConfigDialog::loadConfigFile(SaveFormat saveFormat)
@@ -294,40 +374,12 @@ void ConfigDialog::read(const QJsonObject &json)
         int value = obj["value"].toInt();
         configDatas.insert(name, value);
     }
-    //界面显示出来
-    ui->val1->setText(QString::number(configDatas["circle_len"]));
-    ui->val2->setText(QString::number(configDatas["step_len"]));
-    ui->val3->setText(QString::number(configDatas["ctrl_feq"]));
 
 }
 
 void ConfigDialog::initUI()
 {
     ui->setupUi(this);
-
-    ui->volLevel->addItem(QWidget::tr("低"));
-    ui->volLevel->addItem(QWidget::tr("高"));
-
-    ui->elecContrl->addItem(QWidget::tr("1/2电流值"));
-    ui->elecContrl->addItem(QWidget::tr("1/4电流值"));
-
-    QStringList divList;
-    divList << "1" << "2" << "4" << "8" << "16" << "32" << "64" << "128" << "256";
-    ui->motorLevel->addItems(divList);
-
-    ui->plusType->addItem(QWidget::tr("内部脉冲控制"));
-    ui->plusType->addItem(QWidget::tr("外部脉冲控制"));
-
-    ui->codeLogicDirect->addItem(QWidget::tr("负向"));
-    ui->codeLogicDirect->addItem(QWidget::tr("正向"));
-
-    QStringList rsBaudList;
-    rsBaudList << "115200" << "57600" << "38400" << "19200" << "9600" << "4800";
-    ui->rs485Baud->addItems(rsBaudList);
-
-    QStringList canBaudList;
-    canBaudList << "1000K" << "500K" << "250K" << "125K" << "100K" << "50K";
-    ui->canBaud->addItems(canBaudList);
 
     //ui->val1->setText("300");
     //ui->val2->setText("50");

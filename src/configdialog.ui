@@ -93,11 +93,41 @@
                  <bool>false</bool>
                 </property>
                 <property name="currentText">
-                 <string/>
+                 <string>115200</string>
                 </property>
                 <property name="maxVisibleItems">
                  <number>5</number>
                 </property>
+                <item>
+                 <property name="text">
+                  <string>115200</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>57600</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>38400</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>19200</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>9600</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>4800</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>
@@ -136,11 +166,41 @@
                  <bool>false</bool>
                 </property>
                 <property name="currentText">
-                 <string/>
+                 <string>1000K</string>
                 </property>
                 <property name="maxVisibleItems">
                  <number>5</number>
                 </property>
+                <item>
+                 <property name="text">
+                  <string>1000K</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>500K</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>250K</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>125K</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>100K</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>50K</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>
@@ -186,24 +246,10 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="maximumPositive">
-                <property name="text">
-                 <string>1000</string>
-                </property>
-               </widget>
-              </item>
               <item row="2" column="0">
                <widget class="QLabel" name="label_16">
                 <property name="text">
                  <string>负向最大允许位置(mm)</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLineEdit" name="maximumNegative">
-                <property name="text">
-                 <string>1000</string>
                 </property>
                </widget>
               </item>
@@ -247,6 +293,41 @@
                 </property>
                </widget>
               </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="maximumPositive">
+                <property name="statusTip">
+                 <string>分为1至32等级</string>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>10000</number>
+                </property>
+                <property name="singleStep">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>1000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QSpinBox" name="maximumNegative">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>10000</number>
+                </property>
+                <property name="singleStep">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>1000</number>
+                </property>
+               </widget>
+              </item>
              </layout>
             </item>
             <item>
@@ -277,11 +358,21 @@
                  <bool>false</bool>
                 </property>
                 <property name="currentText">
-                 <string/>
+                 <string>低</string>
                 </property>
                 <property name="maxVisibleItems">
                  <number>2</number>
                 </property>
+                <item>
+                 <property name="text">
+                  <string>低</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>高</string>
+                 </property>
+                </item>
                </widget>
               </item>
               <item row="1" column="0">
@@ -303,11 +394,21 @@
                  <bool>false</bool>
                 </property>
                 <property name="currentText">
-                 <string/>
+                 <string>1/2电流值</string>
                 </property>
                 <property name="maxVisibleItems">
                  <number>2</number>
                 </property>
+                <item>
+                 <property name="text">
+                  <string>1/2电流值</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>1/4电流值</string>
+                 </property>
+                </item>
                </widget>
               </item>
               <item row="2" column="0">
@@ -368,11 +469,56 @@
                  <bool>false</bool>
                 </property>
                 <property name="currentText">
-                 <string/>
+                 <string>1</string>
                 </property>
                 <property name="maxVisibleItems">
                  <number>5</number>
                 </property>
+                <item>
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>2</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>4</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>8</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>16</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>32</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>64</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>128</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>256</string>
+                 </property>
+                </item>
                </widget>
               </item>
               <item row="4" column="0">
@@ -383,7 +529,18 @@
                </widget>
               </item>
               <item row="4" column="1">
-               <widget class="QComboBox" name="plusType"/>
+               <widget class="QComboBox" name="plusType">
+                <item>
+                 <property name="text">
+                  <string>负向</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>正向</string>
+                 </property>
+                </item>
+               </widget>
               </item>
               <item row="5" column="0">
                <widget class="QLabel" name="label_23">
@@ -393,7 +550,18 @@
                </widget>
               </item>
               <item row="5" column="1">
-               <widget class="QComboBox" name="codeLogicDirect"/>
+               <widget class="QComboBox" name="codeLogicDirect">
+                <item>
+                 <property name="text">
+                  <string>内部脉冲控制</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>外部脉冲控制</string>
+                 </property>
+                </item>
+               </widget>
               </item>
              </layout>
             </item>
@@ -519,7 +687,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="writeConfigBtn">
+      <widget class="QPushButton" name="writeSerialBtn">
        <property name="text">
         <string>下载</string>
        </property>
