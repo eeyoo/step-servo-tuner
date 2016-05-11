@@ -576,79 +576,30 @@
       <attribute name="title">
        <string>机械参数配置</string>
       </attribute>
-      <widget class="QWidget" name="layoutWidget_2">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>100</y>
-         <width>291</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_14">
-        <item>
-         <widget class="QLabel" name="label_11">
-          <property name="text">
-           <string>电机步长(mm)</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="val2">
-          <property name="text">
-           <string>55</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="layoutWidget_3">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>150</y>
-         <width>291</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_15">
-        <item>
-         <widget class="QLabel" name="label_12">
-          <property name="text">
-           <string>电机频率(Hz)</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="val3">
-          <property name="text">
-           <string>5000</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>100</x>
-         <y>50</y>
+         <x>210</x>
+         <y>160</y>
          <width>291</width>
          <height>22</height>
         </rect>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_13">
+       <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="0,1">
         <item>
          <widget class="QLabel" name="label_10">
           <property name="text">
-           <string>电机周长(mm)</string>
+           <string>电机圆周长(mm)</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="val1">
-          <property name="text">
-           <string>300</string>
+         <widget class="QSpinBox" name="circleLen">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+          <property name="value">
+           <number>200</number>
           </property>
          </widget>
         </item>

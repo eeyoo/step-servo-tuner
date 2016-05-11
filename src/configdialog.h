@@ -63,7 +63,10 @@ public:
         int canBaud; //CAN波特率
         int deviceId; //设备ID
         int motorDirect; //电机逻辑正方向 0-顺时针，1-逆时针
+        int circleLen;  //外轮圆周长
     };
+
+    Configs configs() const;
 
 signals:
     void sendData(const QByteArray &data);
@@ -85,6 +88,8 @@ private:
     void write(QJsonObject &json) const; //写入json文件
 
     void data(const Configs *configs, QByteArray &qa); //配置结构转换为QByteArray
+
+    void updateConfigs();
 
 private:
     void initUI();
