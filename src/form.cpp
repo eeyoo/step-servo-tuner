@@ -2,14 +2,11 @@
 #include "ui_form.h"
 
 #include "command.h"
-#include "absmovecmd.h"
+#include "configdialog.h"
 #include <iostream>
 #include <QMessageBox>
 
-#include <QFileSystemModel>
 #include <QStandardItemModel>
-
-#include <QTimer>
 
 #include <QtCore/QDebug>
 
@@ -20,26 +17,26 @@ Form::Form(QWidget *parent) :
     ui(new Ui::Form)
 {
     ui->setupUi(this);
-    model = new QStandardItemModel();
+    config = new ConfigDialog;
+
+    int level = config->configs().elecLevel;
+    int circle = config->configs().circleLen;
+    int div[] = {1,2,4,8,16,32,64,128,256};
+    param = 200 * div[level] / circle;
 
     initUI();
-
-    ford_timer = new QTimer(this);
-    ford_timer->setInterval(1000); //间隔1秒
-
     initConnect();
     initModel();
 
-    //m_list = new QStringList;
     cmd_list = new QList<QByteArray>;
-
 }
 
 Form::~Form()
 {
     delete ui;
-    delete ford_timer;
     delete model;
+    delete config;
+    delete cmd_list;
 }
 
 void Form::about()
@@ -55,7 +52,7 @@ void Form::initUI()
 
 void Form::initConnect()
 {
-    connect(ford_timer, SIGNAL(timeout()), this, SLOT(forward()));
+    //connect(ford_timer, SIGNAL(timeout()), this, SLOT(forward()));
 }
 
 void Form::initModel()
@@ -63,7 +60,11 @@ void Form::initModel()
     model = new QStandardItemModel(0, 2, this);
     model->setHeaderData(0, Qt::Horizontal, tr("指令类型"));
     model->setHeaderData(1, Qt::Horizontal, tr("指令内容"));
+
     ui->tableView->setModel(model);
+    QHeaderView *headerView = ui->tableView->horizontalHeader();
+    headerView->setStretchLastSection(true);
+
 }
 
 
@@ -85,10 +86,10 @@ void Form::dropEvent(QDropEvent *event)
 void Form::on_absAddBtn_clicked()
 {
 
-    position = ui->absMoveDistance->text().toInt();
+    position = ui->absMoveDistance->value();
 
     quint8 qpos[4];
-    convert(qpos, position, 4);
+    convert(qpos, position * param, 4);
 
     quint8 qPos[10] = {0x02,0x00,ABS_MOVE_CMD,0x01,0x00,qpos[0],qpos[1],qpos[2],qpos[3],0x00};
     //quint8 qSpd[10] = {0x02,0x00,SETMOVESPCMD,0x01,0x00,qspd[0],qspd[1],qspd[2],qspd[3],0x00};
@@ -116,16 +117,15 @@ void Form::on_absAddBtn_clicked()
 
 void Form::on_relaAddBtn_clicked()
 {
-    int pos = ui->relMoveDistance->text().toInt();
+    int pos = ui->relMoveDistance->value();
     position += pos;
 
     quint8 qpos[4];
-    convert(qpos, position, 4);
-    //quint8 qspd[4];
-    //convert(qspd, spd);
+    convert(qpos, position * param, 4);
+
 
     quint8 qPos[10] = {0x02,0x00,ABS_MOVE_CMD,0x01,0x00,qpos[0],qpos[1],qpos[2],qpos[3],0x00};
-    //quint8 qSpd[10] = {0x02,0x00,SETMOVESPCMD,0x01,0x00,qspd[0],qspd[1],qspd[2],qspd[3],0x00};
+
     QByteArray qa;
     array2qa(qa, qPos, 10);
     //qa.append(qa1).append(qa2);
@@ -228,31 +228,11 @@ void Form::array2qa(QByteArray &data, quint8 *buf, int size)
 void Form::on_stopAct_clicked()
 {
 
-    ford_timer->stop();
-    status = false;
-
     quint8 qStop[10] = {0x02,0x00,EMSTOP_CMD,0x01,0x00,0x00,0x00,0x00,0x00,0x00};
     QByteArray qa;
     array2qa(qa, qStop, 10);
-    //cmd_list->append(qa);
+
     emit sendData(qa);
-}
-
-void Form::forward()
-{
-    if(index > row-1) {
-        index = row-1;
-        ford_timer->stop();
-        status = false;
-    } else if(index < 0) {
-        index = 0;
-    }
-    qDebug() << "row = " << row << " index = " << index;
-
-    emit sendData(cmd_list->at(index));
-
-    ui->tableView->selectRow(index);
-    index++;
 }
 
 void Form::on_forwardAct_clicked()
@@ -437,7 +417,7 @@ void Form::on_outputAddBtn_clicked()
 
     //jmp_to = line-1;
 
-    quint8 ln[] = {0x02,0x00,INPUT_CMD,param,0x00,state,0x00,0x00,0x00,0x00};
+    quint8 ln[] = {0x02,0x00,OUTPUT_CMD,param,0x00,state,0x00,0x00,0x00,0x00};
     QByteArray qa;
     array2qa(qa, ln, 10);
     cmd_list->append(qa);

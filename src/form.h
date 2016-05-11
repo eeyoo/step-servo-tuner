@@ -7,10 +7,8 @@
 namespace Ui {
 class Form;
 }
-
-class QStandardItemModel;
 class QAbstractItemModel;
-
+class ConfigDialog;
 class Form : public QWidget
 {
     Q_OBJECT
@@ -41,7 +39,6 @@ signals:
     void sendData(const QByteArray &data);
 
 private slots:
-    void forward();
 
     void on_stopAct_clicked();
 
@@ -74,18 +71,16 @@ private:
 private:
     Ui::Form *ui;
     QByteArray echo; //串口返回数据
-    //QStandardItemModel *header;
-    //QStandardItemModel *model;
     QAbstractItemModel *model;
-    //QStringList *m_list;
-    int row;   //行位置
-    int index; //指令序列位置
+    int row;        //行位置
+    int index;      //指令序列位置
     int jmp_from;   //无条件跳转起始行
     int jmp_to;    //无条件跳转目标行
     long position; //绝对位置
-    QTimer *ford_timer; //正向计时器
     bool status;
     QList<QByteArray> *cmd_list; //指令列表
+    ConfigDialog *config;
+    int param; //位移转换脉冲数参数
 };
 
 #endif // FORM_H

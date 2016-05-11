@@ -17,7 +17,7 @@
    <item>
     <widget class="QToolBox" name="parentToolBox">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="movePage">
       <property name="geometry">
@@ -35,15 +35,15 @@
        <item>
         <widget class="QToolBox" name="moveToolBox">
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="absPage">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>137</width>
-            <height>75</height>
+            <width>246</width>
+            <height>334</height>
            </rect>
           </property>
           <attribute name="label">
@@ -60,9 +60,15 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="absMoveDistance">
-               <property name="text">
-                <string>100</string>
+              <widget class="QSpinBox" name="absMoveDistance">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>10000</number>
+               </property>
+               <property name="value">
+                <number>100</number>
                </property>
               </widget>
              </item>
@@ -95,8 +101,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>137</width>
-            <height>75</height>
+            <width>246</width>
+            <height>334</height>
            </rect>
           </property>
           <attribute name="label">
@@ -113,9 +119,15 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="relMoveDistance">
-               <property name="text">
-                <string>100</string>
+              <widget class="QSpinBox" name="relMoveDistance">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>10000</number>
+               </property>
+               <property name="value">
+                <number>100</number>
                </property>
               </widget>
              </item>
@@ -335,8 +347,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
-            <height>334</height>
+            <width>126</width>
+            <height>75</height>
            </rect>
           </property>
           <attribute name="label">
@@ -391,8 +403,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
-            <height>334</height>
+            <width>158</width>
+            <height>131</height>
            </rect>
           </property>
           <attribute name="label">
@@ -711,8 +723,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
-            <height>360</height>
+            <width>136</width>
+            <height>103</height>
            </rect>
           </property>
           <attribute name="label">
@@ -806,6 +818,12 @@
        <property name="selectionBehavior">
         <enum>QAbstractItemView::SelectRows</enum>
        </property>
+       <attribute name="horizontalHeaderCascadingSectionResizes">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="horizontalHeaderMinimumSectionSize">
+        <number>120</number>
+       </attribute>
       </widget>
      </item>
      <item>
