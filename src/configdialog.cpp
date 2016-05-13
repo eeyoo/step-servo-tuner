@@ -159,7 +159,7 @@ void ConfigDialog::on_writeSerialBtn_clicked()
     compact(at,qAT,10);
     //组合指令数据
     QByteArray qHD;
-    quint8 hd[] = {id[0],id[1],BATCHCONFCMD,0x00,0x01,0x0f,0x00,0x00,0x00,0x00};
+    quint8 hd[] = {id[0],id[1],BATCHCONFCMD,0x00,0x01,0x0e,0x00,0x00,0x00,0x00};
     compact(hd,qHD,10);
 
     QByteArray data;

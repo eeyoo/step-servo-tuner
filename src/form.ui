@@ -35,7 +35,7 @@
        <item>
         <widget class="QToolBox" name="moveToolBox">
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="absPage">
           <property name="geometry">
@@ -62,7 +62,7 @@
              <item>
               <widget class="QSpinBox" name="absMoveDistance">
                <property name="minimum">
-                <number>1</number>
+                <number>-10000</number>
                </property>
                <property name="maximum">
                 <number>10000</number>
@@ -102,7 +102,7 @@
             <x>0</x>
             <y>0</y>
             <width>246</width>
-            <height>334</height>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
@@ -121,7 +121,7 @@
              <item>
               <widget class="QSpinBox" name="relMoveDistance">
                <property name="minimum">
-                <number>1</number>
+                <number>-10000</number>
                </property>
                <property name="maximum">
                 <number>10000</number>
@@ -161,7 +161,7 @@
             <x>0</x>
             <y>0</y>
             <width>246</width>
-            <height>334</height>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
@@ -180,7 +180,7 @@
              <item>
               <widget class="QSpinBox" name="setRunSpd">
                <property name="minimum">
-                <number>1</number>
+                <number>0</number>
                </property>
                <property name="maximum">
                 <number>100</number>
@@ -260,6 +260,9 @@
              </item>
              <item>
               <widget class="QSpinBox" name="opParam">
+               <property name="minimum">
+                <number>1</number>
+               </property>
                <property name="maximum">
                 <number>20</number>
                </property>
@@ -542,6 +545,9 @@
              </item>
              <item>
               <widget class="QSpinBox" name="jumpParam">
+               <property name="minimum">
+                <number>1</number>
+               </property>
                <property name="maximum">
                 <number>4</number>
                </property>
@@ -580,8 +586,11 @@
              </item>
              <item>
               <widget class="QSpinBox" name="jumpLine">
+               <property name="minimum">
+                <number>1</number>
+               </property>
                <property name="maximum">
-                <number>20</number>
+                <number>10000</number>
                </property>
                <property name="value">
                 <number>1</number>
@@ -639,8 +648,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
-            <height>334</height>
+            <width>136</width>
+            <height>103</height>
            </rect>
           </property>
           <attribute name="label">
@@ -742,6 +751,9 @@
              </item>
              <item>
               <widget class="QSpinBox" name="outputParam">
+               <property name="minimum">
+                <number>1</number>
+               </property>
                <property name="maximum">
                 <number>1</number>
                </property>
@@ -807,6 +819,14 @@
       </layout>
      </widget>
      <widget class="QWidget" name="page_9">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>264</width>
+        <height>404</height>
+       </rect>
+      </property>
       <attribute name="label">
        <string>辅助指令</string>
       </attribute>

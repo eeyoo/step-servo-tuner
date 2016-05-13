@@ -26,6 +26,13 @@ Form::Form(QWidget *parent) :
     convert(id, deviceId, 2);
     param = 200 * div[level] / circle;
 
+    int maxN = config->configs().maxN;
+    int maxP = config->configs().maxP;
+    ui->absMoveDistance->setMaximum(maxP);
+    ui->absMoveDistance->setMinimum(-maxN);
+    ui->relMoveDistance->setMaximum(maxP);
+    ui->relMoveDistance->setMinimum(-maxN);
+
     //qDebug() << "param = " << param;
     initUI();
     initConnect();
