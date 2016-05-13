@@ -60,6 +60,8 @@ private slots:
 
     void on_outputAddBtn_clicked();
 
+    void on_delayAddBtn_clicked();
+
 private:
     void initUI();
     void initConnect();
@@ -81,6 +83,7 @@ private:
     QList<QByteArray> *cmd_list; //指令列表
     ConfigDialog *config;
     int param; //位移转换脉冲数参数
+    quint8 id[2];
 };
 
 #endif // FORM_H

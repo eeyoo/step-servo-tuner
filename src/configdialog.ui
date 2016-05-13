@@ -93,7 +93,10 @@
                  <bool>false</bool>
                 </property>
                 <property name="currentText">
-                 <string>115200</string>
+                 <string>9600</string>
+                </property>
+                <property name="currentIndex">
+                 <number>4</number>
                 </property>
                 <property name="maxVisibleItems">
                  <number>5</number>
@@ -235,7 +238,7 @@
                  <number>32</number>
                 </property>
                 <property name="value">
-                 <number>32</number>
+                 <number>4</number>
                 </property>
                </widget>
               </item>
@@ -302,7 +305,7 @@
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>10000</number>
+                 <number>1000000</number>
                 </property>
                 <property name="singleStep">
                  <number>100</number>
@@ -318,7 +321,7 @@
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>10000</number>
+                 <number>1000000</number>
                 </property>
                 <property name="singleStep">
                  <number>100</number>
@@ -532,12 +535,12 @@
                <widget class="QComboBox" name="plusType">
                 <item>
                  <property name="text">
-                  <string>负向</string>
+                  <string>内部脉冲控制</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>正向</string>
+                  <string>外部脉冲控制</string>
                  </property>
                 </item>
                </widget>
@@ -553,12 +556,12 @@
                <widget class="QComboBox" name="codeLogicDirect">
                 <item>
                  <property name="text">
-                  <string>内部脉冲控制</string>
+                  <string>负向</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>外部脉冲控制</string>
+                  <string>正向</string>
                  </property>
                 </item>
                </widget>

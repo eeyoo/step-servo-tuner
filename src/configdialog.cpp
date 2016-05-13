@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QMessageBox>
 
 #include <QtCore/QDebug>
 
@@ -65,6 +66,10 @@ void ConfigDialog::on_writeSerialBtn_clicked()
     //QByteArray data;
 
     updateConfigs();
+    int level = currentConfigs.elecLevel;
+    int temp[] = {1,2,4,8,16,32,64,128,256};
+    int div = temp[level];
+    int param = 200*div / currentConfigs.circleLen;
 
     quint8 id[2];
     convert(currentConfigs.deviceId, id, 2);
@@ -86,10 +91,9 @@ void ConfigDialog::on_writeSerialBtn_clicked()
     quint8 eg[] = {id[0],id[1],SETCUGEARCMD,0x00,0x03,peg[0],peg[1],peg[2],peg[3],0x00};
     QByteArray qEG;
     compact(eg, qEG, 10);
-    //电机细分等级
-    int els[9] = {1,2,4,8,16,32,64,128,256};
+    //电机细分等级    
     quint8 pel[4];
-    convert(els[currentConfigs.elecLevel], pel, 4);
+    convert(div, pel, 4);
     QByteArray qEL;
     quint8 el[] = {id[0],id[1],SETMOTDIVCMD,0x00,0x04,pel[0],pel[1],pel[2],pel[3],0x00};
     compact(el, qEL, 10);
@@ -131,13 +135,13 @@ void ConfigDialog::on_writeSerialBtn_clicked()
     compact(pt,qPT,10);
     //负向最大允许位移
     quint8 pmn[4];
-    convert(currentConfigs.maxN,pmn,4);
+    convert(-1*param*currentConfigs.maxN,pmn,4);
     QByteArray qMN;
     quint8 mn[] = {id[0],id[1],SETNEGMAXPOS,0x00,0x0b,pmn[0],pmn[1],pmn[2],pmn[3],0x00};
     compact(mn,qMN,10);
     //正向最大允许位移
     quint8 pmp[4];
-    convert(currentConfigs.maxP,pmp,4);
+    convert(param*currentConfigs.maxP,pmp,4);
     QByteArray qMP;
     quint8 mp[] = {id[0],id[1],SETPOSMAXPOS,0x00,0x0c,pmp[0],pmp[1],pmp[2],pmp[3],0x00};
     compact(mp,qMP,10);
@@ -167,6 +171,9 @@ void ConfigDialog::on_writeSerialBtn_clicked()
 
     qDebug() << data.toHex().toUpper();
     emit sendData(data);
+
+    tip();
+
     close();
 }
 
@@ -225,6 +232,8 @@ void ConfigDialog::on_saveConfigBtn_clicked()
         close();
     } else
         qDebug() << "write json file failed.";
+
+    tip();
 
 }
 
@@ -398,4 +407,9 @@ void ConfigDialog::initUI()
 void ConfigDialog::initConnect()
 {
 
+}
+
+void ConfigDialog::tip()
+{
+    QMessageBox::about(this,tr("提示对话框"),tr("修改配置参数后需重启软件生效！"));
 }

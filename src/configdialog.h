@@ -91,6 +91,8 @@ private:
 
     void updateConfigs();
 
+    void tip();
+
 private:
     void initUI();
     void initConnect();

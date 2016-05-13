@@ -22,8 +22,11 @@ Form::Form(QWidget *parent) :
     int level = config->configs().elecLevel;
     int circle = config->configs().circleLen;
     int div[] = {1,2,4,8,16,32,64,128,256};
+    int deviceId = config->configs().deviceId;
+    convert(id, deviceId, 2);
     param = 200 * div[level] / circle;
 
+    //qDebug() << "param = " << param;
     initUI();
     initConnect();
     initModel();
@@ -91,7 +94,7 @@ void Form::on_absAddBtn_clicked()
     quint8 qpos[4];
     convert(qpos, position * param, 4);
 
-    quint8 qPos[10] = {0x02,0x00,ABS_MOVE_CMD,0x01,0x00,qpos[0],qpos[1],qpos[2],qpos[3],0x00};
+    quint8 qPos[10] = {id[0],id[1],ABS_MOVE_CMD,0x01,0x00,qpos[0],qpos[1],qpos[2],qpos[3],0x00};
     //quint8 qSpd[10] = {0x02,0x00,SETMOVESPCMD,0x01,0x00,qspd[0],qspd[1],qspd[2],qspd[3],0x00};
 
     QByteArray qa;
@@ -124,7 +127,7 @@ void Form::on_relaAddBtn_clicked()
     convert(qpos, position * param, 4);
 
 
-    quint8 qPos[10] = {0x02,0x00,ABS_MOVE_CMD,0x01,0x00,qpos[0],qpos[1],qpos[2],qpos[3],0x00};
+    quint8 qPos[10] = {id[0],id[1],ABS_MOVE_CMD,0x01,0x00,qpos[0],qpos[1],qpos[2],qpos[3],0x00};
 
     QByteArray qa;
     array2qa(qa, qPos, 10);
@@ -152,7 +155,7 @@ void Form::on_setSpdBtn_clicked()
     quint8 qspd[4];
     convert(qspd, spd, 4);
 
-    quint8 qSpd[10] = {0x02,0x00,SETMOVESPCMD,0x01,0x00,qspd[0],qspd[1],qspd[2],qspd[3],0x00};
+    quint8 qSpd[10] = {id[0],id[1],SETMOVESPCMD,0x01,0x00,qspd[0],qspd[1],qspd[2],qspd[3],0x00};
     QByteArray qa;
     array2qa(qa, qSpd, 10);
     cmd_list->append(qa);
@@ -209,7 +212,7 @@ void Form::on_stepAct_clicked()
     if(index == jmp_from)
         index = jmp_to;
 
-    qDebug() << "row = " << row << " index = " << index;
+    //qDebug() << "row = " << row << " index = " << index;
 
 }
 
@@ -228,7 +231,7 @@ void Form::array2qa(QByteArray &data, quint8 *buf, int size)
 void Form::on_stopAct_clicked()
 {
 
-    quint8 qStop[10] = {0x02,0x00,EMSTOP_CMD,0x01,0x00,0x00,0x00,0x00,0x00,0x00};
+    quint8 qStop[10] = {id[0],id[1],EMSTOP_CMD,0x01,0x00,0x00,0x00,0x00,0x00,0x00};
     QByteArray qa;
     array2qa(qa, qStop, 10);
 
@@ -237,16 +240,11 @@ void Form::on_stopAct_clicked()
 
 void Form::on_forwardAct_clicked()
 {
-    /*
-    index = 0;
-    ford_timer->start();
-    status = true;
-    */
     int len = cmd_list->count();
     quint8 qlen[4];
     convert(qlen, len, 4);
 
-    quint8 qHead[10] = {0x02,0x00,CMDBATCHHEAD,0x01,0x00,qlen[0],qlen[1],qlen[2],qlen[3],0x00};
+    quint8 qHead[10] = {id[0],id[1],CMDBATCHHEAD,0x01,0x00,qlen[0],qlen[1],qlen[2],qlen[3],0x00};
     QByteArray qa;
     array2qa(qa, qHead, 10);
     //cmd_list->prepend(qa);
@@ -267,7 +265,7 @@ void Form::on_opAddBtn_clicked()
     int opType = ui->opType->currentIndex() + 1; //1-自增 2-自减
     quint8 pop[4];
     convert(pop,opType,4);
-    quint8 op[] = {0x02,0x00,OPERATEPARAM,param,0x00,pop[0],pop[1],pop[2],pop[3],0x00};
+    quint8 op[] = {id[0],id[1],OPERATEPARAM,param,0x00,pop[0],pop[1],pop[2],pop[3],0x00};
     QByteArray qa;
     array2qa(qa, op, 10);
     cmd_list->append(qa);
@@ -294,9 +292,9 @@ void Form::on_jmpAddBtn_clicked()
 
     jmp_to = line-1;
 
-    quint8 pln[4];
-    convert(pln,line,4);
-    quint8 ln[] = {0x02,0x00,JMP_CMD,0x00,0x00,pln[0],pln[1],pln[2],pln[3],0x00};
+    quint8 pln[2];
+    convert(pln,line-1,2);
+    quint8 ln[] = {id[0],id[1],JMP_CMD,0x00,0x00,0x00,0x00,pln[0],pln[1],0x00};
     QByteArray qa;
     array2qa(qa, ln, 10);
     cmd_list->append(qa);
@@ -323,9 +321,11 @@ void Form::on_cmpAddBtn_clicked()
 
     jmp_to = line-1;
 
-    quint8 pln[4];
-    convert(pln,line,3);
-    quint8 ln[] = {0x02,0x00,CMP_CMD,param,type,value,pln[0],pln[1],pln[2],0x00};
+    quint8 pln[2];
+    convert(pln,line-1,2);
+    quint8 val[2];
+    convert(val, value, 2);
+    quint8 ln[] = {id[0],id[1],CMP_CMD,param,type,val[0],val[1],pln[0],pln[1],0x00};
     QByteArray qa;
     array2qa(qa, ln, 10);
     cmd_list->append(qa);
@@ -357,9 +357,9 @@ void Form::on_jumpAddBtn_clicked()
 
     jmp_to = line-1;
 
-    quint8 pln[4];
-    convert(pln,line,3);
-    quint8 ln[] = {0x02,0x00,IOJUMP_CMD,param,0x00,state,pln[0],pln[1],pln[2],0x00};
+    quint8 pln[2];
+    convert(pln,line-1,2);
+    quint8 ln[] = {id[0],id[1],IOJUMP_CMD,param,0x00,state,0x00,pln[0],pln[1],0x00};
     QByteArray qa;
     array2qa(qa, ln, 10);
     cmd_list->append(qa);
@@ -386,15 +386,13 @@ void Form::on_inputAddBtn_clicked()
     int param = ui->inputParam->value();
     int state = ui->inputState->currentIndex();
 
-    //jmp_to = line-1;
-
-    quint8 ln[] = {0x02,0x00,INPUT_CMD,param,0x00,state,0x00,0x00,0x00,0x00,0x00};
+    quint8 cmd[] = {id[0],id[1],INPUT_CMD,param,0x00,state,0x00,0x00,0x00,0x00,0x00};
     QByteArray qa;
-    array2qa(qa, ln, 10);
+    array2qa(qa, cmd, 10);
     cmd_list->append(qa);
 
     QStringList list;
-    list << tr("输入IO状态等待指令");
+    list << tr("输入等待指令");
     if(!state)
         list << QString(tr("编号 %1 输入端口低电平等待")).arg(param);
     else
@@ -405,7 +403,6 @@ void Form::on_inputAddBtn_clicked()
     model->setData(model->index(row, 1), list.value(1));
 
     row++;
-    //jmp_from = row;
 
     ui->tableView->setModel(model);
 }
@@ -415,26 +412,46 @@ void Form::on_outputAddBtn_clicked()
     int param = ui->outputParam->value();
     int state = ui->outputState->currentIndex();
 
-    //jmp_to = line-1;
-
-    quint8 ln[] = {0x02,0x00,OUTPUT_CMD,param,0x00,state,0x00,0x00,0x00,0x00};
+    quint8 cmd[] = {id[0],id[1],SETOUT_CMD,param,0x00,state,0x00,0x00,0x00,0x00};
     QByteArray qa;
-    array2qa(qa, ln, 10);
+    array2qa(qa, cmd, 10);
     cmd_list->append(qa);
 
     QStringList list;
-    list << tr("输出IO状态等待指令");
+    list << tr("输出设置指令");
     if(!state)
-        list << QString(tr("编号 %1 输出端口低电平等待")).arg(param);
+        list << QString(tr("设置编号 %1 输出端口低电平")).arg(param);
     else
-        list << QString(tr("编号 %1 输出端口高电平等待")).arg(param);
+        list << QString(tr("设置编号 %1 输出端口高电平")).arg(param);
 
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
 
     row++;
-    //jmp_from = row;
+
+    ui->tableView->setModel(model);
+}
+
+void Form::on_delayAddBtn_clicked()
+{
+    int value = ui->delayVal->value();
+
+    quint8 val[4];
+    convert(val, value, 4);
+    quint8 cmd[] = {id[0],id[1],DELAY_CMD,0x00,0x00,val[0],val[1],val[2],val[3],0x00};
+    QByteArray qa;
+    array2qa(qa, cmd, 10);
+    cmd_list->append(qa);
+
+    QStringList list;
+    list << tr("延时等待指令") << QString(tr("延时等待 %1 毫秒")).arg(value);
+
+    model->insertRow(row, QModelIndex());
+    model->setData(model->index(row, 0), list.value(0));
+    model->setData(model->index(row, 1), list.value(1));
+
+    row++;
 
     ui->tableView->setModel(model);
 }

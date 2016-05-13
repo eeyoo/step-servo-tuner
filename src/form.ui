@@ -17,7 +17,7 @@
    <item>
     <widget class="QToolBox" name="parentToolBox">
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="movePage">
       <property name="geometry">
@@ -25,7 +25,7 @@
         <x>0</x>
         <y>0</y>
         <width>264</width>
-        <height>430</height>
+        <height>404</height>
        </rect>
       </property>
       <attribute name="label">
@@ -43,7 +43,7 @@
             <x>0</x>
             <y>0</y>
             <width>246</width>
-            <height>334</height>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
@@ -224,7 +224,7 @@
         <x>0</x>
         <y>0</y>
         <width>264</width>
-        <height>430</height>
+        <height>404</height>
        </rect>
       </property>
       <attribute name="label">
@@ -242,7 +242,7 @@
             <x>0</x>
             <y>0</y>
             <width>246</width>
-            <height>386</height>
+            <height>360</height>
            </rect>
           </property>
           <attribute name="label">
@@ -330,7 +330,7 @@
         <x>0</x>
         <y>0</y>
         <width>264</width>
-        <height>430</height>
+        <height>404</height>
        </rect>
       </property>
       <attribute name="label">
@@ -524,7 +524,7 @@
             <x>0</x>
             <y>0</y>
             <width>246</width>
-            <height>334</height>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
@@ -543,7 +543,7 @@
              <item>
               <widget class="QSpinBox" name="jumpParam">
                <property name="maximum">
-                <number>20</number>
+                <number>4</number>
                </property>
                <property name="value">
                 <number>1</number>
@@ -622,7 +622,7 @@
         <x>0</x>
         <y>0</y>
         <width>264</width>
-        <height>430</height>
+        <height>404</height>
        </rect>
       </property>
       <attribute name="label">
@@ -632,7 +632,7 @@
        <item>
         <widget class="QToolBox" name="toolBox_3">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="page_5">
           <property name="geometry">
@@ -640,11 +640,11 @@
             <x>0</x>
             <y>0</y>
             <width>246</width>
-            <height>360</height>
+            <height>334</height>
            </rect>
           </property>
           <attribute name="label">
-           <string>输入IO</string>
+           <string>输入IO等待</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_12">
            <item>
@@ -659,7 +659,7 @@
              <item>
               <widget class="QSpinBox" name="inputParam">
                <property name="maximum">
-                <number>20</number>
+                <number>4</number>
                </property>
                <property name="value">
                 <number>1</number>
@@ -723,12 +723,12 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>136</width>
-            <height>103</height>
+            <width>246</width>
+            <height>334</height>
            </rect>
           </property>
           <attribute name="label">
-           <string>输出IO</string>
+           <string>输出IO设置</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_13">
            <item>
@@ -743,7 +743,7 @@
              <item>
               <widget class="QSpinBox" name="outputParam">
                <property name="maximum">
-                <number>20</number>
+                <number>1</number>
                </property>
                <property name="value">
                 <number>1</number>
@@ -795,6 +795,76 @@
            </item>
            <item>
             <widget class="QPushButton" name="outputAddBtn">
+             <property name="text">
+              <string>加入</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_9">
+      <attribute name="label">
+       <string>辅助指令</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_15">
+       <item>
+        <widget class="QToolBox" name="toolBox_4">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="page_10">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>246</width>
+            <height>360</height>
+           </rect>
+          </property>
+          <attribute name="label">
+           <string>延时指令</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_16">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_18" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_16">
+               <property name="text">
+                <string>延时时间(ms)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="delayVal">
+               <property name="maximum">
+                <number>6500</number>
+               </property>
+               <property name="value">
+                <number>100</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_10">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>282</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="delayAddBtn">
              <property name="text">
               <string>加入</string>
              </property>
