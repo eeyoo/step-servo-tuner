@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
-    <height>550</height>
+    <width>816</width>
+    <height>552</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,15 +17,15 @@
    <item>
     <widget class="QToolBox" name="parentToolBox">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="movePage">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>242</width>
-        <height>454</height>
+        <width>264</width>
+        <height>404</height>
        </rect>
       </property>
       <attribute name="label">
@@ -42,50 +42,35 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>224</width>
-            <height>384</height>
+            <width>246</width>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
            <string>绝对位置运动</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_2">
+            <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1">
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1">
-               <item>
-                <widget class="QLabel" name="label">
-                 <property name="text">
-                  <string>运行距离(mm)</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLineEdit" name="lineEdit"/>
-               </item>
-              </layout>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>运行距离(mm)</string>
+               </property>
+              </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1">
-               <item>
-                <widget class="QLabel" name="label_2">
-                 <property name="text">
-                  <string>速度档位(%)</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QSpinBox" name="spinBox">
-                 <property name="minimum">
-                  <number>1</number>
-                 </property>
-                 <property name="maximum">
-                  <number>100</number>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+              <widget class="QSpinBox" name="absMoveDistance">
+               <property name="minimum">
+                <number>-10000</number>
+               </property>
+               <property name="maximum">
+                <number>10000</number>
+               </property>
+               <property name="value">
+                <number>100</number>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -111,13 +96,13 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="page_2">
+         <widget class="QWidget" name="relatPage">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>259</width>
-            <height>384</height>
+            <width>162</width>
+            <height>75</height>
            </rect>
           </property>
           <attribute name="label">
@@ -134,29 +119,15 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_2"/>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1">
-             <item>
-              <widget class="QLabel" name="label_3">
-               <property name="text">
-                <string>速度档位(%)</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSpinBox" name="spinBox_2">
+              <widget class="QSpinBox" name="relMoveDistance">
                <property name="minimum">
-                <number>1</number>
+                <number>-10000</number>
                </property>
                <property name="maximum">
-                <number>100</number>
+                <number>10000</number>
                </property>
-               <property name="singleStep">
-                <number>1</number>
+               <property name="value">
+                <number>100</number>
                </property>
               </widget>
              </item>
@@ -184,6 +155,65 @@
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="page_8">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>138</width>
+            <height>75</height>
+           </rect>
+          </property>
+          <attribute name="label">
+           <string>速度档位设置</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>速度档位(%)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="setRunSpd">
+               <property name="minimum">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
+               <property name="value">
+                <number>10</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_9">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>242</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="setSpdBtn">
+             <property name="text">
+              <string>加入</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -193,33 +223,710 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>277</width>
-        <height>454</height>
+        <width>264</width>
+        <height>404</height>
        </rect>
       </property>
       <attribute name="label">
        <string>操作指令</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <widget class="QToolBox" name="toolBox">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="page">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>246</width>
+            <height>360</height>
+           </rect>
+          </property>
+          <attribute name="label">
+           <string>操作参数</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_6">
+               <property name="text">
+                <string>参数编号</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="opParam">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>20</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>操作类型</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="opType">
+               <property name="currentText">
+                <string>自增</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>自增</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>自减</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>268</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="opAddBtn">
+             <property name="text">
+              <string>加入</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="conditionPage">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>277</width>
-        <height>454</height>
+        <width>264</width>
+        <height>404</height>
        </rect>
       </property>
       <attribute name="label">
        <string>条件指令</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QToolBox" name="toolBox_2">
+         <property name="currentIndex">
+          <number>2</number>
+         </property>
+         <widget class="QWidget" name="page_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>126</width>
+            <height>75</height>
+           </rect>
+          </property>
+          <attribute name="label">
+           <string>无条件跳转</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_9">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_7">
+               <property name="text">
+                <string>跳转至行数</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="jmpLine">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>20</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>294</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="jmpAddBtn">
+             <property name="text">
+              <string>加入</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="page_3">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>158</width>
+            <height>131</height>
+           </rect>
+          </property>
+          <attribute name="label">
+           <string>有条件跳转</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_8">
+               <property name="text">
+                <string>参数编号</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="cmpParam">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>20</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,0,1">
+             <item>
+              <widget class="QLabel" name="label_15">
+               <property name="text">
+                <string>判断类型</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="cmpType">
+               <property name="currentText">
+                <string>&gt;</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>&gt;</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>==</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>&lt;</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="cmpVal">
+               <property name="maximum">
+                <number>20</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_14">
+               <property name="text">
+                <string>跳转至行数</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="cmpLine">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>20</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>240</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="cmpAddBtn">
+             <property name="text">
+              <string>加入</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="page_7">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>246</width>
+            <height>308</height>
+           </rect>
+          </property>
+          <attribute name="label">
+           <string>IO条件跳转</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_14">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="0,1,0">
+             <item>
+              <widget class="QLabel" name="label_12">
+               <property name="text">
+                <string>端口编号</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="jumpParam">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="ioState">
+               <property name="currentText">
+                <string>低电平</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>低电平</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>高电平</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_13">
+               <property name="text">
+                <string>跳转至行数</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="jumpLine">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>10000</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_8">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>214</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="jumpAddBtn">
+             <property name="text">
+              <string>加入</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_4">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>264</width>
+        <height>404</height>
+       </rect>
+      </property>
+      <attribute name="label">
+       <string>IO指令</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_11">
+       <item>
+        <widget class="QToolBox" name="toolBox_3">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="page_5">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>246</width>
+            <height>334</height>
+           </rect>
+          </property>
+          <attribute name="label">
+           <string>输入IO等待</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_12">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>IO编号</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="inputParam">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_14" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_11">
+               <property name="text">
+                <string>电平状态</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="inputState">
+               <property name="currentText">
+                <string>低电平</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>低电平</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>高电平</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>240</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="inputAddBtn">
+             <property name="text">
+              <string>加入</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="page_6">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>246</width>
+            <height>334</height>
+           </rect>
+          </property>
+          <attribute name="label">
+           <string>输出IO设置</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_13">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_13" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_9">
+               <property name="text">
+                <string>IO编号</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="outputParam">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>1</number>
+               </property>
+               <property name="value">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_10">
+               <property name="text">
+                <string>电平状态</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="outputState">
+               <property name="currentText">
+                <string>断开</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>断开</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>接通</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_7">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>240</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="outputAddBtn">
+             <property name="text">
+              <string>加入</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_9">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>264</width>
+        <height>404</height>
+       </rect>
+      </property>
+      <attribute name="label">
+       <string>辅助指令</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_15">
+       <item>
+        <widget class="QToolBox" name="toolBox_4">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="page_10">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>246</width>
+            <height>360</height>
+           </rect>
+          </property>
+          <attribute name="label">
+           <string>延时指令</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_16">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_18" stretch="0,1">
+             <item>
+              <widget class="QLabel" name="label_16">
+               <property name="text">
+                <string>延时时间(ms)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="delayVal">
+               <property name="maximum">
+                <number>6500</number>
+               </property>
+               <property name="value">
+                <number>100</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_10">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>282</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="delayAddBtn">
+             <property name="text">
+              <string>加入</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_5">
      <item>
-      <widget class="QTableWidget" name="tableWidget"/>
+      <widget class="QTableView" name="tableView">
+       <property name="mouseTracking">
+        <bool>false</bool>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <attribute name="horizontalHeaderCascadingSectionResizes">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="horizontalHeaderMinimumSectionSize">
+        <number>120</number>
+       </attribute>
+      </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
@@ -258,16 +965,16 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="autoAct">
+        <widget class="QPushButton" name="stopAct">
          <property name="text">
-          <string>自动</string>
+          <string>停止</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="stopAct">
+        <widget class="QPushButton" name="forwardAct">
          <property name="text">
-          <string>停止</string>
+          <string>下载</string>
          </property>
         </widget>
        </item>

@@ -36,39 +36,30 @@
 #include "ui_mainwindow.h"
 #include "console.h"
 #include "settingsdialog.h"
-#include "form.h"
-#include "command.h"
-#include "configdialog.h"
 
 #include <QMessageBox>
 #include <QLabel>
 #include <QtSerialPort/QSerialPort>
-#include <QFile>
-#include <QFileDialog>
 
-#include <QtCore/QDebug>
-
-
+//! [0]
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+//! [0]
     ui->setupUi(this);
-
-    form = new Form;
-    setCentralWidget(form);
-    setWindowTitle(QWidget::tr("步进电机快速调试程序"));
-
+    console = new Console;
+    console->setEnabled(false);
+    setCentralWidget(console);
+//! [1]
     serial = new QSerialPort(this);
-
+//! [1]
     settings = new SettingsDialog;
-    config = new ConfigDialog;
 
     ui->actionConnect->setEnabled(true);
     ui->actionDisconnect->setEnabled(false);
-
-    ui->actionConfigure->setEnabled(true);
     ui->actionQuit->setEnabled(true);
+    ui->actionConfigure->setEnabled(true);
 
     status = new QLabel;
     ui->statusBar->addWidget(status);
@@ -78,21 +69,21 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this,
             SLOT(handleError(QSerialPort::SerialPortError)));
 
+//! [2]
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
-
-    connect(form, SIGNAL(sendData(QByteArray)), this, SLOT(writeData(QByteArray)));
-
-    connect(config, SIGNAL(sendConfig(QByteArray)), this, SLOT(writeConfig(QByteArray)));
+//! [2]
+    connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
+//! [3]
 }
+//! [3]
 
 MainWindow::~MainWindow()
 {
     delete settings;
-    delete config;
-    delete form;
     delete ui;
 }
 
+//! [4]
 void MainWindow::openSerialPort()
 {
     SettingsDialog::Settings p = settings->settings();
@@ -103,32 +94,34 @@ void MainWindow::openSerialPort()
     serial->setStopBits(p.stopBits);
     serial->setFlowControl(p.flowControl);
     if (serial->open(QIODevice::ReadWrite)) {
-
+        console->setEnabled(true);
+        console->setLocalEchoEnabled(p.localEchoEnabled);
         ui->actionConnect->setEnabled(false);
         ui->actionDisconnect->setEnabled(true);
         ui->actionConfigure->setEnabled(false);
-        showStatusMessage(tr("连接 %1 : 波特率 %2, %3位, 校验%4, 停止位%5, 控制流%6")
+        showStatusMessage(tr("Connected to %1 : %2, %3, %4, %5, %6")
                           .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
                           .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
     } else {
-        QMessageBox::critical(this, tr("错误"), serial->errorString());
+        QMessageBox::critical(this, tr("Error"), serial->errorString());
 
-        showStatusMessage(tr("连接错误"));
+        showStatusMessage(tr("Open error"));
     }
 }
+//! [4]
 
+//! [5]
 void MainWindow::closeSerialPort()
 {
     if (serial->isOpen())
-    {
         serial->close();
-    }
-
+    console->setEnabled(false);
     ui->actionConnect->setEnabled(true);
     ui->actionDisconnect->setEnabled(false);
     ui->actionConfigure->setEnabled(true);
-    showStatusMessage(tr("断开连接"));
+    showStatusMessage(tr("Disconnected"));
 }
+//! [5]
 
 void MainWindow::about()
 {
@@ -138,44 +131,22 @@ void MainWindow::about()
                           "using Qt, with a menu bar, toolbars, and a status bar."));
 }
 
+//! [6]
 void MainWindow::writeData(const QByteArray &data)
 {
-    //串口发送数据 - 缓存写数据
-    //showStatusMessage(tr("发送指令数据：") + data.toHex());
-
-    if(!serial->isOpen())
-    {
-        QMessageBox::warning(this,tr("警告"),tr("请打开串口！"));
-        return;
-    }
-
     serial->write(data);
-
 }
+//! [6]
 
-void MainWindow::writeConfig(const QByteArray &data)
-{
-    if(!serial->isOpen())
-    {
-        QMessageBox::warning(this,tr("警告"),tr("请打开串口！"));
-        return;
-    }
-
-    serial->write(data);
-
-    config->tip();
-    //config->setFocus();
-    //config->isTopLevel();
-}
-
+//! [7]
 void MainWindow::readData()
 {
-    //缓存读数据 - 串口接收数据
     QByteArray data = serial->readAll();
-    showStatusMessage(tr("接收指令数据：") + data.toHex());
-    form->receiveData(data);
+    console->putData(data);
 }
+//! [7]
 
+//! [8]
 void MainWindow::handleError(QSerialPort::SerialPortError error)
 {
     if (error == QSerialPort::ResourceError) {
@@ -183,33 +154,20 @@ void MainWindow::handleError(QSerialPort::SerialPortError error)
         closeSerialPort();
     }
 }
+//! [8]
 
 void MainWindow::initActionsConnections()
 {
     connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
     connect(ui->actionDisconnect, SIGNAL(triggered()), this, SLOT(closeSerialPort()));
+    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionConfigure, SIGNAL(triggered()), settings, SLOT(show()));
-    connect(ui->actionSystem, SIGNAL(triggered()), config, SLOT(show()));
-    connect(ui->actionAbout, SIGNAL(triggered()), form, SLOT(about()));
-
-    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(closeAll()));
+    connect(ui->actionClear, SIGNAL(triggered()), console, SLOT(clear()));
+    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
+    connect(ui->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 }
 
 void MainWindow::showStatusMessage(const QString &message)
 {
     status->setText(message);
-    //statusBar()->showMessage(message, 1000);
-}
-
-void MainWindow::closeAll()
-{
-    close();
-    config->close();
-    settings->close();
-}
-
-void MainWindow::closeEvent(QCloseEvent */*e*/)
-{
-    closeAll();
-
 }

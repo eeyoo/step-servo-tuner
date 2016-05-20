@@ -84,12 +84,12 @@ void SettingsDialog::showPortInfo(int idx)
         return;
 
     QStringList list = ui->serialPortInfoListBox->itemData(idx).toStringList();
-    ui->descriptionLabel->setText(tr("描述: %1").arg(list.count() > 1 ? list.at(1) : tr(blankString)));
-    ui->manufacturerLabel->setText(tr("制造商: %1").arg(list.count() > 2 ? list.at(2) : tr(blankString)));
-    ui->serialNumberLabel->setText(tr("串口端口: %1").arg(list.count() > 3 ? list.at(3) : tr(blankString)));
-    ui->locationLabel->setText(tr("地址: %1").arg(list.count() > 4 ? list.at(4) : tr(blankString)));
-    ui->vidLabel->setText(tr("厂家ID: %1").arg(list.count() > 5 ? list.at(5) : tr(blankString)));
-    ui->pidLabel->setText(tr("产品ID: %1").arg(list.count() > 6 ? list.at(6) : tr(blankString)));
+    ui->descriptionLabel->setText(tr("Description: %1").arg(list.count() > 1 ? list.at(1) : tr(blankString)));
+    ui->manufacturerLabel->setText(tr("Manufacturer: %1").arg(list.count() > 2 ? list.at(2) : tr(blankString)));
+    ui->serialNumberLabel->setText(tr("Serial number: %1").arg(list.count() > 3 ? list.at(3) : tr(blankString)));
+    ui->locationLabel->setText(tr("Location: %1").arg(list.count() > 4 ? list.at(4) : tr(blankString)));
+    ui->vidLabel->setText(tr("Vendor Identifier: %1").arg(list.count() > 5 ? list.at(5) : tr(blankString)));
+    ui->pidLabel->setText(tr("Product Identifier: %1").arg(list.count() > 6 ? list.at(6) : tr(blankString)));
 }
 
 void SettingsDialog::apply()
@@ -119,14 +119,11 @@ void SettingsDialog::checkCustomDevicePathPolicy(int idx)
 
 void SettingsDialog::fillPortsParameters()
 {
-    ui->baudRateBox->addItem(QStringLiteral("4800"), QSerialPort::Baud4800);
     ui->baudRateBox->addItem(QStringLiteral("9600"), QSerialPort::Baud9600);
     ui->baudRateBox->addItem(QStringLiteral("19200"), QSerialPort::Baud19200);
     ui->baudRateBox->addItem(QStringLiteral("38400"), QSerialPort::Baud38400);
-    ui->baudRateBox->addItem(QStringLiteral("57600"), QSerialPort::Baud57600);
     ui->baudRateBox->addItem(QStringLiteral("115200"), QSerialPort::Baud115200);
-    ui->baudRateBox->addItem(tr("自定义"));
-    ui->baudRateBox->setCurrentIndex(1);
+    ui->baudRateBox->addItem(tr("Custom"));
 
     ui->dataBitsBox->addItem(QStringLiteral("5"), QSerialPort::Data5);
     ui->dataBitsBox->addItem(QStringLiteral("6"), QSerialPort::Data6);
@@ -173,7 +170,7 @@ void SettingsDialog::fillPortsInfo()
         ui->serialPortInfoListBox->addItem(list.first(), list);
     }
 
-    ui->serialPortInfoListBox->addItem(tr("自定义"));
+    ui->serialPortInfoListBox->addItem(tr("Custom"));
 }
 
 void SettingsDialog::updateSettings()
@@ -204,5 +201,5 @@ void SettingsDialog::updateSettings()
                 ui->flowControlBox->itemData(ui->flowControlBox->currentIndex()).toInt());
     currentSettings.stringFlowControl = ui->flowControlBox->currentText();
 
-    //currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
+    currentSettings.localEchoEnabled = ui->localEchoCheckBox->isChecked();
 }

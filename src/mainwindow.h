@@ -63,6 +63,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    void closeEvent(QCloseEvent *);
 
 private slots:
     void openSerialPort();
@@ -70,7 +72,8 @@ private slots:
     void about();
     void writeData(const QByteArray &data);
     void readData();
-    void configFromFile();
+    void writeConfig(const QByteArray &data);
+    void closeAll();
 
     void handleError(QSerialPort::SerialPortError error);
 
@@ -86,8 +89,6 @@ private:
     QSerialPort *serial;
     Form *form;
     ConfigDialog *config;   //程序初始化设置界面
-    //File *fileName;
-    //Command *comm;
 };
 
 #endif // MAINWINDOW_H
