@@ -53,18 +53,57 @@ typedef struct {
     quint8 check;      //校验
 } Cmd;
 
+void buffer(quint8 *buf, int data);
+int level(double base, double cmp);
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
-
-    Cmd cmd = {1,2,3,4,5,6,7,8,9,10};
-    quint8 *a = cmd.data;
-    qDebug() << a[0] << " " << a[1] << " " << a[2] << " " << a[3];
-
-    quint8 *p = &cmd;
-
-    qDebug() << p[0];
-
+    /*
+    quint8 buf[4];
+    buffer(buf, 10000);
+    qDebug() << buf[0] << " " << buf[1] << " "
+                       << buf[2] << " " << buf[3];
+    */
+    //qDebug() << "Hello world";
+    //qDebug() << "6.2 4.5 level = " << level(6.2, 4.5);
+    level(6.2, 4.5);
     return app.exec();
 }
 
+void buffer(quint8 *buf, int data)
+{
+    buf[0] = data;
+    buf[1] = data >> 8;
+    buf[2] = data >> 16;
+    buf[3] = data >> 24;
+}
+
+int level(double base, double cmp)
+{
+    qDebug() << "enter level fun...";
+    //根据额定电流值判断电压参考值和电流档位
+
+    int level = 1;
+    double e = 0.0;
+
+/*
+    do {
+        e = cmp - (level*base/32);
+        level++;
+        qDebug() << QString("level %1, e %2").arg(level).arg(e);
+    } while(e>0.01);
+    */
+
+    for(int i=0; i<32; i++) {
+        qDebug() << QString("level %1, e %2").arg(level).arg(e);
+        e = (level*base/32) - cmp;
+        if(e > 0)
+            break;
+        level++;
+    }
+
+    qDebug() << "end level fun...";
+    return level-1; //0-31
+
+}
