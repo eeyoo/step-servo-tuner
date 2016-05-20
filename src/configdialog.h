@@ -28,6 +28,10 @@
 
 #define EQUIPID      0x02 //设备ID
 */
+
+#define CMPCURRHIGH  6.2   //最大电流档位值(A) 0.31V/0.05Om
+#define CMPCURRLOW   3.3   //最小电流档位值(A) 0.165V/0.05Om
+
 namespace Ui {
 class ConfigDialog;
 }
@@ -45,13 +49,17 @@ public:
         Json, Binary
     };
 
+    enum PaneType {
+        SMI57XXXX=0, SMI42XXXX
+    };
+
     bool loadConfigFile(SaveFormat saveFormat);
     bool saveConfigFile(SaveFormat saveFormat) const;
 
     struct Configs {
-        int elecCtrl; //智能电流控制
-        int volLevel; //参考电压
-        int elecGrade; //电流档位
+        int elecCtrl; //待机电流
+        //int volLevel; //参考电压 310mv - 0 165mv - 1
+        double elecGrade; //额定电流
         int elecLevel; //电机细分等级
         int codeType; //逻辑编码方向
         int plusType;  //脉冲方向
@@ -64,12 +72,17 @@ public:
         int deviceId; //设备ID
         int motorDirect; //电机逻辑正方向 0-顺时针，1-逆时针
         int circleLen;  //外轮圆周长
+        double maxCurr; //最大电流
+        int countOut;    //输出端口数
+        int countIn;    //输入端口数
+        PaneType pane;  //板型
     };
 
     Configs configs() const;
+    void tip(); //提示重新载入软件
 
 signals:
-    void sendData(const QByteArray &data);
+    void sendConfig(const QByteArray &data);
 
 private slots:
     void on_writeSerialBtn_clicked();
@@ -91,7 +104,9 @@ private:
 
     void updateConfigs();
 
-    void tip();
+
+
+    int level(double base, double cmp); //计算电流档位
 
 private:
     void initUI();
@@ -99,8 +114,9 @@ private:
 
 private:
     Ui::ConfigDialog *ui;
-    QMap<QString, int> configDatas;
+    QMap<QString, double> configDatas;
     Configs currentConfigs;
+    int initId;
 };
 
 #endif // CONFIGDIALOG_H

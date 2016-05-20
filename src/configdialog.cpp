@@ -17,6 +17,7 @@ ConfigDialog::ConfigDialog(QWidget *parent) :
     ui->setupUi(this);
     initUI();
     updateConfigs();
+    initId = configDatas["device_id"];
 }
 
 ConfigDialog::~ConfigDialog()
@@ -24,70 +25,70 @@ ConfigDialog::~ConfigDialog()
     delete ui;
 }
 
+int ConfigDialog::level(double base, double cmp)
+{
+
+    //根据额定电流值判断电压参考值和电流档位
+
+    int level = 1;
+    double e = 0.0;
+
+    for(int i=0; i<32; i++) {
+        //qDebug() << QString("level %1, e %2").arg(level).arg(e);
+        e = (level*base/32) - cmp;
+        if(e > 0)
+            break;
+        level++;
+    }
+
+    return level-1; //0-31
+
+}
+
 void ConfigDialog::on_writeSerialBtn_clicked()
 {
-    /*
-    int elecCtrl = ui->elecContrl->currentIndex(); //智能电流控制
-    int volLevel = ui->volLevel->currentIndex(); //参考电压
-    int elecGrade = ui->elecGrade->value();     //电流档位
-    int elecLevel = ui->motorLevel->currentIndex(); //电机细分等级
-    int codeType = ui->codeLogicDirect->currentIndex(); //逻辑编码方向
-    int plusType = ui->plusType->currentIndex(); //脉冲控制方式
-    int maxN = ui->maximumNegative->value(); //负向最大允许位移
-    int maxP = ui->maximumPositive->value(); //正向最大允许位移
-    int decTime = ui->servoDecTime->value(); //减速时间
-    int accTime = ui->servoAccTime->value(); //加速时间
+    updateConfigs(); //更新Map struct
 
-    int rsBaud = ui->rs485Baud->currentIndex(); //RS485波特率
-    int canBaud = ui->canBaud->currentIndex();  //CAN波特率
-    int deviceID = ui->deviceID->value();   //设备ID
-    int motorDirect = ui->motorDirect->currentIndex();  //电机逻辑正方向
-
-    currentConfigs.elecCtrl = elecCtrl;
-    currentConfigs.volLevel = volLevel;
-    currentConfigs.elecGrade = elecGrade;
-    currentConfigs.elecLevel = elecLevel;
-
-    configDatas["elec_ctrl"] = elecCtrl;
-    configDatas["vol_level"] = volLevel;
-    configDatas["elec_grade"] = elecGrade;
-    configDatas["elec_level"] = elecLevel;
-    configDatas["code_type"] = codeType;
-    configDatas["plus_type"] = plusType;
-    configDatas["negative_max"] = maxN;
-    configDatas["positive_max"] = maxP;
-    configDatas["dec_time"] = decTime;
-    configDatas["acc_time"] = accTime;
-    configDatas["rs485_baud"] = rsBaud;
-    configDatas["can_baud"] = canBaud;
-    configDatas["device_id"] = deviceID;
-    configDatas["motor_direct"] = motorDirect;
-    */
-    //QByteArray data;
-
-    updateConfigs();
-    int level = currentConfigs.elecLevel;
+    int n = currentConfigs.elecLevel;
     int temp[] = {1,2,4,8,16,32,64,128,256};
-    int div = temp[level];
-    int param = 200*div / currentConfigs.circleLen;
+
+    int div = temp[n];  //电机细分等级
+    int param = 200*div / currentConfigs.circleLen; //位移脉冲转换值
+
+
 
     quint8 id[2];
-    convert(currentConfigs.deviceId, id, 2);
+    convert(initId, id, 2);
     //智能电流控制
     quint8 pec[4];
     convert(currentConfigs.elecCtrl,pec,4);
     quint8 ec[] = {id[0],id[1],SETSMARTCURR,0x00,0x01,pec[0],pec[1],pec[2],pec[3],0x00};
     QByteArray qEC;
     compact(ec, qEC, 10);
+
+    //参考电压边界与电流档位需要额定电流与板型决定
+    int volLevel = 0; // 0 or 1
+    int elecLevel = 0; // 0 - 31
+    double amp = currentConfigs.elecGrade; //额定电流值
+    double maxCurr = currentConfigs.maxCurr; //最大电流限制
+    if(amp > CMPCURRLOW)
+    {
+        volLevel = 0; //310mv
+        elecLevel = level(CMPCURRHIGH, maxCurr);
+    } else {
+        volLevel = 1; //165mv
+        elecLevel = level(CMPCURRLOW, amp);
+    }
+
     //参考电压
     quint8 pvl[4];
-    convert(currentConfigs.volLevel, pvl, 4);
+    convert(volLevel, pvl, 4);
     quint8 vl[] = {id[0],id[1],SETREFVOLCMD,0x00,0x02,pvl[0],pvl[1],pvl[2],pvl[3],0x00};
     QByteArray qVL;
     compact(vl, qVL, 10);
     //电流档位
     quint8 peg[4];
-    convert(currentConfigs.elecGrade, peg, 4);
+    convert(elecLevel, peg, 4);
     quint8 eg[] = {id[0],id[1],SETCUGEARCMD,0x00,0x03,peg[0],peg[1],peg[2],peg[3],0x00};
     QByteArray qEG;
     compact(eg, qEG, 10);
@@ -135,7 +136,7 @@ void ConfigDialog::on_writeSerialBtn_clicked()
     compact(pt,qPT,10);
     //负向最大允许位移
     quint8 pmn[4];
-    convert(-1*param*currentConfigs.maxN,pmn,4);
+    convert(param*currentConfigs.maxN,pmn,4);
     QByteArray qMN;
     quint8 mn[] = {id[0],id[1],SETNEGMAXPOS,0x00,0x0b,pmn[0],pmn[1],pmn[2],pmn[3],0x00};
     compact(mn,qMN,10);
@@ -163,18 +164,17 @@ void ConfigDialog::on_writeSerialBtn_clicked()
     compact(hd,qHD,10);
 
     QByteArray data;
+
     data.append(qHD).append(qAT).append(qDT).append(qMP).append(qMN).append(qPT)
             .append(qCT).append(qRS).append(qCAN)
             .append(qID).append(qMD).append(qEL).append(qEG).append(qVL).append(qEC);
 
-    //data.append(qmd);
+    //data.append(qVL).append(qEG);
 
-    qDebug() << data.toHex().toUpper();
-    emit sendData(data);
+    emit sendConfig(data);
 
-    tip();
-
-    close();
+    saveConfigFile(Json);
+    //tip();
 }
 
 quint32 ConfigDialog::power(int index)
@@ -208,7 +208,7 @@ void ConfigDialog::receiveDate(const QByteArray &data)
 void ConfigDialog::on_saveConfigBtn_clicked()
 {
     updateConfigs();
-
+/*
     configDatas["elec_ctrl"] = currentConfigs.elecCtrl;
     configDatas["vol_level"] = currentConfigs.volLevel;
     configDatas["elec_grade"] = currentConfigs.elecGrade;
@@ -224,16 +224,11 @@ void ConfigDialog::on_saveConfigBtn_clicked()
     configDatas["device_id"] = currentConfigs.deviceId;
     configDatas["motor_direct"] = currentConfigs.motorDirect;
     configDatas["circle_len"] = currentConfigs.circleLen;
+*/
 
+    saveConfigFile(Json);
 
-    bool ret = saveConfigFile(Json);
-    if(ret) {
-        qDebug() << "write json file successful.";
-        close();
-    } else
-        qDebug() << "write json file failed.";
-
-    tip();
+    //tip();
 
 }
 
@@ -241,10 +236,11 @@ void ConfigDialog::updateConfigs()
 {
     //串口下载参数
     int elecCtrl = ui->elecContrl->currentIndex(); //智能电流控制
-    int volLevel = ui->volLevel->currentIndex(); //参考电压
-    int elecGrade = ui->elecGrade->value(); //电流档位
+    //int volLevel = ui->volLevel->currentIndex();    //参考电压
+    double elecGrade = ui->elecGrade->value();      //电流档位
     int elecLevel = ui->motorLevel->currentIndex(); //电机细分等级
-    int codeType = ui->codeLogicDirect->currentIndex(); //逻辑编码方向
+    //int codeType = ui->codeLogicDirect->currentIndex(); //逻辑编码方向
+    int codeType = 0;
     int plusType = ui->plusType->currentIndex(); //脉冲控制方式
     int maxN = ui->maximumNegative->value(); //负向最大允许位移
     int maxP = ui->maximumPositive->value(); //正向最大允许位移
@@ -254,13 +250,13 @@ void ConfigDialog::updateConfigs()
     int canBaud = ui->canBaud->currentIndex();  //CAN波特率
     int deviceID = ui->deviceID->value();   //设备ID
     int motorDirect = ui->motorDirect->currentIndex();  //电机逻辑正方向
-
     //不需下载参数
     int circe = ui->circleLen->value(); //电机外轮圆周长
+    int pane = ui->paneType->currentIndex(); //板型（0 - 57mm 1 - 42mm）
 
     //保存下载参数
     currentConfigs.elecCtrl = elecCtrl;
-    currentConfigs.volLevel = volLevel;
+    //currentConfigs.volLevel = volLevel;
     currentConfigs.elecGrade = elecGrade;
     currentConfigs.elecLevel = elecLevel;
     currentConfigs.codeType = codeType;
@@ -274,6 +270,37 @@ void ConfigDialog::updateConfigs()
     currentConfigs.deviceId = deviceID;
     currentConfigs.motorDirect = motorDirect;
     currentConfigs.circleLen = circe;
+    if(pane == 0) {
+        currentConfigs.pane = SMI57XXXX;
+        currentConfigs.maxCurr = 4.5;
+        currentConfigs.countIn = 5;
+        currentConfigs.countOut = 1;
+    } else if(pane == 1) {
+        currentConfigs.pane = SMI42XXXX;
+        currentConfigs.maxCurr = 3.0;
+        currentConfigs.countIn = 3;
+        currentConfigs.countOut = 1;
+    }
+
+    configDatas["elec_ctrl"] = currentConfigs.elecCtrl;
+    //configDatas["vol_level"] = currentConfigs.volLevel;
+    configDatas["elec_grade"] = currentConfigs.elecGrade;
+    configDatas["elec_level"] = currentConfigs.elecLevel;
+    configDatas["code_type"] = currentConfigs.codeType;
+    configDatas["plus_type"] = currentConfigs.plusType;
+    configDatas["negative_max"] = currentConfigs.maxN;
+    configDatas["positive_max"] = currentConfigs.maxP;
+    configDatas["dec_time"] = currentConfigs.decTime;
+    configDatas["acc_time"] = currentConfigs.accTime;
+    configDatas["rs485_baud"] = currentConfigs.rsBaud;
+    configDatas["can_baud"] = currentConfigs.canBaud;
+    configDatas["device_id"] = currentConfigs.deviceId;
+    configDatas["motor_direct"] = currentConfigs.motorDirect;
+    configDatas["circle_len"] = currentConfigs.circleLen;
+    configDatas["max_current"] = currentConfigs.maxCurr;
+    configDatas["count_out"] = currentConfigs.countOut;
+    configDatas["count_in"] = currentConfigs.countIn;
+    configDatas["pane_type"] = currentConfigs.pane;
 }
 
 ConfigDialog::Configs ConfigDialog::configs() const
@@ -303,7 +330,7 @@ bool ConfigDialog::saveConfigFile(SaveFormat saveFormat) const
 void ConfigDialog::write(QJsonObject &json) const
 {
     QJsonArray configArray;
-    QMapIterator<QString, int> i(configDatas);
+    QMapIterator<QString, double> i(configDatas);
     while(i.hasNext()) {
         i.next();
         QJsonObject obj;
@@ -318,23 +345,15 @@ void ConfigDialog::write(QJsonObject &json) const
 void ConfigDialog::on_readConfigBtn_clicked()
 {
     //读取磁盘文件
-    bool ret = loadConfigFile(Json);
-    if (ret) {
-        qDebug() << "read json file successful.";
-    } else {
-        qDebug() << "read json file failed.";
-    }
-
-    //界面显示出来
-    //ui->val1->setText(QString::number(configDatas["circle_len"]));
+    loadConfigFile(Json);
 
     ui->deviceID->setValue(configDatas["device_id"]);
     ui->rs485Baud->setCurrentIndex(configDatas["rs485_baud"]);
     ui->canBaud->setCurrentIndex(configDatas["can_baud"]);
     ui->elecContrl->setCurrentIndex(configDatas["elec_ctrl"]);
-    ui->volLevel->setCurrentIndex(configDatas["vol_level"]);
+    //ui->volLevel->setCurrentIndex(configDatas["vol_level"]);
     ui->motorLevel->setCurrentIndex(configDatas["elec_level"]);
-    ui->codeLogicDirect->setCurrentIndex(configDatas["code_type"]);
+    //ui->codeLogicDirect->setCurrentIndex(configDatas["code_type"]);
     ui->plusType->setCurrentIndex(configDatas["plus_type"]);
     ui->elecGrade->setValue(configDatas["elec_grade"]);
     ui->maximumNegative->setValue(configDatas["negative_max"]);
@@ -342,6 +361,7 @@ void ConfigDialog::on_readConfigBtn_clicked()
     ui->servoAccTime->setValue(configDatas["acc_time"]);
     ui->servoDecTime->setValue(configDatas["dec_time"]);
     ui->circleLen->setValue(configDatas["circle_len"]);
+    ui->paneType->setCurrentIndex(configDatas["pane_type"]);
 }
 
 bool ConfigDialog::loadConfigFile(SaveFormat saveFormat)
@@ -370,12 +390,10 @@ void ConfigDialog::read(const QJsonObject &json)
     //JSON格式文件解析出来
     QJsonArray configArray = json["configs"].toArray();
 
-    //ui->val1->setText(configArray[]);
-
     for (int i=0; i < configArray.size(); i++) {
         QJsonObject obj = configArray[i].toObject();
         QString name = obj["name"].toString();
-        int value = obj["value"].toInt();
+        double value = obj["value"].toDouble();
         configDatas.insert(name, value);
     }
 
@@ -385,15 +403,14 @@ void ConfigDialog::initUI()
 {
 
     loadConfigFile(Json);
-    //qDebug() << configDatas["device_id"];
 
     ui->deviceID->setValue(configDatas["device_id"]);
     ui->rs485Baud->setCurrentIndex(configDatas["rs485_baud"]);
     ui->canBaud->setCurrentIndex(configDatas["can_baud"]);
     ui->elecContrl->setCurrentIndex(configDatas["elec_ctrl"]);
-    ui->volLevel->setCurrentIndex(configDatas["vol_level"]);
+    //ui->volLevel->setCurrentIndex(configDatas["vol_level"]);
     ui->motorLevel->setCurrentIndex(configDatas["elec_level"]);
-    ui->codeLogicDirect->setCurrentIndex(configDatas["code_type"]);
+    //ui->codeLogicDirect->setCurrentIndex(configDatas["code_type"]);
     ui->plusType->setCurrentIndex(configDatas["plus_type"]);
     ui->elecGrade->setValue(configDatas["elec_grade"]);
     ui->maximumNegative->setValue(configDatas["negative_max"]);
@@ -401,6 +418,7 @@ void ConfigDialog::initUI()
     ui->servoAccTime->setValue(configDatas["acc_time"]);
     ui->servoDecTime->setValue(configDatas["dec_time"]);
     ui->circleLen->setValue(configDatas["circle_len"]);
+    ui->paneType->setCurrentIndex(configDatas["pane_type"]);
 
 }
 

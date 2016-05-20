@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>697</width>
-    <height>455</height>
+    <width>644</width>
+    <height>457</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,10 +53,10 @@
                  <string>分为1至32等级</string>
                 </property>
                 <property name="minimum">
-                 <number>2</number>
+                 <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>100000</number>
+                 <number>1000</number>
                 </property>
                </widget>
               </item>
@@ -216,31 +216,18 @@
            <property name="title">
             <string>电机配置</string>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0,1">
+           <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
              <layout class="QFormLayout" name="formLayout">
               <item row="0" column="0">
                <widget class="QLabel" name="label_5">
                 <property name="text">
-                 <string>电流档位</string>
+                 <string>额定电流（A）</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QSpinBox" name="elecGrade">
-                <property name="statusTip">
-                 <string>分为1至32等级</string>
-                </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <number>32</number>
-                </property>
-                <property name="value">
-                 <number>4</number>
-                </property>
-               </widget>
+               <widget class="QDoubleSpinBox" name="elecGrade"/>
               </item>
               <item row="1" column="0">
                <widget class="QLabel" name="label_3">
@@ -249,10 +236,45 @@
                 </property>
                </widget>
               </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="maximumPositive">
+                <property name="statusTip">
+                 <string>分为1至32等级</string>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>1000000</number>
+                </property>
+                <property name="singleStep">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>1000</number>
+                </property>
+               </widget>
+              </item>
               <item row="2" column="0">
                <widget class="QLabel" name="label_16">
                 <property name="text">
                  <string>负向最大允许位置(mm)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QSpinBox" name="maximumNegative">
+                <property name="minimum">
+                 <number>-1000000</number>
+                </property>
+                <property name="maximum">
+                 <number>1000000</number>
+                </property>
+                <property name="singleStep">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>1000</number>
                 </property>
                </widget>
               </item>
@@ -296,41 +318,6 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
-               <widget class="QSpinBox" name="maximumPositive">
-                <property name="statusTip">
-                 <string>分为1至32等级</string>
-                </property>
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <number>1000000</number>
-                </property>
-                <property name="singleStep">
-                 <number>100</number>
-                </property>
-                <property name="value">
-                 <number>1000</number>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QSpinBox" name="maximumNegative">
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <number>1000000</number>
-                </property>
-                <property name="singleStep">
-                 <number>100</number>
-                </property>
-                <property name="value">
-                 <number>1000</number>
-                </property>
-               </widget>
-              </item>
              </layout>
             </item>
             <item>
@@ -343,37 +330,22 @@
             <item>
              <layout class="QFormLayout" name="formLayout_2">
               <item row="0" column="0">
-               <widget class="QLabel" name="label">
+               <widget class="QLabel" name="label_11">
                 <property name="text">
-                 <string>参考电压边界</string>
+                 <string>控制器型号</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QComboBox" name="volLevel">
-                <property name="toolTip">
-                 <string/>
-                </property>
-                <property name="statusTip">
-                 <string/>
-                </property>
-                <property name="editable">
-                 <bool>false</bool>
-                </property>
-                <property name="currentText">
-                 <string>低</string>
-                </property>
-                <property name="maxVisibleItems">
-                 <number>2</number>
-                </property>
+               <widget class="QComboBox" name="paneType">
                 <item>
                  <property name="text">
-                  <string>低</string>
+                  <string>SMI57XXXX</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>高</string>
+                  <string>SMI42XXXX</string>
                  </property>
                 </item>
                </widget>
@@ -381,7 +353,7 @@
               <item row="1" column="0">
                <widget class="QLabel" name="label_2">
                 <property name="text">
-                 <string>智能电流控制</string>
+                 <string>待机电流</string>
                 </property>
                </widget>
               </item>
@@ -541,27 +513,6 @@
                 <item>
                  <property name="text">
                   <string>外部脉冲控制</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="5" column="0">
-               <widget class="QLabel" name="label_23">
-                <property name="text">
-                 <string>编码逻辑方向</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="1">
-               <widget class="QComboBox" name="codeLogicDirect">
-                <item>
-                 <property name="text">
-                  <string>负向</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>正向</string>
                  </property>
                 </item>
                </widget>
