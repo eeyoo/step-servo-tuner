@@ -26,12 +26,7 @@ Form::Form(QWidget *parent) :
     convert(id, deviceId, 2);
     param = 200 * div[level] / circle;
 
-    int maxN = config->configs().maxN;
-    int maxP = config->configs().maxP;
-    ui->absMoveDistance->setMaximum(maxP);
-    ui->absMoveDistance->setMinimum(-maxN);
-    ui->relMoveDistance->setMaximum(maxP);
-    ui->relMoveDistance->setMinimum(-maxN);
+
 
     //qDebug() << "param = " << param;
     initUI();
@@ -52,12 +47,21 @@ Form::~Form()
 void Form::about()
 {
     QMessageBox::about(this, tr("控制器配置程序"),
-                       tr("/***********测试版*************/"));
+                       tr("/***********v1.0 测试版*************/"));
 }
 
 void Form::initUI()
 {
+    int countIn = config->configs().countIn;
+    ui->jumpParam->setMaximum(countIn);
+    ui->inputParam->setMaximum(countIn);
 
+    int maxN = config->configs().maxN;
+    int maxP = config->configs().maxP;
+    ui->absMoveDistance->setMaximum(maxP);
+    ui->absMoveDistance->setMinimum(maxN);
+    ui->relMoveDistance->setMaximum(maxP);
+    ui->relMoveDistance->setMinimum(maxN);
 }
 
 void Form::initConnect()
@@ -81,6 +85,7 @@ void Form::initModel()
 void Form::receiveData(const QByteArray &data)
 {
     echo = data;
+    qDebug() << "echo: " << echo.toHex();
 }
 
 void Form::dragEnterEvent(QDragEnterEvent *event)
@@ -297,6 +302,11 @@ void Form::on_jmpAddBtn_clicked()
 {
     int line = ui->jmpLine->value();
 
+    if(line > row) {
+        QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1")).arg(row));
+        return;
+    }
+
     jmp_to = line-1;
 
     quint8 pln[2];
@@ -322,6 +332,11 @@ void Form::on_jmpAddBtn_clicked()
 void Form::on_cmpAddBtn_clicked()
 {
     int line = ui->cmpLine->value();
+    if(line > row) {
+        QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1")).arg(row));
+        return;
+    }
+
     int param = ui->cmpParam->value();
     int type = ui->cmpType->currentIndex() + 1;
     int value = ui->cmpVal->value();
@@ -359,6 +374,11 @@ void Form::on_cmpAddBtn_clicked()
 void Form::on_jumpAddBtn_clicked()
 {
     int line = ui->jumpLine->value();
+    if(line > row) {
+        QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1")).arg(row));
+        return;
+    }
+
     int param = ui->jumpParam->value();
     int state = ui->ioState->currentIndex();
 

@@ -17,7 +17,7 @@
    <item>
     <widget class="QToolBox" name="parentToolBox">
      <property name="currentIndex">
-      <number>4</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="movePage">
       <property name="geometry">
@@ -35,7 +35,7 @@
        <item>
         <widget class="QToolBox" name="moveToolBox">
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="absPage">
           <property name="geometry">
@@ -101,8 +101,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
-            <height>308</height>
+            <width>162</width>
+            <height>75</height>
            </rect>
           </property>
           <attribute name="label">
@@ -160,8 +160,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
-            <height>308</height>
+            <width>138</width>
+            <height>75</height>
            </rect>
           </property>
           <attribute name="label">
@@ -369,6 +369,9 @@
              </item>
              <item>
               <widget class="QSpinBox" name="jmpLine">
+               <property name="minimum">
+                <number>1</number>
+               </property>
                <property name="maximum">
                 <number>20</number>
                </property>
@@ -425,6 +428,9 @@
              </item>
              <item>
               <widget class="QSpinBox" name="cmpParam">
+               <property name="minimum">
+                <number>1</number>
+               </property>
                <property name="maximum">
                 <number>20</number>
                </property>
@@ -489,6 +495,9 @@
              </item>
              <item>
               <widget class="QSpinBox" name="cmpLine">
+               <property name="minimum">
+                <number>1</number>
+               </property>
                <property name="maximum">
                 <number>20</number>
                </property>
@@ -549,7 +558,7 @@
                 <number>1</number>
                </property>
                <property name="maximum">
-                <number>4</number>
+                <number>100</number>
                </property>
                <property name="value">
                 <number>1</number>
@@ -641,15 +650,15 @@
        <item>
         <widget class="QToolBox" name="toolBox_3">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="page_5">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>136</width>
-            <height>103</height>
+            <width>246</width>
+            <height>334</height>
            </rect>
           </property>
           <attribute name="label">
@@ -667,8 +676,11 @@
              </item>
              <item>
               <widget class="QSpinBox" name="inputParam">
+               <property name="minimum">
+                <number>1</number>
+               </property>
                <property name="maximum">
-                <number>4</number>
+                <number>100</number>
                </property>
                <property name="value">
                 <number>1</number>
@@ -776,16 +788,16 @@
              <item>
               <widget class="QComboBox" name="outputState">
                <property name="currentText">
-                <string>低电平</string>
+                <string>断开</string>
                </property>
                <item>
                 <property name="text">
-                 <string>低电平</string>
+                 <string>断开</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>高电平</string>
+                 <string>接通</string>
                 </property>
                </item>
               </widget>

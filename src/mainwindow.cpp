@@ -55,8 +55,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //comm = new Command;
-
     form = new Form;
     setCentralWidget(form);
     setWindowTitle(QWidget::tr("步进电机快速调试程序"));
@@ -84,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(form, SIGNAL(sendData(QByteArray)), this, SLOT(writeData(QByteArray)));
 
-    connect(config, SIGNAL(sendData(QByteArray)), this, SLOT(writeData(QByteArray)));
+    connect(config, SIGNAL(sendConfig(QByteArray)), this, SLOT(writeConfig(QByteArray)));
 }
 
 MainWindow::~MainWindow()
@@ -113,7 +111,7 @@ void MainWindow::openSerialPort()
                           .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
                           .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
     } else {
-        QMessageBox::critical(this, tr("Error"), serial->errorString());
+        QMessageBox::critical(this, tr("错误"), serial->errorString());
 
         showStatusMessage(tr("连接错误"));
     }
@@ -143,10 +141,31 @@ void MainWindow::about()
 void MainWindow::writeData(const QByteArray &data)
 {
     //串口发送数据 - 缓存写数据
-
     //showStatusMessage(tr("发送指令数据：") + data.toHex());
+
+    if(!serial->isOpen())
+    {
+        QMessageBox::warning(this,tr("警告"),tr("请打开串口！"));
+        return;
+    }
+
     serial->write(data);
 
+}
+
+void MainWindow::writeConfig(const QByteArray &data)
+{
+    if(!serial->isOpen())
+    {
+        QMessageBox::warning(this,tr("警告"),tr("请打开串口！"));
+        return;
+    }
+
+    serial->write(data);
+
+    config->tip();
+    //config->setFocus();
+    //config->isTopLevel();
 }
 
 void MainWindow::readData()
@@ -173,11 +192,24 @@ void MainWindow::initActionsConnections()
     connect(ui->actionSystem, SIGNAL(triggered()), config, SLOT(show()));
     connect(ui->actionAbout, SIGNAL(triggered()), form, SLOT(about()));
 
-    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(closeAll()));
 }
 
 void MainWindow::showStatusMessage(const QString &message)
 {
     status->setText(message);
     //statusBar()->showMessage(message, 1000);
+}
+
+void MainWindow::closeAll()
+{
+    close();
+    config->close();
+    settings->close();
+}
+
+void MainWindow::closeEvent(QCloseEvent */*e*/)
+{
+    closeAll();
+
 }
