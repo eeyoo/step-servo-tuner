@@ -369,6 +369,7 @@ bool ConfigDialog::loadConfigFile(SaveFormat saveFormat)
     QFile loadFile(saveFormat == Json
                    ? QStringLiteral("save.json")
                    : QStringLiteral("save.dat"));
+
     if(!loadFile.open(QIODevice::ReadOnly)) {
         //qWarning("不能打开文件!");
         return false;
@@ -402,7 +403,19 @@ void ConfigDialog::read(const QJsonObject &json)
 void ConfigDialog::initUI()
 {
 
-    loadConfigFile(Json);
+    //loadConfigFile(Json);
+    QFile loadFile(QStringLiteral(":/config/save.json"));
+
+    if(!loadFile.open(QIODevice::ReadOnly)) {
+        //qWarning("不能打开文件!");
+        return;
+    }
+
+    QByteArray saveData = loadFile.readAll();
+
+    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+
+    read(loadDoc.object()); //解析QJsonDocument文件
 
     ui->deviceID->setValue(configDatas["device_id"]);
     ui->rs485Baud->setCurrentIndex(configDatas["rs485_baud"]);

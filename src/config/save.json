@@ -1,0 +1,80 @@
+{
+    "configs": [
+        {
+            "name": "acc_time",
+            "value": 2000
+        },
+        {
+            "name": "can_baud",
+            "value": 0
+        },
+        {
+            "name": "circle_len",
+            "value": 50
+        },
+        {
+            "name": "code_type",
+            "value": 0
+        },
+        {
+            "name": "count_in",
+            "value": 5
+        },
+        {
+            "name": "count_out",
+            "value": 1
+        },
+        {
+            "name": "dec_time",
+            "value": 2000
+        },
+        {
+            "name": "device_id",
+            "value": 5
+        },
+        {
+            "name": "elec_ctrl",
+            "value": 0
+        },
+        {
+            "name": "elec_grade",
+            "value": 2.5
+        },
+        {
+            "name": "elec_level",
+            "value": 3
+        },
+        {
+            "name": "max_current",
+            "value": 4.5
+        },
+        {
+            "name": "motor_direct",
+            "value": 0
+        },
+        {
+            "name": "negative_max",
+            "value": -1000
+        },
+        {
+            "name": "pane_type",
+            "value": 0
+        },
+        {
+            "name": "plus_type",
+            "value": 0
+        },
+        {
+            "name": "positive_max",
+            "value": 1000
+        },
+        {
+            "name": "rs485_baud",
+            "value": 4
+        },
+        {
+            "name": "vol_level",
+            "value": 0
+        }
+    ]
+}
