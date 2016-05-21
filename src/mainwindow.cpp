@@ -155,6 +155,8 @@ void MainWindow::writeData(const QByteArray &data)
 
 void MainWindow::writeConfig(const QByteArray &data)
 {
+    //showStatusMessage(tr("发送指令数据：") + data.toHex());
+
     if(!serial->isOpen())
     {
         QMessageBox::warning(this,tr("警告"),tr("请打开串口！"));

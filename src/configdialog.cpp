@@ -74,7 +74,9 @@ void ConfigDialog::on_writeSerialBtn_clicked()
     if(amp > CMPCURRLOW)
     {
         volLevel = 0; //310mv
-        elecLevel = level(CMPCURRHIGH, maxCurr);
+        if(amp > maxCurr)
+            amp = maxCurr;
+        elecLevel = level(CMPCURRHIGH, amp);
     } else {
         volLevel = 1; //165mv
         elecLevel = level(CMPCURRLOW, amp);
@@ -402,20 +404,23 @@ void ConfigDialog::read(const QJsonObject &json)
 
 void ConfigDialog::initUI()
 {
+    //外部文件不存在，读取资源文件
+    if(!loadConfigFile(Json))
+    {
+        QFile loadFile(QStringLiteral(":/config/save.json"));
 
-    //loadConfigFile(Json);
-    QFile loadFile(QStringLiteral(":/config/save.json"));
+        if(!loadFile.open(QIODevice::ReadOnly)) {
+            //qWarning("不能打开文件!");
+            return;
+        }
 
-    if(!loadFile.open(QIODevice::ReadOnly)) {
-        //qWarning("不能打开文件!");
-        return;
+        QByteArray saveData = loadFile.readAll();
+
+        QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+
+        read(loadDoc.object()); //解析QJsonDocument文件
     }
 
-    QByteArray saveData = loadFile.readAll();
-
-    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-
-    read(loadDoc.object()); //解析QJsonDocument文件
 
     ui->deviceID->setValue(configDatas["device_id"]);
     ui->rs485Baud->setCurrentIndex(configDatas["rs485_baud"]);
@@ -443,4 +448,35 @@ void ConfigDialog::initConnect()
 void ConfigDialog::tip()
 {
     QMessageBox::about(this,tr("提示对话框"),tr("修改配置参数后需重启软件生效！"));
+}
+
+void ConfigDialog::on_resetBtn_clicked()
+{
+    QFile loadFile(QStringLiteral(":/config/save.json"));
+    if(!loadFile.open(QIODevice::ReadOnly)) {
+        //qWarning("不能打开文件!");
+        return;
+    }
+
+    QByteArray saveData = loadFile.readAll();
+
+    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+    read(loadDoc.object()); //解析QJsonDocument文件
+
+    ui->deviceID->setValue(configDatas["device_id"]);
+    ui->rs485Baud->setCurrentIndex(configDatas["rs485_baud"]);
+    ui->canBaud->setCurrentIndex(configDatas["can_baud"]);
+    ui->elecContrl->setCurrentIndex(configDatas["elec_ctrl"]);
+    //ui->volLevel->setCurrentIndex(configDatas["vol_level"]);
+    ui->motorLevel->setCurrentIndex(configDatas["elec_level"]);
+    //ui->codeLogicDirect->setCurrentIndex(configDatas["code_type"]);
+    ui->plusType->setCurrentIndex(configDatas["plus_type"]);
+    ui->elecGrade->setValue(configDatas["elec_grade"]);
+    ui->maximumNegative->setValue(configDatas["negative_max"]);
+    ui->maximumPositive->setValue(configDatas["positive_max"]);
+    ui->servoAccTime->setValue(configDatas["acc_time"]);
+    ui->servoDecTime->setValue(configDatas["dec_time"]);
+    ui->circleLen->setValue(configDatas["circle_len"]);
+    ui->paneType->setCurrentIndex(configDatas["pane_type"]);
+
 }

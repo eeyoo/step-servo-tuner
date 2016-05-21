@@ -91,6 +91,8 @@ private slots:
 
     void on_readConfigBtn_clicked();
 
+    void on_resetBtn_clicked();
+
 private:
     quint32 power(int index); //return 2^index
 
@@ -103,8 +105,6 @@ private:
     void data(const Configs *configs, QByteArray &qa); //配置结构转换为QByteArray
 
     void updateConfigs();
-
-
 
     int level(double base, double cmp); //计算电流档位
 

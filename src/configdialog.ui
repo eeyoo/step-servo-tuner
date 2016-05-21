@@ -578,6 +578,13 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="resetBtn">
+       <property name="text">
+        <string>重置配置</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="saveConfigBtn">
        <property name="text">
         <string>写入配置文件</string>
