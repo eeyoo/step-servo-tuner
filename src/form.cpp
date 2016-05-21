@@ -25,7 +25,7 @@ Form::Form(QWidget *parent) :
     int deviceId = config->configs().deviceId;
     convert(id, deviceId, 2);
     param = 200 * div[level] / circle;
-
+    //qDebug() << QString("param %1 pos %2").arg(param).arg(position);
 
 
     //qDebug() << "param = " << param;
@@ -85,7 +85,7 @@ void Form::initModel()
 void Form::receiveData(const QByteArray &data)
 {
     echo = data;
-    qDebug() << "echo: " << echo.toHex();
+    //qDebug() << "echo: " << echo.toHex();
 }
 
 void Form::dragEnterEvent(QDragEnterEvent *event)
@@ -103,11 +103,13 @@ void Form::on_absAddBtn_clicked()
 
     position = ui->absMoveDistance->value();
 
+    moves.append(0);
     quint8 qpos[4];
     convert(qpos, position * param, 4);
 
+    //qDebug() << QString("plus %1 pos %2").arg(position*param).arg(position);
+
     quint8 qPos[10] = {id[0],id[1],ABS_MOVE_CMD,0x01,0x00,qpos[0],qpos[1],qpos[2],qpos[3],0x00};
-    //quint8 qSpd[10] = {0x02,0x00,SETMOVESPCMD,0x01,0x00,qspd[0],qspd[1],qspd[2],qspd[3],0x00};
 
     QByteArray qa;
     array2qa(qa, qPos, 10);
@@ -134,10 +136,12 @@ void Form::on_relaAddBtn_clicked()
 {
     int pos = ui->relMoveDistance->value();
     position += pos;
+    moves.append(pos);
 
     quint8 qpos[4];
     convert(qpos, position * param, 4);
 
+    //qDebug() << QString("plus %1 pos %2").arg(position*param).arg(position);
 
     quint8 qPos[10] = {id[0],id[1],ABS_MOVE_CMD,0x01,0x00,qpos[0],qpos[1],qpos[2],qpos[3],0x00};
 
@@ -163,6 +167,8 @@ void Form::on_relaAddBtn_clicked()
 
 void Form::on_setSpdBtn_clicked()
 {
+    moves.append(0);
+
     int spd = ui->setRunSpd->value();
     quint8 qspd[4];
     convert(qspd, spd, 4);
@@ -187,19 +193,23 @@ void Form::on_setSpdBtn_clicked()
 void Form::on_resetBtn_clicked()
 {
     cmd_list->clear();
+    moves.clear();
 
     model->removeRows(0, row, QModelIndex());
     ui->tableView->setModel(model);
     row = 0;
     index = 0;
+    position = 0;
 }
 
 void Form::on_deleteBtn_clicked()
 {
     row--;
     index--;
-    if (row < 0) {
-        row = 0;
+    if (row == 0) {
+        //row = 0;
+        position = 0;
+        index = 0;
     }
 
     if(row == jmp_from)
@@ -207,6 +217,10 @@ void Form::on_deleteBtn_clicked()
 
     model->removeRow(row, QModelIndex());
     cmd_list->removeAt(row);
+    position -= moves.at(row);
+    moves.removeAt(row);
+
+    //qDebug() << QString("position %1 row %2").arg(position).arg(row);
 }
 
 
@@ -273,6 +287,7 @@ void Form::on_forwardAct_clicked()
 
 void Form::on_opAddBtn_clicked()
 {
+    moves.append(0);
     int param = ui->opParam->value();
     int opType = ui->opType->currentIndex() + 1; //1-自增 2-自减
     quint8 pop[4];
@@ -300,6 +315,7 @@ void Form::on_opAddBtn_clicked()
 
 void Form::on_jmpAddBtn_clicked()
 {
+    moves.append(0);
     int line = ui->jmpLine->value();
 
     if(line > row) {
@@ -331,6 +347,7 @@ void Form::on_jmpAddBtn_clicked()
 
 void Form::on_cmpAddBtn_clicked()
 {
+    moves.append(0);
     int line = ui->cmpLine->value();
     if(line > row) {
         QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1")).arg(row));
@@ -373,6 +390,7 @@ void Form::on_cmpAddBtn_clicked()
 
 void Form::on_jumpAddBtn_clicked()
 {
+    moves.append(0);
     int line = ui->jumpLine->value();
     if(line > row) {
         QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1")).arg(row));
@@ -410,6 +428,7 @@ void Form::on_jumpAddBtn_clicked()
 
 void Form::on_inputAddBtn_clicked()
 {
+    moves.append(0);
     int param = ui->inputParam->value();
     int state = ui->inputState->currentIndex();
 
@@ -436,6 +455,7 @@ void Form::on_inputAddBtn_clicked()
 
 void Form::on_outputAddBtn_clicked()
 {
+    moves.append(0);
     int param = ui->outputParam->value();
     int state = ui->outputState->currentIndex();
 
@@ -462,6 +482,7 @@ void Form::on_outputAddBtn_clicked()
 
 void Form::on_delayAddBtn_clicked()
 {
+    moves.append(0);
     int value = ui->delayVal->value();
 
     quint8 val[4];

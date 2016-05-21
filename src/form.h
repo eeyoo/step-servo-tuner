@@ -84,6 +84,7 @@ private:
     ConfigDialog *config;
     int param; //位移转换脉冲数参数
     quint8 id[2];
+    QList<long> moves; //位移增量List
 };
 
 #endif // FORM_H

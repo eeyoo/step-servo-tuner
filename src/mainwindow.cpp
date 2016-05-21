@@ -150,7 +150,6 @@ void MainWindow::writeData(const QByteArray &data)
     }
 
     serial->write(data);
-
 }
 
 void MainWindow::writeConfig(const QByteArray &data)
@@ -174,7 +173,20 @@ void MainWindow::readData()
 {
     //缓存读数据 - 串口接收数据
     QByteArray data = serial->readAll();
-    showStatusMessage(tr("接收指令数据：") + data.toHex());
+
+    int size = data.size();
+    //qDebug() << QString("receive %1").arg(data.at(size-1));
+
+    //qDebug() << "szie " + size;
+    if(size>0) {
+        //qDebug() << "szie " + size;
+        showStatusMessage(tr("下载数据成功！"));
+    } else {
+        //qDebug() << "szie " + size;
+        showStatusMessage(tr("下载数据失败！"));
+    }
+
+
     form->receiveData(data);
 }
 
