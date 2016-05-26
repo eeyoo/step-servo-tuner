@@ -29,6 +29,8 @@
     <property name="title">
      <string>操作</string>
     </property>
+    <addaction name="actionOpenProg"/>
+    <addaction name="actionSaveProg"/>
     <addaction name="actionConnect"/>
     <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
@@ -62,6 +64,9 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionOpenProg"/>
+   <addaction name="actionSaveProg"/>
+   <addaction name="separator"/>
    <addaction name="actionConnect"/>
    <addaction name="actionDisconnect"/>
    <addaction name="separator"/>
@@ -154,6 +159,24 @@
    </property>
    <property name="shortcut">
     <string>Alt+S</string>
+   </property>
+  </action>
+  <action name="actionOpenProg">
+   <property name="icon">
+    <iconset resource="tuner.qrc">
+     <normaloff>:/images/connect.png</normaloff>:/images/connect.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开程序</string>
+   </property>
+  </action>
+  <action name="actionSaveProg">
+   <property name="icon">
+    <iconset resource="tuner.qrc">
+     <normaloff>:/images/disconnect.png</normaloff>:/images/disconnect.png</iconset>
+   </property>
+   <property name="text">
+    <string>保存程序</string>
    </property>
   </action>
  </widget>

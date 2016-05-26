@@ -17,7 +17,7 @@
    <item>
     <widget class="QToolBox" name="parentToolBox">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="movePage">
       <property name="geometry">
@@ -35,7 +35,7 @@
        <item>
         <widget class="QToolBox" name="moveToolBox">
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="absPage">
           <property name="geometry">
@@ -101,8 +101,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>162</width>
-            <height>75</height>
+            <width>246</width>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
@@ -160,12 +160,12 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>138</width>
-            <height>75</height>
+            <width>246</width>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
-           <string>速度档位设置</string>
+           <string>速度设置</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
@@ -173,7 +173,7 @@
              <item>
               <widget class="QLabel" name="label_2">
                <property name="text">
-                <string>速度档位(%)</string>
+                <string>线速度(mm/s)</string>
                </property>
               </widget>
              </item>
@@ -183,14 +183,21 @@
                 <number>0</number>
                </property>
                <property name="maximum">
-                <number>100</number>
+                <number>100000</number>
                </property>
                <property name="value">
-                <number>10</number>
+                <number>100</number>
                </property>
               </widget>
              </item>
             </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="rpsLab">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="verticalSpacer_9">
@@ -744,8 +751,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
-            <height>334</height>
+            <width>124</width>
+            <height>103</height>
            </rect>
           </property>
           <attribute name="label">

@@ -18,6 +18,9 @@ public:
     ~Form();
     void receiveData(const QByteArray &data);
 
+    bool loadProgFile();
+    bool saveProgFile() const;
+
 public slots:
     void about();
 
@@ -62,6 +65,8 @@ private slots:
 
     void on_delayAddBtn_clicked();
 
+    void spd_show(int);
+
 private:
     void initUI();
     void initConnect();
@@ -85,6 +90,7 @@ private:
     int param; //位移转换脉冲数参数
     quint8 id[2];
     QList<long> moves; //位移增量List
+    double beta; //线速度与脉冲转换参数
 };
 
 #endif // FORM_H

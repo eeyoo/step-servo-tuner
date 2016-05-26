@@ -27,13 +27,17 @@ Form::Form(QWidget *parent) :
     param = 200 * div[level] / circle;
     //qDebug() << QString("param %1 pos %2").arg(param).arg(position);
 
+    beta = 0.4 * div[level] / circle; // 200 * 100 / 50000
 
+    int maxSpd = 100 / beta;
+    ui->setRunSpd->setMaximum(maxSpd);
     //qDebug() << "param = " << param;
     initUI();
     initConnect();
     initModel();
 
     cmd_list = new QList<QByteArray>;
+    spd_show(ui->setRunSpd->value());
 }
 
 Form::~Form()
@@ -67,6 +71,7 @@ void Form::initUI()
 void Form::initConnect()
 {
     //connect(ford_timer, SIGNAL(timeout()), this, SLOT(forward()));
+    connect(ui->setRunSpd, SIGNAL(valueChanged(int)), this, SLOT(spd_show(int)));
 }
 
 void Form::initModel()
@@ -169,7 +174,10 @@ void Form::on_setSpdBtn_clicked()
 {
     moves.append(0);
 
-    int spd = ui->setRunSpd->value();
+    int lpd = ui->setRunSpd->value(); //线速度mm/s - 转速 - 每秒脉冲数
+    int spd = beta * lpd;
+    //qDebug() << QString(tr("参数 %1 档位 %2%")).arg(beta).arg(spd);
+
     quint8 qspd[4];
     convert(qspd, spd, 4);
 
@@ -179,7 +187,7 @@ void Form::on_setSpdBtn_clicked()
     cmd_list->append(qa);
 
     QStringList list;
-    list << tr("设置速度指令") << QString(tr("设置速度档位 %1%")).arg(spd);
+    list << tr("设置速度指令") << QString(tr("线速度设置为 %1 mm/s")).arg(lpd);
 
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
@@ -240,6 +248,14 @@ void Form::on_stepAct_clicked()
 
     //qDebug() << "row = " << row << " index = " << index;
 
+}
+
+void Form::spd_show(int lpd)
+{
+    int circle = config->configs().circleLen;
+    //int lpd = ui->setRunSpd->value();
+    double rps = (double)lpd / circle;
+    ui->rpsLab->setText(QString(tr("转速：%1 rps(转每秒)")).arg(rps));
 }
 
 void Form::convert(quint8 *buf, int data, int size)

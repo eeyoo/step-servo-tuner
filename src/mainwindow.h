@@ -75,6 +75,9 @@ private slots:
     void writeConfig(const QByteArray &data);
     void closeAll();
 
+    void openProgFile(); //导入程序文件
+    void saveProgFile(); //保存程序文件
+
     void handleError(QSerialPort::SerialPortError error);
 
 private:
