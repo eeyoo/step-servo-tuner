@@ -3,8 +3,11 @@
 
 #include "command.h"
 #include "configdialog.h"
-#include <iostream>
+
 #include <QMessageBox>
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 #include <QStandardItemModel>
 
@@ -37,6 +40,8 @@ Form::Form(QWidget *parent) :
     initModel();
 
     cmd_list = new QList<QByteArray>;
+    //lines = new QList<CommandLine>;
+
     spd_show(ui->setRunSpd->value());
 }
 
@@ -103,6 +108,59 @@ void Form::dropEvent(QDropEvent *event)
 
 }
 
+bool Form::saveProgFile(QString fileName) const
+{
+    QFile saveFile(fileName);
+    if(!saveFile.open(QIODevice::WriteOnly)) {
+        qDebug() << tr("打开文件失败");
+        return false;
+    }
+    QJsonObject json;
+    QJsonArray lineArray;
+
+    foreach (const CommandLine line, lines) {
+        QJsonObject lineObject;
+        line.write(lineObject);
+        lineArray.append(lineObject);
+    }
+    json["list"] = lineArray;
+    QJsonDocument saveDoc(json);
+    saveFile.write(saveDoc.toJson());
+
+    return true;
+}
+
+bool Form::loadProgFile(QString fileName)
+{
+    QFile loadFile(fileName);
+    if(!loadFile.open(QIODevice::ReadOnly)) {
+        qDebug() << tr("打开文件失败");
+        return false;
+    }
+    QByteArray saveData = loadFile.readAll();
+    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+
+    lines.clear();
+
+    QJsonObject json = loadDoc.object();
+    QJsonArray list = json["list"].toArray();
+    for(int i=0; i < list.size(); ++i) {
+        QJsonObject lineObject = list[i].toObject();
+        CommandLine line;
+        line.read(lineObject);
+        lines.append(line);
+
+        model->insertRow(i, QModelIndex());
+        model->setData(model->index(i, 0), line.type());
+        model->setData(model->index(i,1), line.content());
+        cmd_list->append(line.data());
+    }
+
+    ui->tableView->setModel(model);
+
+    return true;
+}
+
 void Form::on_absAddBtn_clicked()
 {
 
@@ -131,6 +189,9 @@ void Form::on_absAddBtn_clicked()
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
+
+    CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
+    lines.append(cline); //加入指令序列
 
     row++;
 
@@ -380,7 +441,7 @@ void Form::on_cmpAddBtn_clicked()
     convert(pln,line-1,2);
     quint8 val[2];
     convert(val, value, 2);
-    quint8 ln[] = {id[0],id[1],CMP_CMD,param,type,val[0],val[1],pln[0],pln[1],0x00};
+    quint8 ln[10] = {id[0],id[1],CMP_CMD,param,type,val[0],val[1],pln[0],pln[1],0x00};
     QByteArray qa;
     array2qa(qa, ln, 10);
     cmd_list->append(qa);

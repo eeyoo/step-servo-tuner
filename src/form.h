@@ -2,13 +2,14 @@
 #define FORM_H
 
 #include <QWidget>
-
+#include "commandline.h"
 
 namespace Ui {
 class Form;
 }
 class QAbstractItemModel;
 class ConfigDialog;
+
 class Form : public QWidget
 {
     Q_OBJECT
@@ -18,8 +19,8 @@ public:
     ~Form();
     void receiveData(const QByteArray &data);
 
-    bool loadProgFile();
-    bool saveProgFile() const;
+    bool loadProgFile(QString fileName);  //读取json文件并解析出来生成模型和指令序列
+    bool saveProgFile(QString fileName) const; //将模型和指令序列保存为json文件
 
 public slots:
     void about();
@@ -91,6 +92,7 @@ private:
     quint8 id[2];
     QList<long> moves; //位移增量List
     double beta; //线速度与脉冲转换参数
+    QList<CommandLine> lines; //指令序列
 };
 
 #endif // FORM_H

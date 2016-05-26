@@ -239,6 +239,10 @@ void MainWindow::openProgFile()
                                tr("程序 (*.json)"));
     qDebug() << "打开文件名： " + fileName;
     //读取文件流内容，调用程序form载入程序指令方法
+    if(form->loadProgFile(fileName))
+        qDebug() << "load prog file successful.";
+    else
+        qDebug() << "load failed.";
     //更新程序form模型
 }
 
@@ -250,5 +254,12 @@ void MainWindow::saveProgFile()
                                tr("程序 (*.json)"));
     qDebug() << "保存文件名： " + fileName;
     //Form指令序列保存至文件流
+    bool ret = form->saveProgFile(fileName);
+
     //保存为磁盘文件
+    if(ret) {
+        qDebug() << "save prog file successful.";
+    } else {
+        qDebug() << "save prog file failed.";
+    }
 }
