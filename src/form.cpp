@@ -55,8 +55,7 @@ Form::~Form()
 
 void Form::about()
 {
-    QMessageBox::about(this, tr("控制器配置程序"),
-                       tr("/***********v1.0 测试版*************/"));
+    QMessageBox::about(this, tr("控制器应用程序"),tr("V1.0 版应用程序"));
 }
 
 void Form::initUI()
@@ -112,7 +111,7 @@ bool Form::saveProgFile(QString fileName) const
 {
     QFile saveFile(fileName);
     if(!saveFile.open(QIODevice::WriteOnly)) {
-        qDebug() << tr("打开文件失败");
+        //qDebug() << tr("打开文件失败");
         return false;
     }
     QJsonObject json;
@@ -134,7 +133,7 @@ bool Form::loadProgFile(QString fileName)
 {
     QFile loadFile(fileName);
     if(!loadFile.open(QIODevice::ReadOnly)) {
-        qDebug() << tr("打开文件失败");
+        //qDebug() << tr("打开文件失败");
         return false;
     }
     QByteArray saveData = loadFile.readAll();
@@ -149,16 +148,34 @@ bool Form::loadProgFile(QString fileName)
         CommandLine line;
         line.read(lineObject);
         lines.append(line);
-
-        model->insertRow(i, QModelIndex());
-        model->setData(model->index(i, 0), line.type());
-        model->setData(model->index(i,1), line.content());
-        cmd_list->append(line.data());
     }
 
-    ui->tableView->setModel(model);
+    //更新程序模型
+    update_cmd();
 
     return true;
+}
+
+void Form::update_cmd()
+{
+    cmd_list->clear();
+    moves.clear();
+
+    model->removeRows(0, row, QModelIndex());
+    ui->tableView->setModel(model);
+    row = 0;
+    index = 0;
+    position = 0;
+
+    for(row; row < lines.size(); row++) {
+        CommandLine line = lines.at(row);
+        model->insertRow(row, QModelIndex());
+        model->setData(model->index(row, 0), line.type());
+        model->setData(model->index(row,1), line.content());
+
+        cmd_list->append(line.data());
+    }
+    ui->tableView->setModel(model);
 }
 
 void Form::on_absAddBtn_clicked()
@@ -226,6 +243,9 @@ void Form::on_relaAddBtn_clicked()
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
 
+    CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
+    lines.append(cline); //加入指令序列
+
     row++;
 
     ui->tableView->setModel(model);
@@ -253,6 +273,9 @@ void Form::on_setSpdBtn_clicked()
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
+
+    CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
+    lines.append(cline); //加入指令序列
 
     row++;
 
@@ -288,6 +311,7 @@ void Form::on_deleteBtn_clicked()
     cmd_list->removeAt(row);
     position -= moves.at(row);
     moves.removeAt(row);
+    lines.removeAt(row);
 
     //qDebug() << QString("position %1 row %2").arg(position).arg(row);
 }
@@ -384,6 +408,9 @@ void Form::on_opAddBtn_clicked()
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
 
+    CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
+    lines.append(cline); //加入指令序列
+
     row++;
 
     ui->tableView->setModel(model);
@@ -415,6 +442,9 @@ void Form::on_jmpAddBtn_clicked()
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
+
+    CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
+    lines.append(cline); //加入指令序列
 
     row++;
     jmp_from = row;
@@ -459,6 +489,9 @@ void Form::on_cmpAddBtn_clicked()
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
 
+    CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
+    lines.append(cline); //加入指令序列
+
     row++;
     jmp_from = row;
 
@@ -497,6 +530,9 @@ void Form::on_jumpAddBtn_clicked()
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
 
+    CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
+    lines.append(cline); //加入指令序列
+
     row++;
     jmp_from = row;
 
@@ -525,6 +561,9 @@ void Form::on_inputAddBtn_clicked()
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
 
+    CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
+    lines.append(cline); //加入指令序列
+
     row++;
 
     ui->tableView->setModel(model);
@@ -552,6 +591,9 @@ void Form::on_outputAddBtn_clicked()
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
 
+    CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
+    lines.append(cline); //加入指令序列
+
     row++;
 
     ui->tableView->setModel(model);
@@ -575,6 +617,9 @@ void Form::on_delayAddBtn_clicked()
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
+
+    CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
+    lines.append(cline); //加入指令序列
 
     row++;
 

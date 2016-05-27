@@ -33,3 +33,5 @@ RESOURCES += \
 
 DISTFILES += \
     ../doc/todo.txt
+
+RC_ICONS = images/app.ico

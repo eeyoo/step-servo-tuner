@@ -165,8 +165,6 @@ void MainWindow::writeConfig(const QByteArray &data)
     serial->write(data);
 
     config->tip();
-    //config->setFocus();
-    //config->isTopLevel();
 }
 
 void MainWindow::readData()
@@ -236,8 +234,8 @@ void MainWindow::openProgFile()
     //打开默认文件目录等待用户选中载入文件，限制打开文件格式
     QString fileName = QFileDialog::getOpenFileName(this, tr("打开程序文件"),
                                "",
-                               tr("程序 (*.json)"));
-    qDebug() << "打开文件名： " + fileName;
+                               tr("程序 (*.prog)"));
+    //qDebug() << "打开文件名： " + fileName;
     //读取文件流内容，调用程序form载入程序指令方法
     if(form->loadProgFile(fileName))
         qDebug() << "load prog file successful.";
@@ -250,9 +248,9 @@ void MainWindow::saveProgFile()
 {
     //打开文件保存对话框，提示用户输入文件名以待保存
     QString fileName = QFileDialog::getSaveFileName(this, tr("保存文件"),
-                               "程序.json",
-                               tr("程序 (*.json)"));
-    qDebug() << "保存文件名： " + fileName;
+                               "程序.prog",
+                               tr("程序 (*.prog)"));
+    //qDebug() << "保存文件名： " + fileName;
     //Form指令序列保存至文件流
     bool ret = form->saveProgFile(fileName);
 

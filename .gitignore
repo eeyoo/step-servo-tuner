@@ -34,5 +34,6 @@ Makefile*
 *.qmlproject.user.*
 
 release/
+downloads/
 
 

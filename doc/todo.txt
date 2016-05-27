@@ -150,4 +150,11 @@ fix bug:
 需求更改：
 1、速度档位输入改为线速度输入(mm/s)，并转换成转速（rps）显示，
 转换为档位百分比发给金；
-2、程序文件持久化；
+2、程序文件持久化.
+
+2016-5-27 周五
+========================
+1、完善程序载入和保存功能，并测试功能；
+2、更换图标和应用图标
+action icon: https://design.google.com/icons/
+app icon: http://www.iconarchive.com/show/flatwoken-icons-by-alecive/Apps-Audio-Card-icon.html

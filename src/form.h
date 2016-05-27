@@ -35,6 +35,8 @@ private slots:
 
     void on_deleteBtn_clicked();
 
+    void update_cmd();
+
 protected:
     void dragEnterEvent(QDragEnterEvent *event); //拖动事件
     void dropEvent(QDropEvent *event); //放置事件

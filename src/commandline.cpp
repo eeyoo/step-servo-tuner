@@ -17,7 +17,9 @@ void CommandLine::read(const QJsonObject &json)
 {
     mType = json["type"].toString();
     mContent = json["content"].toString();
-    mData = json["data"].toString().toLocal8Bit(); //QString -> QByteArray
+    QString str = json["data"].toString();
+    //mData = json["data"].toString().toLocal8Bit(); //QString -> QByteArray
+    mData = QByteArray::fromHex(str.toLocal8Bit());
 }
 
 void CommandLine::write(QJsonObject &json) const
@@ -27,11 +29,6 @@ void CommandLine::write(QJsonObject &json) const
     mData.toHex();
     //qDebug() << "data: " + mData.toHex();
     json["data"] = QString::fromLocal8Bit(mData.toHex().data());
-}
-
-void CommandLine::print()
-{
-
 }
 
 QString CommandLine::type() const
