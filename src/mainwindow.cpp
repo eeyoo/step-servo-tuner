@@ -171,17 +171,38 @@ void MainWindow::readData()
 {
     //缓存读数据 - 串口接收数据
     QByteArray data = serial->readAll();
+    //qDebug() << QString::fromLatin1(data.toHex().data());
 
     int size = data.size();
-    //qDebug() << QString("receive %1").arg(data.at(size-1));
+    //if(size)
 
     //qDebug() << "szie " + size;
+    /*
     if(size>0) {
         //qDebug() << "szie " + size;
-        showStatusMessage(tr("下载数据成功！"));
+        //showStatusMessage(tr("下载数据成功！"));
+        QMessageBox::information(this, tr("下载提示"), tr("下载数据成功！"));
     } else {
         //qDebug() << "szie " + size;
-        showStatusMessage(tr("下载数据失败！"));
+        //showStatusMessage(tr("下载数据失败！"));
+        QMessageBox::information(this, tr("下载提示"), tr("下载数据失败！"));
+    }
+    */
+    //qDebug() << QString::number(size);
+    if(size >= 3) {
+        int ret = (quint8)data.at(2);
+        //qDebug() << QString::number(ret);
+        switch (ret) {
+        case 0xca:
+            QMessageBox::information(this, tr("下载提示"), tr("下载配置成功！"));
+            break;
+        case 0xcd:
+            QMessageBox::information(this, tr("下载提示"), tr("下载程序成功！"));
+            break;
+        default:
+            QMessageBox::information(this, tr("下载提示"), tr("下载数据成功！"));
+            break;
+        }
     }
 
 
@@ -247,7 +268,7 @@ void MainWindow::openProgFile()
 void MainWindow::saveProgFile()
 {
     //打开文件保存对话框，提示用户输入文件名以待保存
-    QString fileName = QFileDialog::getSaveFileName(this, tr("保存文件"),
+    QString fileName = QFileDialog::getSaveFileName(this, tr("保存程序文件"),
                                "程序.prog",
                                tr("程序 (*.prog)"));
     //qDebug() << "保存文件名： " + fileName;
