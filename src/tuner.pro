@@ -7,20 +7,20 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     settingsdialog.cpp \
-    console.cpp \
     form.cpp \
     command.cpp \
     configdialog.cpp \
-    commandline.cpp
+    commandline.cpp \
+    commanditemmodel.cpp
 
 HEADERS += \
     mainwindow.h \
     settingsdialog.h \
-    console.h \
     form.h \
     command.h \
     configdialog.h \
-    commandline.h
+    commandline.h \
+    commanditemmodel.h
 
 FORMS += \
     mainwindow.ui \

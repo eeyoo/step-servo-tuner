@@ -10,13 +10,15 @@
 #include <QJsonDocument>
 
 #include <QStandardItemModel>
+#include <QMouseEvent>
 
 #include <QtCore/QDebug>
 
 Form::Form(QWidget *parent) :
     QWidget(parent),row(0),
-    index(0), position(0),status(false),
+    index(0), position(0),
     jmp_from(0), jmp_to(0),
+    select_line(-1),
     ui(new Ui::Form)
 {
     ui->setupUi(this);
@@ -43,6 +45,7 @@ Form::Form(QWidget *parent) :
     //lines = new QList<CommandLine>;
 
     spd_show(ui->setRunSpd->value());
+
 }
 
 Form::~Form()
@@ -76,6 +79,8 @@ void Form::initConnect()
 {
     //connect(ford_timer, SIGNAL(timeout()), this, SLOT(forward()));
     connect(ui->setRunSpd, SIGNAL(valueChanged(int)), this, SLOT(spd_show(int)));
+    connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(tableDoubleClick(QModelIndex)));
+    connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(tableClick(QModelIndex)));
 }
 
 void Form::initModel()
@@ -88,13 +93,6 @@ void Form::initModel()
     QHeaderView *headerView = ui->tableView->horizontalHeader();
     headerView->setStretchLastSection(true);
 
-}
-
-
-void Form::receiveData(const QByteArray &data)
-{
-    echo = data;
-    //qDebug() << "echo: " << echo.toHex();
 }
 
 void Form::dragEnterEvent(QDragEnterEvent *event)
@@ -206,6 +204,8 @@ void Form::on_absAddBtn_clicked()
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
+    //model->setData(model->index(row, 2), 1, Qt::UserRole);
+    //自定义QModelIndex
 
     CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
     lines.append(cline); //加入指令序列
@@ -282,39 +282,6 @@ void Form::on_setSpdBtn_clicked()
     ui->tableView->setModel(model);
 }
 
-void Form::on_resetBtn_clicked()
-{
-    cmd_list->clear();
-    moves.clear();
-
-    model->removeRows(0, row, QModelIndex());
-    ui->tableView->setModel(model);
-    row = 0;
-    index = 0;
-    position = 0;
-}
-
-void Form::on_deleteBtn_clicked()
-{
-    row--;
-    index--;
-    if (row == 0) {
-        //row = 0;
-        position = 0;
-        index = 0;
-    }
-
-    if(row == jmp_from)
-        jmp_to = 0;
-
-    model->removeRow(row, QModelIndex());
-    cmd_list->removeAt(row);
-    position -= moves.at(row);
-    moves.removeAt(row);
-    lines.removeAt(row);
-
-    //qDebug() << QString("position %1 row %2").arg(position).arg(row);
-}
 
 
 void Form::on_stepAct_clicked()
@@ -367,6 +334,14 @@ void Form::on_stopAct_clicked()
 
 void Form::on_forwardAct_clicked()
 {
+    /*
+    int ret = (quint8)echo.at(2);
+    if(ret != 0x0f) {
+        QMessageBox::warning(this, tr("提示"), tr("请停止运行"));
+        return;
+    }
+    qDebug() << tr("下载程序成功");
+    */
     int len = cmd_list->count();
     quint8 qlen[4];
     convert(qlen, len, 4);
@@ -601,6 +576,19 @@ void Form::on_outputAddBtn_clicked()
 
 void Form::on_delayAddBtn_clicked()
 {
+    //引起指令模型变化
+    // 1 增加一条指令序列
+    // 2 单指令数据转化
+    // 3 指令序列追加
+    // 4 模型数据追加
+    // 5 指令序列持久化
+
+    // 抽象为单条指令与指令集合两个对象
+    // 单条指令数据结构
+    // 指令类型 数据格式化(通讯) 指令描述(展示)
+
+    // 指令集合数据结构
+    // 指令数据序列(通讯) 模型(展示) 状态(指令数量 当前执行)
     moves.append(0);
     int value = ui->delayVal->value();
 
@@ -624,4 +612,134 @@ void Form::on_delayAddBtn_clicked()
     row++;
 
     ui->tableView->setModel(model);
+}
+
+void Form::tableDoubleClick(const QModelIndex &/*index*/)
+{
+    // 具体到某一行数据被双击
+    // 需自定义一种模型，便于识别末行指令的类型
+    // 然后展开相应的指令编辑区，用户修改指令
+    // 数据模型还需要根据修改参数更新显示文本和指令
+    //int nr = index.row();
+    //qDebug() << tr("%1 row double clicked. data %2").arg(nr).arg(index.data().toString());
+
+    //确定行 确定指令类型
+    // 加入指令按钮有两种状态 新增和修改
+    // 首次是新增 本方法改变状态为修改
+    // 行确定修改模型
+    // 类型确定修改指定模型行的数据
+    // 指令和指令行对象均需要更新
+}
+
+void Form::tableClick(const QModelIndex &index)
+{
+    int nr = index.row();
+    select_line = nr;
+    qDebug() << tr("%1 row clicked. data %2").arg(nr+1).arg(index.data().toString());
+}
+
+
+void Form::on_clearBtn_clicked()
+{
+    cmd_list->clear();
+    moves.clear();
+
+    model->removeRows(0, row, QModelIndex());
+    ui->tableView->setModel(model);
+    row = 0;
+    index = 0;
+    position = 0;
+}
+
+void Form::on_deleteBtn_clicked()
+{
+    if(select_line < 0) {
+        QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
+        return;
+    }
+    /*
+    row--;
+    index--;
+    if (row == 0) {
+        //row = 0;
+        position = 0;
+        index = 0;
+    }
+
+    if(row == jmp_from)
+        jmp_to = 0;
+
+    model->removeRow(row, QModelIndex());
+    cmd_list->removeAt(row);
+    position -= moves.at(row);
+    moves.removeAt(row);
+    lines.removeAt(row);
+    */
+    row--;
+    if(row < 0) row = 0;
+
+    model->removeRow(select_line, QModelIndex());
+    cmd_list->removeAt(select_line);
+    position -= moves.at(select_line);
+    moves.removeAt(select_line);
+    lines.removeAt(select_line);
+    qDebug() << tr("%1 行已被删除！").arg(select_line+1);
+
+    select_line = -1;
+}
+
+void Form::on_editBtn_clicked()
+{
+    if(select_line < 0) {
+        QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
+        return;
+    }
+    //do your thing
+
+    select_line = -1; // back default value
+}
+
+void Form::on_insertBtn_clicked()
+{
+
+    if(select_line < 0) {
+        QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
+        return;
+    } else {
+        //插入当前行之前，之后
+    }
+
+}
+
+void Form::on_upBtn_clicked()
+{
+
+    if(select_line < 0) {
+        QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
+        return;
+    }
+    if(select_line == 0) {
+        QMessageBox::information(this, tr("提示"), tr("开始指令行无法上移！"));
+        return;
+    }
+    //上移的操作
+    model->moveRow(QModelIndex(),select_line,QModelIndex(),select_line-1);
+
+    select_line = -1;
+}
+
+void Form::on_downBtn_clicked()
+{
+    if(select_line < 0) {
+        QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
+        return;
+    }
+    if(select_line == row-1) {
+        QMessageBox::information(this, tr("提示"), tr("结束指令行无法下移！"));
+        return;
+    }
+    //下移的操作
+    model->moveRow(QModelIndex(),select_line,QModelIndex(),select_line+1);
+
+    select_line = -1;
 }

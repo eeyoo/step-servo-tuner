@@ -9,7 +9,6 @@
 
 #define ABS_MOVE_CMD 0x01 //绝对运动
 #define SETMOVESPCMD 0x03 //目标速度
-#define EMSTOP_CMD   0x0f //停止
 
 #define OPERATEPARAM 0x31 //操作参数命令 1)++  2)--
 #define JMP_CMD      0x32 //无条件跳转
@@ -36,14 +35,11 @@
 #define SETREFVOLCMD 0xb3 //设置参考电压 0 - 低 1 - 高
 #define SETSMARTCURR 0xb4 //设置智能电流控制值 0 - 设置电流值1/2; 1 - 设置电流值1/4
 
-#define BATCHCONFCMD 0xca //批量配置
-#define BATCHCMDNUMB 0x0a //批量配置参数命令数目
-#define CMDDATANUM   0x0a //命令字节数
-#define DATANUMBER   0x04 //数据字节数
+#define BATCHCONFCMD 0xca //配置下载
+#define CMDBATCHHEAD 0xcd //指令下载
 
-#define CMDBATCHHEAD 0xcd //运行指令打包
+#define EMSTOP_CMD   0x0f //设备停止
 
-#define EQUIPID      0x02 //设备ID
 
 typedef struct {
     quint8 id[2];      //命令ID

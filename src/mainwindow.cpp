@@ -50,7 +50,7 @@
 
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
+    QMainWindow(parent),isStopStatus(false),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -107,11 +107,17 @@ void MainWindow::openSerialPort()
         ui->actionConnect->setEnabled(false);
         ui->actionDisconnect->setEnabled(true);
         ui->actionConfigure->setEnabled(false);
+        /*
         showStatusMessage(tr("连接 %1 : 波特率 %2, %3位, 校验%4, 停止位%5, 控制流%6")
                           .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
                           .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
+                          */
+        QString status = tr("串口连接成功\n端口%1, 波特率%2, 数据%3位, 校验方式 %4, 停止位%5位, 控制流%6")
+                .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
+                .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl);
+        QMessageBox::information(this,tr("串口连接"),status);
     } else {
-        QMessageBox::critical(this, tr("错误"), serial->errorString());
+        QMessageBox::critical(this, tr("串口连接错误"), serial->errorString());
 
         showStatusMessage(tr("连接错误"));
     }
@@ -127,7 +133,8 @@ void MainWindow::closeSerialPort()
     ui->actionConnect->setEnabled(true);
     ui->actionDisconnect->setEnabled(false);
     ui->actionConfigure->setEnabled(true);
-    showStatusMessage(tr("断开连接"));
+    //showStatusMessage(tr("断开连接"));
+    QMessageBox::information(this, tr("串口连接"), tr("串口已断开连接"));
 }
 
 void MainWindow::about()
@@ -146,6 +153,11 @@ void MainWindow::writeData(const QByteArray &data)
     if(!serial->isOpen())
     {
         QMessageBox::warning(this,tr("警告"),tr("请打开串口！"));
+        return;
+    }
+    //未接收到停止状态反馈不能下载程序
+    if(!isStopStatus) {
+        QMessageBox::warning(this, tr("警告"), tr("请停止运行"));
         return;
     }
 
@@ -189,24 +201,26 @@ void MainWindow::readData()
     }
     */
     //qDebug() << QString::number(size);
-    if(size >= 3) {
+    if(size > 2) {
         int ret = (quint8)data.at(2);
         //qDebug() << QString::number(ret);
         switch (ret) {
-        case 0xca:
+        case BATCHCONFCMD:
             QMessageBox::information(this, tr("下载提示"), tr("下载配置成功！"));
             break;
-        case 0xcd:
+        case CMDBATCHHEAD:
+            isStopStatus = false; //设备运行状态
             QMessageBox::information(this, tr("下载提示"), tr("下载程序成功！"));
             break;
+        case EMSTOP_CMD:
+            isStopStatus = true; //设备停止状态
+            QMessageBox::information(this, tr("设备状态"), tr("设备已停止"));
         default:
-            QMessageBox::information(this, tr("下载提示"), tr("下载数据成功！"));
+            //QMessageBox::information(this, tr("下载提示"), tr("下载数据成功！"));
             break;
         }
     }
 
-
-    form->receiveData(data);
 }
 
 void MainWindow::handleError(QSerialPort::SerialPortError error)
@@ -247,7 +261,22 @@ void MainWindow::closeAll()
 void MainWindow::closeEvent(QCloseEvent */*e*/)
 {
     closeAll();
+    //qDebug() << "close event";
+}
 
+void MainWindow::mousePressEvent(QMouseEvent *e)
+{
+    //qDebug() << "mouse pressed.";
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *e)
+{
+    //qDebug() << "mouse released.";
+}
+
+void MainWindow::mouseDoubleClickEvent(QMouseEvent *e)
+{
+    //qDebug() << "mouse double clicked.";
 }
 
 void MainWindow::openProgFile()

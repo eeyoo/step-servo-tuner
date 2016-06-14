@@ -66,6 +66,10 @@ public:
 protected:
     void closeEvent(QCloseEvent *);
 
+    void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
+    void mouseDoubleClickEvent(QMouseEvent *e);
+
 private slots:
     void openSerialPort();
     void closeSerialPort();
@@ -92,6 +96,7 @@ private:
     QSerialPort *serial;
     Form *form;
     ConfigDialog *config;   //程序初始化设置界面
+    bool isStopStatus; //设备是否停止默认否 default false
 };
 
 #endif // MAINWINDOW_H

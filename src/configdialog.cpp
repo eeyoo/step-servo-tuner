@@ -447,7 +447,7 @@ void ConfigDialog::initConnect()
 
 void ConfigDialog::tip()
 {
-    QMessageBox::about(this,tr("提示对话框"),tr("修改配置参数后需重启软件生效！"));
+    QMessageBox::information(this,tr("提示对话框"),tr("修改配置参数后需重启软件生效！"));
 }
 
 void ConfigDialog::on_resetBtn_clicked()
