@@ -27,7 +27,7 @@ Form::Form(QWidget *parent) :
     int level = config->configs().elecLevel;
     int circle = config->configs().circleLen;
     int div[] = {1,2,4,8,16,32,64,128,256};
-    int deviceId = config->configs().deviceId;
+    deviceId = config->configs().deviceId;
     convert(id, deviceId, 2);
     param = 200 * div[level] / circle;
     //qDebug() << QString("param %1 pos %2").arg(param).arg(position);
@@ -179,7 +179,9 @@ void Form::update_cmd()
 void Form::on_absAddBtn_clicked()
 {
 
+    // Command cmd(data, type) 数据和类型内存创建指令数据结构
     position = ui->absMoveDistance->value();
+    int val = position*param;
 
     moves.append(0);
     quint8 qpos[4];
@@ -188,6 +190,11 @@ void Form::on_absAddBtn_clicked()
     //qDebug() << QString("plus %1 pos %2").arg(position*param).arg(position);
 
     quint8 qPos[10] = {id[0],id[1],ABS_MOVE_CMD,0x01,0x00,qpos[0],qpos[1],qpos[2],qpos[3],0x00};
+
+    Command abscmd(deviceId, val, Command::ABS);
+    QByteArray qa1 = abscmd.data();
+    //qDebug() << val;
+    qDebug() << qa1.toHex();
 
     QByteArray qa;
     array2qa(qa, qPos, 10);
@@ -220,6 +227,12 @@ void Form::on_relaAddBtn_clicked()
     int pos = ui->relMoveDistance->value();
     position += pos;
     moves.append(pos);
+
+    int val = position*param;
+    Command relacmd(deviceId, val, Command::RELA);
+    QByteArray qa1 = relacmd.data();
+    //qDebug() << val;
+    qDebug() << qa1.toHex();
 
     quint8 qpos[4];
     convert(qpos, position * param, 4);
@@ -259,6 +272,8 @@ void Form::on_setSpdBtn_clicked()
     int spd = beta * lpd;
     //qDebug() << QString(tr("参数 %1 档位 %2%")).arg(beta).arg(spd);
 
+    Command spdcmd(deviceId, spd, Command::SPD);
+    qDebug() << spdcmd.data().toHex();
     quint8 qspd[4];
     convert(qspd, spd, 4);
 
@@ -695,6 +710,10 @@ void Form::on_editBtn_clicked()
         return;
     }
     //do your thing
+    //有些事既然答应了就一鼓作气给搞定，否则一拖再拖，时间成本就就浪费了
+    //抽个大空，把坑填完
+    //修改指令需要知道当前选中行是什么类型指令
+
 
     select_line = -1; // back default value
 }

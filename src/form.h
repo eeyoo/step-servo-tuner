@@ -105,6 +105,7 @@ private:
     double beta; //线速度与脉冲转换参数
     QList<CommandLine> lines; //指令序列
     int select_line;  //选中当前行
+    int deviceId;
 };
 
 #endif // FORM_H
