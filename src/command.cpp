@@ -5,7 +5,7 @@
 //quint8 array[]
 //QByteArray
 
-Command::Command(int id, int param, CMDTYPE type) {
+Command::Command(int *param, CMDTYPE type) {
     //quint8 bufID[NUMBER_ID];
     //quint8 bufData[NUMBER_DA];
     //convert(bufID, id, NUMBER_ID);
@@ -15,60 +15,117 @@ Command::Command(int id, int param, CMDTYPE type) {
 
     switch (type) {
     case ABS://绝对运行
-        parse(buf, id, param, ABS_MOVE_CMD);
-        break;
     case RELA://相对运行
-        parse(buf, id, param, ABS_MOVE_CMD);
+        parse(buf, param, ABS_MOVE_CMD);
         break;
     case SPD://设置速度
-        parse(buf, id, param, SETMOVESPCMD);
+        parse(buf, param, SETMOVESPCMD);
+        break;
+    case OPER:
+        parse(buf, param, OPERATEPARAM);
+        break;
+    case DELAY:
+        parse(buf, param, DELAY_CMD);
+        break;
+    case JMP:
+        parse(buf, param, JMP_CMD);
+        break;
+    case CMP:
+        parse(buf, param, CMP_CMD);
+        break;
+    case IOJMP:
+        parse(buf, param, IOJUMP_CMD);
+        break;
+    case SETOUT:
+        parse(buf, param, SETOUT_CMD);
+        break;
+    case INPUT:
+        parse(buf, param, INPUT_CMD);
+        break;
+    case STOP:
+        parse(buf, param, EMSTOP_CMD);
+    default:
+        break;
+    }
+
+}
+
+void Command::parse(quint8 *buf, int *param, int def)
+{
+
+    quint8 bufID[NUMBER_ID];
+    quint8 bufData[NUMBER_DA];
+    quint8 bufLow[NUMBER_LOW];
+    quint8 bufHigh[NUMBER_HIGH];
+
+    convert(bufID, param[0], NUMBER_ID); //param[0] = id
+
+    switch (def) {
+    case ABS_MOVE_CMD:
+    case SETMOVESPCMD:
+    case DELAY_CMD:
+    case EMSTOP_CMD:
+        convert(bufData, param[1], NUMBER_DA);
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = def;
+        buf[3] = 0x01;
+        buf[4] = 0x00;
+        buf[5] = bufData[0];
+        buf[6] = bufData[1];
+        buf[7] = bufData[2];
+        buf[8] = bufData[3];
+        buf[9] = 0x00;
+        break;
+    case OPERATEPARAM:
+        convert(bufData, param[1], NUMBER_DA);
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = def;
+        buf[3] = param[2];
+        buf[4] = 0x00;
+        buf[5] = bufData[0];
+        buf[6] = bufData[1];
+        buf[7] = bufData[2];
+        buf[8] = bufData[3];
+        buf[9] = 0x00;
+        break;
+
+    case CMP_CMD:
+        convert(bufLow, param[1], NUMBER_LOW);
+        convert(bufHigh, param[2], NUMBER_HIGH);
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = def;
+        buf[3] = param[3];
+        buf[4] = param[4];
+        buf[5] = bufLow[0];
+        buf[6] = bufLow[1];
+        buf[7] = bufHigh[0];
+        buf[8] = bufHigh[1];
+        buf[9] = 0x00;
+        break;
+    case JMP_CMD:
+    case IOJUMP_CMD:
+    case INPUT_CMD:
+    case SETOUT_CMD:
+        convert(bufLow, param[1], NUMBER_LOW);
+        convert(bufHigh, param[2], NUMBER_HIGH);
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = def;
+        buf[3] = param[3];
+        buf[4] = 0x00;
+        buf[5] = bufLow[0];
+        buf[6] = bufLow[1];
+        buf[7] = bufHigh[0];
+        buf[8] = bufHigh[1];
+        buf[9] = 0x00;
         break;
     default:
         break;
     }
 
-    /*
-    if (type == ABS) {
-        init(type);
-        convert(bufID, id, NUMBER_ID);
-        convert(bufData, param, NUMBER_DA);
-        quint8 p[NUMBER_CMD] = {bufID[0],bufID[1],ABS_MOVE_CMD,0x01,0x00,bufData[0],bufData[1],bufData[2],bufData[3],0x00};
-        array2qa(qa, p, NUMBER_CMD);
-    } else if (type == RELA) {
-        init(type);
-        convert(bufID, id, NUMBER_ID);
-        convert(bufData, param, NUMBER_DA);
-        quint8 p[NUMBER_CMD] = {bufID[0],bufID[1],ABS_MOVE_CMD,0x01,0x00,bufData[0],bufData[1],bufData[2],bufData[3],0x00};
-        array2qa(qa, p, NUMBER_CMD);
-    } else if (type == SPD) {
-        init(type);
-        convert(bufID, id, NUMBER_ID);
-        convert(bufData, param, NUMBER_DA);
-        quint8 p[NUMBER_CMD] = {bufID[0],bufID[1],SETMOVESPCMD,0x01,0x00,bufData[0],bufData[1],bufData[2],bufData[3],0x00};
-        array2qa(qa, p, NUMBER_CMD);
-    }*/
-
-
-}
-
-void Command::parse(quint8 *buf, int id, int param, int def)
-{
-
-    quint8 bufID[NUMBER_ID];
-    quint8 bufData[NUMBER_DA];
-    convert(bufID, id, NUMBER_ID);
-    convert(bufData, param, NUMBER_DA);
-
-    buf[0] = bufID[0];
-    buf[1] = bufID[1];
-    buf[2] = def;
-    buf[3] = 0x01;
-    buf[4] = 0x00;
-    buf[5] = bufData[0];
-    buf[6] = bufData[1];
-    buf[7] = bufData[2];
-    buf[8] = bufData[3];
-    buf[9] = 0x00;
 
     array2qa(qa, buf, NUMBER_CMD);
 }

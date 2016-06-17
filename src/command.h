@@ -43,6 +43,8 @@
 #define NUMBER_ID    0x02
 #define NUMBER_DA    0x04
 #define NUMBER_CMD   0x0a
+#define NUMBER_HIGH  0x02
+#define NUMBER_LOW   0x02
 
 /*
 typedef struct {
@@ -61,12 +63,13 @@ class Command : public QObject
     Q_OBJECT
 
 public:
+
     enum CMDTYPE {
-        ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT
+        ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT, STOP
     };
 
-    explicit Command(int id, int param, CMDTYPE type);
-    //Command(quint8 *param, CMDTYPE type);
+    explicit Command(int *param, CMDTYPE type);
+    //Command(int *param, CMDTYPE type);
     //Command(QByteArray &param, CMDTYPE type);
     ~Command();
 
@@ -74,7 +77,8 @@ public:
     QByteArray data() const; //指令转换为字符数据
 
 private:
-    void parse(quint8 *buf, int id, int param, int def);
+    void parse(quint8 *buf, int *param, int def);
+    //void parsejmp(quint8 *buf, int id, int *param, int def);
     void init(CMDTYPE type);
     void convert(quint8 *buf, int data, int size); //int -> quint8[4]
     void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray

@@ -191,7 +191,8 @@ void Form::on_absAddBtn_clicked()
 
     quint8 qPos[10] = {id[0],id[1],ABS_MOVE_CMD,0x01,0x00,qpos[0],qpos[1],qpos[2],qpos[3],0x00};
 
-    Command abscmd(deviceId, val, Command::ABS);
+    int params[2] = {deviceId, val};
+    Command abscmd(params, Command::ABS);
     QByteArray qa1 = abscmd.data();
     //qDebug() << val;
     qDebug() << qa1.toHex();
@@ -229,7 +230,8 @@ void Form::on_relaAddBtn_clicked()
     moves.append(pos);
 
     int val = position*param;
-    Command relacmd(deviceId, val, Command::RELA);
+    int params[2] = {deviceId, val};
+    Command relacmd(params, Command::RELA);
     QByteArray qa1 = relacmd.data();
     //qDebug() << val;
     qDebug() << qa1.toHex();
@@ -272,7 +274,8 @@ void Form::on_setSpdBtn_clicked()
     int spd = beta * lpd;
     //qDebug() << QString(tr("参数 %1 档位 %2%")).arg(beta).arg(spd);
 
-    Command spdcmd(deviceId, spd, Command::SPD);
+    int params[2] = {deviceId, spd};
+    Command spdcmd(params, Command::SPD);
     qDebug() << spdcmd.data().toHex();
     quint8 qspd[4];
     convert(qspd, spd, 4);
@@ -339,12 +342,17 @@ void Form::array2qa(QByteArray &data, quint8 *buf, int size)
 
 void Form::on_stopAct_clicked()
 {
-
+    /*
     quint8 qStop[10] = {id[0],id[1],EMSTOP_CMD,0x01,0x00,0x00,0x00,0x00,0x00,0x00};
     QByteArray qa;
     array2qa(qa, qStop, 10);
-
     emit sendData(qa);
+    */
+    int params[2] = {deviceId, 0};
+    Command stopcmd(params, Command::STOP);
+
+    qDebug() << stopcmd.data().toHex();
+    emit sendData(stopcmd.data());
 }
 
 void Form::on_forwardAct_clicked()
@@ -381,6 +389,11 @@ void Form::on_opAddBtn_clicked()
     moves.append(0);
     int param = ui->opParam->value();
     int opType = ui->opType->currentIndex() + 1; //1-自增 2-自减
+
+    int params[3] = {deviceId, opType, param};
+    Command opcmd(params, Command::OPER);
+    qDebug() << opcmd.data().toHex();
+
     quint8 pop[4];
     convert(pop,opType,4);
     quint8 op[] = {id[0],id[1],OPERATEPARAM,param,0x00,pop[0],pop[1],pop[2],pop[3],0x00};
@@ -413,9 +426,13 @@ void Form::on_jmpAddBtn_clicked()
     int line = ui->jmpLine->value();
 
     if(line > row) {
-        QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1")).arg(row));
+        QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1 行")).arg(row));
         return;
     }
+
+    int params[4] = {deviceId, 0, line, 0};
+    Command jmpcmd(params, Command::JMP);
+    qDebug() << jmpcmd.data().toHex();
 
     jmp_to = line-1;
 
@@ -427,7 +444,7 @@ void Form::on_jmpAddBtn_clicked()
     cmd_list->append(qa);
 
     QStringList list;
-    list << tr("无条件跳转指令") << QString(tr("无条件跳转至 %1行指令")).arg(line);
+    list << tr("无条件跳转指令") << QString(tr("无条件跳转至 %1 行指令")).arg(line);
 
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
@@ -447,7 +464,7 @@ void Form::on_cmpAddBtn_clicked()
     moves.append(0);
     int line = ui->cmpLine->value();
     if(line > row) {
-        QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1")).arg(row));
+        QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1 行")).arg(row));
         return;
     }
 
@@ -456,6 +473,10 @@ void Form::on_cmpAddBtn_clicked()
     int value = ui->cmpVal->value();
 
     jmp_to = line-1;
+
+    int params[5] = {deviceId, value, line, param, type};
+    Command cmpcmd(params, Command::CMP);
+    qDebug() << cmpcmd.data().toHex();
 
     quint8 pln[2];
     convert(pln,line-1,2);
@@ -469,11 +490,11 @@ void Form::on_cmpAddBtn_clicked()
     QStringList list;
     list << tr("有条件跳转指令");
     if(type == 1)
-        list << QString(tr("编号 %1 参数大于 %2 跳转至 %3行指令")).arg(param).arg(value).arg(line);
+        list << QString(tr("编号 %1 参数大于 %2 跳转至 %3 行指令")).arg(param).arg(value).arg(line);
     if(type == 2)
-        list << QString(tr("编号 %1 参数等于 %2 跳转至 %3行指令")).arg(param).arg(value).arg(line);
+        list << QString(tr("编号 %1 参数等于 %2 跳转至 %3 行指令")).arg(param).arg(value).arg(line);
     if(type == 3)
-        list << QString(tr("编号 %1 参数小于 %2 跳转至 %3行指令")).arg(param).arg(value).arg(line);
+        list << QString(tr("编号 %1 参数小于 %2 跳转至 %3 行指令")).arg(param).arg(value).arg(line);
 
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
@@ -493,14 +514,18 @@ void Form::on_jumpAddBtn_clicked()
     moves.append(0);
     int line = ui->jumpLine->value();
     if(line > row) {
-        QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1")).arg(row));
+        QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1 行")).arg(row));
         return;
     }
 
     int param = ui->jumpParam->value();
-    int state = ui->ioState->currentIndex();
+    int state = ui->ioState->currentIndex();//0-低电平 1-高电平
 
     jmp_to = line-1;
+
+    int params[4] = {deviceId, state, line, param};
+    Command cmpcmd(params, Command::IOJMP);
+    qDebug() << cmpcmd.data().toHex();
 
     quint8 pln[2];
     convert(pln,line-1,2);
@@ -512,9 +537,9 @@ void Form::on_jumpAddBtn_clicked()
     QStringList list;
     list << tr("IO条件跳转指令");
     if(!state)
-        list << QString(tr("编号 %1 IO端口高电平跳转至 %2行指令")).arg(param).arg(line);
+        list << QString(tr("编号 %1 IO端口高电平跳转至 %2 行指令")).arg(param).arg(line);
     else
-        list << QString(tr("编号 %1 IO端口低电平跳转至 %2行指令")).arg(param).arg(line);
+        list << QString(tr("编号 %1 IO端口低电平跳转至 %2 行指令")).arg(param).arg(line);
 
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
@@ -529,13 +554,17 @@ void Form::on_jumpAddBtn_clicked()
     ui->tableView->setModel(model);
 }
 
-void Form::on_inputAddBtn_clicked()
+void Form::on_inputAddBtn_clicked() //输入等待
 {
     moves.append(0);
     int param = ui->inputParam->value();
     int state = ui->inputState->currentIndex();
 
-    quint8 cmd[] = {id[0],id[1],INPUT_CMD,param,0x00,state,0x00,0x00,0x00,0x00,0x00};
+    int params[4] = {deviceId, state, 0, param};
+    Command inputcmd(params, Command::INPUT);
+    qDebug() << inputcmd.data().toHex();
+
+    quint8 cmd[] = {id[0],id[1],INPUT_CMD,param,0x00,state,0x00,0x00,0x00,0x00};
     QByteArray qa;
     array2qa(qa, cmd, 10);
     cmd_list->append(qa);
@@ -559,11 +588,15 @@ void Form::on_inputAddBtn_clicked()
     ui->tableView->setModel(model);
 }
 
-void Form::on_outputAddBtn_clicked()
+void Form::on_outputAddBtn_clicked() //输出主动
 {
     moves.append(0);
     int param = ui->outputParam->value();
     int state = ui->outputState->currentIndex();
+
+    int params[4] = {deviceId, state, 0, param};
+    Command outputcmd(params, Command::SETOUT);
+    qDebug() << outputcmd.data().toHex();
 
     quint8 cmd[] = {id[0],id[1],SETOUT_CMD,param,0x00,state,0x00,0x00,0x00,0x00};
     QByteArray qa;
@@ -573,9 +606,9 @@ void Form::on_outputAddBtn_clicked()
     QStringList list;
     list << tr("输出设置指令");
     if(!state)
-        list << QString(tr("设置编号 %1 输出端口低电平")).arg(param);
+        list << QString(tr("设置编号 %1 输出端口断开")).arg(param);
     else
-        list << QString(tr("设置编号 %1 输出端口高电平")).arg(param);
+        list << QString(tr("设置编号 %1 输出端口接通")).arg(param);
 
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
@@ -606,6 +639,10 @@ void Form::on_delayAddBtn_clicked()
     // 指令数据序列(通讯) 模型(展示) 状态(指令数量 当前执行)
     moves.append(0);
     int value = ui->delayVal->value();
+
+    int params[2] = {deviceId, value};
+    Command delaycmd(params, Command::DELAY);
+    qDebug() << delaycmd.data().toHex();
 
     quint8 val[4];
     convert(val, value, 4);
