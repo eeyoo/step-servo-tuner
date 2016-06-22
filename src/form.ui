@@ -6,25 +6,25 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>816</width>
+    <width>957</width>
     <height>552</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,2">
+  <layout class="QHBoxLayout" name="horizontalLayout_19" stretch="1,0,2">
    <item>
     <widget class="QToolBox" name="parentToolBox">
      <property name="currentIndex">
-      <number>2</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="movePage">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>264</width>
+        <width>308</width>
         <height>404</height>
        </rect>
       </property>
@@ -35,15 +35,15 @@
        <item>
         <widget class="QToolBox" name="moveToolBox">
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="absPage">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
-            <height>308</height>
+            <width>162</width>
+            <height>75</height>
            </rect>
           </property>
           <attribute name="label">
@@ -160,12 +160,12 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>138</width>
-            <height>75</height>
+            <width>290</width>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
-           <string>速度档位设置</string>
+           <string>速度设置</string>
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
@@ -173,7 +173,7 @@
              <item>
               <widget class="QLabel" name="label_2">
                <property name="text">
-                <string>速度档位(%)</string>
+                <string>线速度(mm/s)</string>
                </property>
               </widget>
              </item>
@@ -183,14 +183,21 @@
                 <number>0</number>
                </property>
                <property name="maximum">
-                <number>100</number>
+                <number>100000</number>
                </property>
                <property name="value">
-                <number>10</number>
+                <number>100</number>
                </property>
               </widget>
              </item>
             </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="rpsLab">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="verticalSpacer_9">
@@ -223,7 +230,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>264</width>
+        <width>308</width>
         <height>404</height>
        </rect>
       </property>
@@ -241,7 +248,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
+            <width>290</width>
             <height>360</height>
            </rect>
           </property>
@@ -332,7 +339,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>264</width>
+        <width>308</width>
         <height>404</height>
        </rect>
       </property>
@@ -535,7 +542,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
+            <width>290</width>
             <height>308</height>
            </rect>
           </property>
@@ -639,7 +646,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>264</width>
+        <width>308</width>
         <height>404</height>
        </rect>
       </property>
@@ -650,15 +657,15 @@
        <item>
         <widget class="QToolBox" name="toolBox_3">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="page_5">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
-            <height>334</height>
+            <width>136</width>
+            <height>103</height>
            </rect>
           </property>
           <attribute name="label">
@@ -701,7 +708,10 @@
              <item>
               <widget class="QComboBox" name="inputState">
                <property name="currentText">
-                <string>低电平</string>
+                <string>高电平</string>
+               </property>
+               <property name="currentIndex">
+                <number>1</number>
                </property>
                <item>
                 <property name="text">
@@ -744,7 +754,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
+            <width>290</width>
             <height>334</height>
            </rect>
           </property>
@@ -788,7 +798,10 @@
              <item>
               <widget class="QComboBox" name="outputState">
                <property name="currentText">
-                <string>断开</string>
+                <string>接通</string>
+               </property>
+               <property name="currentIndex">
+                <number>1</number>
                </property>
                <item>
                 <property name="text">
@@ -835,7 +848,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>264</width>
+        <width>308</width>
         <height>404</height>
        </rect>
       </property>
@@ -853,7 +866,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>246</width>
+            <width>290</width>
             <height>360</height>
            </rect>
           </property>
@@ -911,25 +924,88 @@
     </widget>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout_5">
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_6">
      <item>
-      <widget class="QTableView" name="tableView">
-       <property name="mouseTracking">
-        <bool>false</bool>
+      <layout class="QVBoxLayout" name="verticalLayout_17">
+       <item>
+        <widget class="QTableView" name="tableView">
+         <property name="mouseTracking">
+          <bool>false</bool>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <attribute name="horizontalHeaderCascadingSectionResizes">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="horizontalHeaderMinimumSectionSize">
+          <number>120</number>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="stepAct">
+           <property name="text">
+            <string>单步</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="stopAct">
+           <property name="text">
+            <string>停止</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="forwardAct">
+           <property name="text">
+            <string>下载</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
        </property>
-       <property name="selectionBehavior">
-        <enum>QAbstractItemView::SelectRows</enum>
-       </property>
-       <attribute name="horizontalHeaderCascadingSectionResizes">
-        <bool>false</bool>
-       </attribute>
-       <attribute name="horizontalHeaderMinimumSectionSize">
-        <number>120</number>
-       </attribute>
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QPushButton" name="editBtn">
+         <property name="text">
+          <string>修改</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QPushButton" name="deleteBtn">
          <property name="text">
@@ -938,43 +1014,43 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="resetBtn">
+        <widget class="QPushButton" name="insertBtn">
          <property name="text">
-          <string>清空</string>
+          <string>插入</string>
          </property>
         </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer">
+        <widget class="QPushButton" name="upBtn">
+         <property name="text">
+          <string>上移</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="downBtn">
+         <property name="text">
+          <string>下移</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_11">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
-           <height>20</height>
+           <width>20</width>
+           <height>40</height>
           </size>
          </property>
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="stepAct">
+        <widget class="QPushButton" name="clearBtn">
          <property name="text">
-          <string>单步</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="stopAct">
-         <property name="text">
-          <string>停止</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="forwardAct">
-         <property name="text">
-          <string>下载</string>
+          <string>清空</string>
          </property>
         </widget>
        </item>

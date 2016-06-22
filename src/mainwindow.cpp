@@ -50,7 +50,7 @@
 
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
+    QMainWindow(parent),isStopStatus(false),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -107,11 +107,17 @@ void MainWindow::openSerialPort()
         ui->actionConnect->setEnabled(false);
         ui->actionDisconnect->setEnabled(true);
         ui->actionConfigure->setEnabled(false);
+        /*
         showStatusMessage(tr("连接 %1 : 波特率 %2, %3位, 校验%4, 停止位%5, 控制流%6")
                           .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
                           .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
+                          */
+        QString status = tr("串口连接成功\n端口%1, 波特率%2, 数据%3位, 校验方式 %4, 停止位%5位, 控制流%6")
+                .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
+                .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl);
+        QMessageBox::information(this,tr("串口连接"),status);
     } else {
-        QMessageBox::critical(this, tr("错误"), serial->errorString());
+        QMessageBox::critical(this, tr("串口连接错误"), serial->errorString());
 
         showStatusMessage(tr("连接错误"));
     }
@@ -127,7 +133,8 @@ void MainWindow::closeSerialPort()
     ui->actionConnect->setEnabled(true);
     ui->actionDisconnect->setEnabled(false);
     ui->actionConfigure->setEnabled(true);
-    showStatusMessage(tr("断开连接"));
+    //showStatusMessage(tr("断开连接"));
+    QMessageBox::information(this, tr("串口连接"), tr("串口已断开连接"));
 }
 
 void MainWindow::about()
@@ -148,6 +155,11 @@ void MainWindow::writeData(const QByteArray &data)
         QMessageBox::warning(this,tr("警告"),tr("请打开串口！"));
         return;
     }
+    //未接收到停止状态反馈不能下载程序
+    if(!isStopStatus) {
+        QMessageBox::warning(this, tr("警告"), tr("请停止运行"));
+        return;
+    }
 
     serial->write(data);
 }
@@ -165,29 +177,50 @@ void MainWindow::writeConfig(const QByteArray &data)
     serial->write(data);
 
     config->tip();
-    //config->setFocus();
-    //config->isTopLevel();
 }
 
 void MainWindow::readData()
 {
     //缓存读数据 - 串口接收数据
     QByteArray data = serial->readAll();
+    //qDebug() << QString::fromLatin1(data.toHex().data());
 
     int size = data.size();
-    //qDebug() << QString("receive %1").arg(data.at(size-1));
+    //if(size)
 
     //qDebug() << "szie " + size;
+    /*
     if(size>0) {
         //qDebug() << "szie " + size;
-        showStatusMessage(tr("下载数据成功！"));
+        //showStatusMessage(tr("下载数据成功！"));
+        QMessageBox::information(this, tr("下载提示"), tr("下载数据成功！"));
     } else {
         //qDebug() << "szie " + size;
-        showStatusMessage(tr("下载数据失败！"));
+        //showStatusMessage(tr("下载数据失败！"));
+        QMessageBox::information(this, tr("下载提示"), tr("下载数据失败！"));
+    }
+    */
+    //qDebug() << QString::number(size);
+    if(size > 2) {
+        int ret = (quint8)data.at(2);
+        //qDebug() << QString::number(ret);
+        switch (ret) {
+        case BATCHCONFCMD:
+            QMessageBox::information(this, tr("下载提示"), tr("下载配置成功！"));
+            break;
+        case CMDBATCHHEAD:
+            isStopStatus = false; //设备运行状态
+            QMessageBox::information(this, tr("下载提示"), tr("下载程序成功！"));
+            break;
+        case EMSTOP_CMD:
+            isStopStatus = true; //设备停止状态
+            QMessageBox::information(this, tr("设备状态"), tr("设备已停止"));
+        default:
+            //QMessageBox::information(this, tr("下载提示"), tr("下载数据成功！"));
+            break;
+        }
     }
 
-
-    form->receiveData(data);
 }
 
 void MainWindow::handleError(QSerialPort::SerialPortError error)
@@ -205,6 +238,9 @@ void MainWindow::initActionsConnections()
     connect(ui->actionConfigure, SIGNAL(triggered()), settings, SLOT(show()));
     connect(ui->actionSystem, SIGNAL(triggered()), config, SLOT(show()));
     connect(ui->actionAbout, SIGNAL(triggered()), form, SLOT(about()));
+
+    connect(ui->actionOpenProg, SIGNAL(triggered(bool)), this, SLOT(openProgFile()));
+    connect(ui->actionSaveProg, SIGNAL(triggered(bool)), this, SLOT(saveProgFile()));
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(closeAll()));
 }
@@ -225,5 +261,53 @@ void MainWindow::closeAll()
 void MainWindow::closeEvent(QCloseEvent */*e*/)
 {
     closeAll();
+    //qDebug() << "close event";
+}
 
+void MainWindow::mousePressEvent(QMouseEvent *e)
+{
+    //qDebug() << "mouse pressed.";
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *e)
+{
+    //qDebug() << "mouse released.";
+}
+
+void MainWindow::mouseDoubleClickEvent(QMouseEvent *e)
+{
+    //qDebug() << "mouse double clicked.";
+}
+
+void MainWindow::openProgFile()
+{
+    //打开默认文件目录等待用户选中载入文件，限制打开文件格式
+    QString fileName = QFileDialog::getOpenFileName(this, tr("打开程序文件"),
+                               "",
+                               tr("程序 (*.prog)"));
+    //qDebug() << "打开文件名： " + fileName;
+    //读取文件流内容，调用程序form载入程序指令方法
+    if(form->loadProgFile(fileName))
+        qDebug() << "load prog file successful.";
+    else
+        qDebug() << "load failed.";
+    //更新程序form模型
+}
+
+void MainWindow::saveProgFile()
+{
+    //打开文件保存对话框，提示用户输入文件名以待保存
+    QString fileName = QFileDialog::getSaveFileName(this, tr("保存程序文件"),
+                               "程序.prog",
+                               tr("程序 (*.prog)"));
+    //qDebug() << "保存文件名： " + fileName;
+    //Form指令序列保存至文件流
+    bool ret = form->saveProgFile(fileName);
+
+    //保存为磁盘文件
+    if(ret) {
+        qDebug() << "save prog file successful.";
+    } else {
+        qDebug() << "save prog file failed.";
+    }
 }

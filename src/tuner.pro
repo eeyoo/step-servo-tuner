@@ -7,18 +7,20 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     settingsdialog.cpp \
-    console.cpp \
     form.cpp \
     command.cpp \
-    configdialog.cpp
+    configdialog.cpp \
+    commandline.cpp \
+    commanditemmodel.cpp
 
 HEADERS += \
     mainwindow.h \
     settingsdialog.h \
-    console.h \
     form.h \
     command.h \
-    configdialog.h
+    configdialog.h \
+    commandline.h \
+    commanditemmodel.h
 
 FORMS += \
     mainwindow.ui \
@@ -31,3 +33,5 @@ RESOURCES += \
 
 DISTFILES += \
     ../doc/todo.txt
+
+RC_ICONS = images/app.ico

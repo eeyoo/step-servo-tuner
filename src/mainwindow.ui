@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>831</width>
-    <height>552</height>
+    <width>902</width>
+    <height>535</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>831</width>
+     <width>902</width>
      <height>23</height>
     </rect>
    </property>
@@ -29,6 +29,8 @@
     <property name="title">
      <string>操作</string>
     </property>
+    <addaction name="actionOpenProg"/>
+    <addaction name="actionSaveProg"/>
     <addaction name="actionConnect"/>
     <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
@@ -62,6 +64,9 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionOpenProg"/>
+   <addaction name="actionSaveProg"/>
+   <addaction name="separator"/>
    <addaction name="actionConnect"/>
    <addaction name="actionDisconnect"/>
    <addaction name="separator"/>
@@ -69,11 +74,15 @@
    <addaction name="actionSystem"/>
   </widget>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="tuner.qrc">
+     <normaloff>:/images/help_48dp.png</normaloff>:/images/help_48dp.png</iconset>
+   </property>
    <property name="text">
-    <string>关于</string>
+    <string>帮助</string>
    </property>
    <property name="toolTip">
-    <string>About program</string>
+    <string>帮助</string>
    </property>
    <property name="shortcut">
     <string>Alt+A</string>
@@ -87,7 +96,7 @@
   <action name="actionConnect">
    <property name="icon">
     <iconset resource="tuner.qrc">
-     <normaloff>:/images/connect.png</normaloff>:/images/connect.png</iconset>
+     <normaloff>:/images/link.png</normaloff>:/images/link.png</iconset>
    </property>
    <property name="text">
     <string>连接</string>
@@ -105,7 +114,7 @@
   <action name="actionDisconnect">
    <property name="icon">
     <iconset resource="tuner.qrc">
-     <normaloff>:/images/disconnect.png</normaloff>:/images/disconnect.png</iconset>
+     <normaloff>:/images/link_off.png</normaloff>:/images/link_off.png</iconset>
    </property>
    <property name="text">
     <string>断开</string>
@@ -123,13 +132,13 @@
   <action name="actionConfigure">
    <property name="icon">
     <iconset resource="tuner.qrc">
-     <normaloff>:/images/settings.png</normaloff>:/images/settings.png</iconset>
+     <normaloff>:/images/serial.png</normaloff>:/images/serial.png</iconset>
    </property>
    <property name="text">
     <string>串口配置</string>
    </property>
    <property name="toolTip">
-    <string>配置串口参数</string>
+    <string>串口配置</string>
    </property>
    <property name="shortcut">
     <string>Alt+C</string>
@@ -138,7 +147,7 @@
   <action name="actionQuit">
    <property name="icon">
     <iconset resource="tuner.qrc">
-     <normaloff>:/images/application-exit.png</normaloff>:/images/application-exit.png</iconset>
+     <normaloff>:/images/close.png</normaloff>:/images/close.png</iconset>
    </property>
    <property name="text">
     <string>退出</string>
@@ -147,13 +156,31 @@
   <action name="actionSystem">
    <property name="icon">
     <iconset resource="tuner.qrc">
-     <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
+     <normaloff>:/images/settings_new.png</normaloff>:/images/settings_new.png</iconset>
    </property>
    <property name="text">
     <string>系统配置</string>
    </property>
    <property name="shortcut">
     <string>Alt+S</string>
+   </property>
+  </action>
+  <action name="actionOpenProg">
+   <property name="icon">
+    <iconset resource="tuner.qrc">
+     <normaloff>:/images/open.png</normaloff>:/images/open.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开程序</string>
+   </property>
+  </action>
+  <action name="actionSaveProg">
+   <property name="icon">
+    <iconset resource="tuner.qrc">
+     <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>保存程序</string>
    </property>
   </action>
  </widget>
