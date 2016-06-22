@@ -1,16 +1,16 @@
-#ifndef CMDSTANDARDITEMMODEL_H
-#define CMDSTANDARDITEMMODEL_H
+#ifndef COMMANDITEMLIST_H
+#define COMMANDITEMLIST_H
+
 #include <QObject>
-#include <QStandardItemModel>
+#include <QAbstractItemModel>
 
 #include "command.h"
 
-//标准项模型子类化 - 指令专用
-class CmdStandardItemModel : public QStandardItemModel
+class CommandItemList
 {
     Q_OBJECT
 public:
-    explicit CmdStandardItemModel();
+    CommandItemList(QObject *parent = 0);
 
     //追加 插入 移动 修改 删除指令
     void append(Command &cmd);
@@ -20,9 +20,9 @@ public:
     void del(Command &cmd);
 
 private:
+    QAbstractItemModel *model;
     QList<Command> mCmdList;
     QStringList mStrList;
-    QStandardItem *mItem;
 };
 
-#endif // CMDSTANDARDITEMMODEL_H
+#endif // COMMANDITEMLIST_H
