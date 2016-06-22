@@ -240,3 +240,14 @@ QTableView单击或双击信号实现指令行修改。
 删除
 
 
+2016-6-21 周二
+==============================
+别人往往只能看到结果，所以过程是自己，结果给别人尽量漂亮点
+自定义数据角色（显示 可编辑 提示等等）
+model->setData(model->index(row, 0), acmd.type(), Qt::UserRole);
+model->setData(model->index(row, 1), acmd.type(), Qt::UserRole);
+
+QModleIndex::data(int role = Qt::DisplayRole)
+默认返回显示角色数据
+QModleIndex::data(int role = Qt::UserRole)
+即可显示自定义角色数据，比如指令类型编号

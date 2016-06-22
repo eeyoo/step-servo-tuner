@@ -81,10 +81,12 @@ void Form::initConnect()
     connect(ui->setRunSpd, SIGNAL(valueChanged(int)), this, SLOT(spd_show(int)));
     connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(tableDoubleClick(QModelIndex)));
     connect(ui->tableView, SIGNAL(clicked(QModelIndex)), this, SLOT(tableClick(QModelIndex)));
+    //connect(ui->tableView, SIGNAL(clicked(QModelIndex))
 }
 
 void Form::initModel()
 {
+    //mymodel = new QStandardItemModel;
     model = new QStandardItemModel(0, 2, this);
     model->setHeaderData(0, Qt::Horizontal, tr("指令类型"));
     model->setHeaderData(1, Qt::Horizontal, tr("指令内容"));
@@ -192,8 +194,8 @@ void Form::on_absAddBtn_clicked()
     quint8 qPos[10] = {id[0],id[1],ABS_MOVE_CMD,0x01,0x00,qpos[0],qpos[1],qpos[2],qpos[3],0x00};
 
     int params[2] = {deviceId, val};
-    Command abscmd(params, Command::ABS);
-    QByteArray qa1 = abscmd.data();
+    Command acmd(params, Command::ABS);
+    QByteArray qa1 = acmd.data();
     //qDebug() << val;
     qDebug() << qa1.toHex();
 
@@ -204,17 +206,20 @@ void Form::on_absAddBtn_clicked()
     //m_list->append(qa1.append(qa2).toHex());
     //m_list->append(qa2.toHex());
     cmd_list->append(qa);
+    //指令序列 - 发送数据
 
     QStringList list;
     list << tr("绝对运动指令") << QString(tr("绝对运行距离至 %1mm")).arg(position);
 
-
+    //指令序列 - 模型
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
-    //model->setData(model->index(row, 2), 1, Qt::UserRole);
+    model->setData(model->index(row, 0), acmd.type(), Qt::UserRole);
+    model->setData(model->index(row, 1), acmd.type(), Qt::UserRole);
     //自定义QModelIndex
 
+    //指令序列 - 文件
     CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
     lines.append(cline); //加入指令序列
 
@@ -231,8 +236,8 @@ void Form::on_relaAddBtn_clicked()
 
     int val = position*param;
     int params[2] = {deviceId, val};
-    Command relacmd(params, Command::RELA);
-    QByteArray qa1 = relacmd.data();
+    Command acmd(params, Command::RELA);
+    QByteArray qa1 = acmd.data();
     //qDebug() << val;
     qDebug() << qa1.toHex();
 
@@ -257,6 +262,8 @@ void Form::on_relaAddBtn_clicked()
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
+    model->setData(model->index(row, 0), acmd.type(), Qt::UserRole);
+    model->setData(model->index(row, 1), acmd.type(), Qt::UserRole);
 
     CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
     lines.append(cline); //加入指令序列
@@ -275,8 +282,8 @@ void Form::on_setSpdBtn_clicked()
     //qDebug() << QString(tr("参数 %1 档位 %2%")).arg(beta).arg(spd);
 
     int params[2] = {deviceId, spd};
-    Command spdcmd(params, Command::SPD);
-    qDebug() << spdcmd.data().toHex();
+    Command acmd(params, Command::SPD);
+    qDebug() << acmd.data().toHex();
     quint8 qspd[4];
     convert(qspd, spd, 4);
 
@@ -291,6 +298,8 @@ void Form::on_setSpdBtn_clicked()
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
+    model->setData(model->index(row, 0), acmd.type(), Qt::UserRole);
+    model->setData(model->index(row, 1), acmd.type(), Qt::UserRole);
 
     CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
     lines.append(cline); //加入指令序列
@@ -391,8 +400,8 @@ void Form::on_opAddBtn_clicked()
     int opType = ui->opType->currentIndex() + 1; //1-自增 2-自减
 
     int params[3] = {deviceId, opType, param};
-    Command opcmd(params, Command::OPER);
-    qDebug() << opcmd.data().toHex();
+    Command acmd(params, Command::OPER);
+    qDebug() << acmd.data().toHex();
 
     quint8 pop[4];
     convert(pop,opType,4);
@@ -410,6 +419,8 @@ void Form::on_opAddBtn_clicked()
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
+    model->setData(model->index(row, 0), acmd.type(), Qt::UserRole);
+    model->setData(model->index(row, 1), acmd.type(), Qt::UserRole);
 
     CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
     lines.append(cline); //加入指令序列
@@ -431,8 +442,8 @@ void Form::on_jmpAddBtn_clicked()
     }
 
     int params[4] = {deviceId, 0, line, 0};
-    Command jmpcmd(params, Command::JMP);
-    qDebug() << jmpcmd.data().toHex();
+    Command acmd(params, Command::JMP);
+    qDebug() << acmd.data().toHex();
 
     jmp_to = line-1;
 
@@ -449,6 +460,8 @@ void Form::on_jmpAddBtn_clicked()
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
+    model->setData(model->index(row, 0), acmd.type(), Qt::UserRole);
+    model->setData(model->index(row, 1), acmd.type(), Qt::UserRole);
 
     CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
     lines.append(cline); //加入指令序列
@@ -475,8 +488,8 @@ void Form::on_cmpAddBtn_clicked()
     jmp_to = line-1;
 
     int params[5] = {deviceId, value, line, param, type};
-    Command cmpcmd(params, Command::CMP);
-    qDebug() << cmpcmd.data().toHex();
+    Command acmd(params, Command::CMP);
+    qDebug() << acmd.data().toHex();
 
     quint8 pln[2];
     convert(pln,line-1,2);
@@ -499,6 +512,8 @@ void Form::on_cmpAddBtn_clicked()
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
+    model->setData(model->index(row, 0), acmd.type(), Qt::UserRole);
+    model->setData(model->index(row, 1), acmd.type(), Qt::UserRole);
 
     CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
     lines.append(cline); //加入指令序列
@@ -524,8 +539,8 @@ void Form::on_jumpAddBtn_clicked()
     jmp_to = line-1;
 
     int params[4] = {deviceId, state, line, param};
-    Command cmpcmd(params, Command::IOJMP);
-    qDebug() << cmpcmd.data().toHex();
+    Command acmd(params, Command::IOJMP);
+    qDebug() << acmd.data().toHex();
 
     quint8 pln[2];
     convert(pln,line-1,2);
@@ -544,6 +559,8 @@ void Form::on_jumpAddBtn_clicked()
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
+    model->setData(model->index(row, 0), acmd.type(), Qt::UserRole);
+    model->setData(model->index(row, 1), acmd.type(), Qt::UserRole);
 
     CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
     lines.append(cline); //加入指令序列
@@ -561,8 +578,8 @@ void Form::on_inputAddBtn_clicked() //输入等待
     int state = ui->inputState->currentIndex();
 
     int params[4] = {deviceId, state, 0, param};
-    Command inputcmd(params, Command::INPUT);
-    qDebug() << inputcmd.data().toHex();
+    Command acmd(params, Command::INPUT);
+    qDebug() << acmd.data().toHex();
 
     quint8 cmd[] = {id[0],id[1],INPUT_CMD,param,0x00,state,0x00,0x00,0x00,0x00};
     QByteArray qa;
@@ -579,6 +596,8 @@ void Form::on_inputAddBtn_clicked() //输入等待
     model->insertRow(row, QModelIndex());
     model->setData(model->index(row, 0), list.value(0));
     model->setData(model->index(row, 1), list.value(1));
+    model->setData(model->index(row, 0), acmd.type(), Qt::UserRole);
+    model->setData(model->index(row, 1), acmd.type(), Qt::UserRole);
 
     CommandLine cline(list.value(0), list.value(1), qa); //指令行对象
     lines.append(cline); //加入指令序列
@@ -687,7 +706,8 @@ void Form::tableClick(const QModelIndex &index)
 {
     int nr = index.row();
     select_line = nr;
-    qDebug() << tr("%1 row clicked. data %2").arg(nr+1).arg(index.data().toString());
+    QVariant type = index.data(Qt::UserRole);
+    qDebug() << tr("%1 row clicked. data %2").arg(nr+1).arg(type.toInt());
 }
 
 
@@ -709,24 +729,7 @@ void Form::on_deleteBtn_clicked()
         QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
         return;
     }
-    /*
-    row--;
-    index--;
-    if (row == 0) {
-        //row = 0;
-        position = 0;
-        index = 0;
-    }
 
-    if(row == jmp_from)
-        jmp_to = 0;
-
-    model->removeRow(row, QModelIndex());
-    cmd_list->removeAt(row);
-    position -= moves.at(row);
-    moves.removeAt(row);
-    lines.removeAt(row);
-    */
     row--;
     if(row < 0) row = 0;
 

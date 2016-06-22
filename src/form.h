@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "commandline.h"
+#include "commanditemmodel.h"
 
 namespace Ui {
 class Form;
@@ -61,9 +62,9 @@ private slots:
 
     void spd_show(int);
 
-    void tableDoubleClick(const QModelIndex &);
+    void tableDoubleClick(const QModelIndex &); //双击事件
 
-    void tableClick(const QModelIndex &index);
+    void tableClick(const QModelIndex &index);  //单击事件
 
     void update_cmd();  //更新命令行list
 
@@ -92,6 +93,7 @@ private:
 private:
     Ui::Form *ui;
     QAbstractItemModel *model;
+    //CommandItemModel *mymodel;
     int row;        //行位置
     int index;      //单步运行行
     int jmp_from;   //无条件跳转起始行
