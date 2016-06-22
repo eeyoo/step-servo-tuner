@@ -17,7 +17,7 @@
    <item>
     <widget class="QToolBox" name="parentToolBox">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="movePage">
       <property name="geometry">
@@ -35,15 +35,15 @@
        <item>
         <widget class="QToolBox" name="moveToolBox">
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="absPage">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>162</width>
-            <height>75</height>
+            <width>290</width>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
@@ -90,7 +90,7 @@
            <item>
             <widget class="QPushButton" name="absAddBtn">
              <property name="text">
-              <string>加入</string>
+              <string>确定</string>
              </property>
             </widget>
            </item>
@@ -101,8 +101,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>162</width>
-            <height>75</height>
+            <width>290</width>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
@@ -149,13 +149,13 @@
            <item>
             <widget class="QPushButton" name="relaAddBtn">
              <property name="text">
-              <string>加入</string>
+              <string>确定</string>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="page_8">
+         <widget class="QWidget" name="spdPage">
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -215,7 +215,7 @@
            <item>
             <widget class="QPushButton" name="setSpdBtn">
              <property name="text">
-              <string>加入</string>
+              <string>确定</string>
              </property>
             </widget>
            </item>
@@ -239,11 +239,11 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
-        <widget class="QToolBox" name="toolBox">
+        <widget class="QToolBox" name="operateToolBox">
          <property name="currentIndex">
           <number>0</number>
          </property>
-         <widget class="QWidget" name="page">
+         <widget class="QWidget" name="opPage">
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -324,7 +324,7 @@
            <item>
             <widget class="QPushButton" name="opAddBtn">
              <property name="text">
-              <string>加入</string>
+              <string>确定</string>
              </property>
             </widget>
            </item>
@@ -348,17 +348,17 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_8">
        <item>
-        <widget class="QToolBox" name="toolBox_2">
+        <widget class="QToolBox" name="condToolBox">
          <property name="currentIndex">
           <number>2</number>
          </property>
-         <widget class="QWidget" name="page_2">
+         <widget class="QWidget" name="jmpPage">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>126</width>
-            <height>75</height>
+            <width>290</width>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
@@ -405,19 +405,19 @@
            <item>
             <widget class="QPushButton" name="jmpAddBtn">
              <property name="text">
-              <string>加入</string>
+              <string>确定</string>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="page_3">
+         <widget class="QWidget" name="cmpPage">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>158</width>
-            <height>131</height>
+            <width>290</width>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
@@ -531,13 +531,13 @@
            <item>
             <widget class="QPushButton" name="cmpAddBtn">
              <property name="text">
-              <string>加入</string>
+              <string>确定</string>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="page_7">
+         <widget class="QWidget" name="ioJmpPage">
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -631,7 +631,7 @@
            <item>
             <widget class="QPushButton" name="jumpAddBtn">
              <property name="text">
-              <string>加入</string>
+              <string>确定</string>
              </property>
             </widget>
            </item>
@@ -641,7 +641,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_4">
+     <widget class="QWidget" name="ioPage">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -655,17 +655,17 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_11">
        <item>
-        <widget class="QToolBox" name="toolBox_3">
+        <widget class="QToolBox" name="ioToolBox">
          <property name="currentIndex">
           <number>1</number>
          </property>
-         <widget class="QWidget" name="page_5">
+         <widget class="QWidget" name="inPage">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>136</width>
-            <height>103</height>
+            <width>290</width>
+            <height>334</height>
            </rect>
           </property>
           <attribute name="label">
@@ -743,13 +743,13 @@
            <item>
             <widget class="QPushButton" name="inputAddBtn">
              <property name="text">
-              <string>加入</string>
+              <string>确定</string>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="page_6">
+         <widget class="QWidget" name="outPage">
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -833,7 +833,7 @@
            <item>
             <widget class="QPushButton" name="outputAddBtn">
              <property name="text">
-              <string>加入</string>
+              <string>确定</string>
              </property>
             </widget>
            </item>
@@ -843,7 +843,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_9">
+     <widget class="QWidget" name="auxPage">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -857,11 +857,11 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_15">
        <item>
-        <widget class="QToolBox" name="toolBox_4">
+        <widget class="QToolBox" name="auxToolBox">
          <property name="currentIndex">
           <number>0</number>
          </property>
-         <widget class="QWidget" name="page_10">
+         <widget class="QWidget" name="delayPage">
           <property name="geometry">
            <rect>
             <x>0</x>
@@ -911,7 +911,7 @@
            <item>
             <widget class="QPushButton" name="delayAddBtn">
              <property name="text">
-              <string>加入</string>
+              <string>确定</string>
              </property>
             </widget>
            </item>
@@ -1007,13 +1007,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="deleteBtn">
-         <property name="text">
-          <string>删除</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="insertBtn">
          <property name="text">
           <string>插入</string>
@@ -1031,6 +1024,13 @@
         <widget class="QPushButton" name="downBtn">
          <property name="text">
           <string>下移</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="deleteBtn">
+         <property name="text">
+          <string>删除</string>
          </property>
         </widget>
        </item>

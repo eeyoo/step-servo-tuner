@@ -22,6 +22,10 @@ public:
     bool loadProgFile(QString fileName);  //读取json文件并解析出来生成模型和指令序列
     bool saveProgFile(QString fileName) const; //将模型和指令序列保存为json文件
 
+    enum OperType {
+        APP, EDIT, INSE
+    };
+
 public slots:
     void about();
 
@@ -66,7 +70,11 @@ private slots:
 
     void tableClick(const QModelIndex &index);  //单击事件
 
+    void showToolBox(const QModelIndex &index);
+
     void update_cmd();  //更新命令行list
+
+
 
 private slots:
 
@@ -108,6 +116,8 @@ private:
     QList<CommandLine> lines; //指令序列
     int select_line;  //选中当前行
     int deviceId;
+    int cmdType;
+    OperType op;
 };
 
 #endif // FORM_H

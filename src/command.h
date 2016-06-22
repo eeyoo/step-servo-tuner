@@ -75,6 +75,7 @@ public:
 
 
     QByteArray data() const; //指令转换为字符数据
+    Command::CMDTYPE type();
 
 private:
     void parse(quint8 *buf, int *param, int def);
@@ -86,6 +87,7 @@ private:
 private:
     //quint8 array[NUMBER_CMD];
     QByteArray qa;
+    CMDTYPE mType;
 };
 
 #endif // COMMAND_H

@@ -10,6 +10,7 @@ Command::Command(int *param, CMDTYPE type) {
     //quint8 bufData[NUMBER_DA];
     //convert(bufID, id, NUMBER_ID);
     //convert(bufData, param, NUMBER_DA);
+    mType = type;
     init(type);
     quint8 buf[NUMBER_CMD];
 
@@ -48,6 +49,11 @@ Command::Command(int *param, CMDTYPE type) {
         break;
     }
 
+}
+
+Command::CMDTYPE Command::type()
+{
+    return mType;
 }
 
 void Command::parse(quint8 *buf, int *param, int def)
@@ -90,7 +96,6 @@ void Command::parse(quint8 *buf, int *param, int def)
         buf[8] = bufData[3];
         buf[9] = 0x00;
         break;
-
     case CMP_CMD:
         convert(bufLow, param[1], NUMBER_LOW);
         convert(bufHigh, param[2], NUMBER_HIGH);
@@ -125,7 +130,6 @@ void Command::parse(quint8 *buf, int *param, int def)
     default:
         break;
     }
-
 
     array2qa(qa, buf, NUMBER_CMD);
 }
