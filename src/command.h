@@ -61,12 +61,11 @@ typedef struct {
 class Command : public QObject
 {
     Q_OBJECT
-
 public:
-
     enum CMDTYPE {
         ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT, STOP
     };
+    explicit Command(QObject *parent=0);
 
     explicit Command(int *param, CMDTYPE type);
     //Command(int *param, CMDTYPE type);

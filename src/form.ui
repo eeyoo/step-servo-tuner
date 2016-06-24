@@ -357,8 +357,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>290</width>
-            <height>308</height>
+            <width>126</width>
+            <height>75</height>
            </rect>
           </property>
           <attribute name="label">
@@ -416,8 +416,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>290</width>
-            <height>308</height>
+            <width>158</width>
+            <height>131</height>
            </rect>
           </property>
           <attribute name="label">
@@ -664,8 +664,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>290</width>
-            <height>334</height>
+            <width>136</width>
+            <height>103</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1000,13 +1000,6 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QPushButton" name="editBtn">
-         <property name="text">
-          <string>修改</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="insertBtn">
          <property name="text">
           <string>插入</string>
@@ -1035,6 +1028,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="clearBtn">
+         <property name="text">
+          <string>清空</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer_11">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -1046,13 +1046,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="clearBtn">
-         <property name="text">
-          <string>清空</string>
-         </property>
-        </widget>
        </item>
       </layout>
      </item>

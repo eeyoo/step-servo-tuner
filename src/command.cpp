@@ -4,6 +4,11 @@
 
 //quint8 array[]
 //QByteArray
+Command::Command(QObject *parent) :
+    QObject(parent)
+{
+
+}
 
 Command::Command(int *param, CMDTYPE type) {
     //quint8 bufID[NUMBER_ID];

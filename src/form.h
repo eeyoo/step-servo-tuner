@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "commandline.h"
-#include "commanditemmodel.h"
+#include "commanditemlist.h"
 
 namespace Ui {
 class Form;
@@ -23,7 +23,7 @@ public:
     bool saveProgFile(QString fileName) const; //将模型和指令序列保存为json文件
 
     enum OperType {
-        APP, EDIT, INSE
+        APP, EDIT, INSE, QUIT
     };
 
 public slots:
@@ -82,7 +82,7 @@ private slots:
 
     void on_deleteBtn_clicked(); //删除
 
-    void on_editBtn_clicked();  //修改 ***
+    //void on_editBtn_clicked();  //修改 ***
 
     void on_insertBtn_clicked(); //插入
 
@@ -100,24 +100,21 @@ private:
 
 private:
     Ui::Form *ui;
-    QAbstractItemModel *model;
-    //CommandItemModel *mymodel;
-    int row;        //行位置
+    CommandItemList *itemList;
     int index;      //单步运行行
-    int jmp_from;   //无条件跳转起始行
-    int jmp_to;    //无条件跳转目标行
     long position; //绝对位置
     QList<QByteArray> *cmd_list; //指令列表
     ConfigDialog *config;
     int param; //位移转换脉冲数参数
     quint8 id[2];
-    QList<long> moves; //位移增量List
     double beta; //线速度与脉冲转换参数
     QList<CommandLine> lines; //指令序列
     int select_line;  //选中当前行
     int deviceId;
     int cmdType;
     OperType op;
+    bool quit;
+    int mLine;
 };
 
 #endif // FORM_H
