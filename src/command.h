@@ -56,37 +56,59 @@ typedef struct {
     quint8 check;      //校验
 } Cmd;
 */
+static int alpha = 1; //位移转换脉冲数参数
+static double beta = 1.0; //线速度与脉冲转换参数
 
-
-class Command : public QObject
+class QJsonArray;
+class Command
 {
-    Q_OBJECT
 public:
     enum CMDTYPE {
-        ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT, STOP
+        ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT, STOP, HEAD
     };
-    explicit Command(QObject *parent=0);
+    explicit Command(int a, double b);
 
-    explicit Command(int *param, CMDTYPE type);
-    //Command(int *param, CMDTYPE type);
+    Command(int *param, CMDTYPE type);
+    Command(QJsonArray &arr, int type);
+
     //Command(QByteArray &param, CMDTYPE type);
     ~Command();
 
 
     QByteArray data() const; //指令转换为字符数据
     Command::CMDTYPE type();
+    QJsonArray array() const;
+    void pp();
+
+    long position();
+    long pos();
 
 private:
+    //void init(int alpha, double beta); //初始化参数
+
     void parse(quint8 *buf, int *param, int def);
-    //void parsejmp(quint8 *buf, int id, int *param, int def);
-    void init(CMDTYPE type);
+    void parse(quint8 *buf, QJsonArray &arr, int def);
+
     void convert(quint8 *buf, int data, int size); //int -> quint8[4]
     void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
 
+    void abs(quint8 *buf, int *param);
+    void rela(quint8 *buf, int *param);
+    void spd(quint8 *buf, int *param);
+
+    void fabs(quint8 *buf, QJsonArray &arr);
+    void frela(quint8 *buf, QJsonArray &arr);
+    void fspd(quint8 *buf, QJsonArray &arr);
+
 private:
     //quint8 array[NUMBER_CMD];
+    //ConfigDialog *config;
     QByteArray qa;
     CMDTYPE mType;
+    //int *params;
+    long mpos;
+    long mp;
+    QList<int> ps; //参数列表
 };
 
 #endif // COMMAND_H
