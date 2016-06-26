@@ -41,12 +41,14 @@ private:
     QAbstractItemModel *model;
     QList<Command> cmd_list;
     QList<QStringList> lists;
-    QList<int> moves;
+    QList<long> moves; //相对位置增量
+    QList<long> posList; //记录每行指令的绝对位置
+
     Command *cmd;
     //QStringList list;
-    int row; //游标行
-    int line; //选中行
-    int rows; //总行数
+    int row; //保存追加行
+    int line; //保存选中行
+    int rows; //保存总行数
     long position; //指令序列绝对位置
 };
 

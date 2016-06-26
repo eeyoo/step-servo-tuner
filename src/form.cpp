@@ -164,12 +164,12 @@ void Form::on_absAddBtn_clicked()
 void Form::on_relaAddBtn_clicked()
 {
     int pos = ui->relMoveDistance->value();
-    int base = itemList->pos();
+    int base = itemList->pos();//获取指令序列当前绝对位置
 
     //moves.append(pos);
 
     //int val = position*param;
-    int params[3] = {deviceId, pos, base}; //指令需要将相对位置转换为绝对位置处理后发生下位机
+    int params[3] = {deviceId, pos, base}; //绝对位置 = 增量 + 基准
     Command acmd(params, Command::RELA);
     qDebug() << acmd.data().toHex();
 
@@ -497,10 +497,9 @@ void Form::on_deleteBtn_clicked()
     }
 
     itemList->del(mLine);
+    qDebug() << tr("%1 行已被删除！").arg(mLine+1);
+
     mLine = -1;
-    //qDebug() << tr("%1 行已被删除！").arg(select_line+1);
-
-
 }
 
 void Form::on_insertBtn_clicked()

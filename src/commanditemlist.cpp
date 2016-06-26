@@ -37,26 +37,28 @@ void CommandItemList::append(Command &cmd, QStringList &list)
 {
     //this->cmd = cmd;
     //this->list = list;
+    //追加指令为
+    position = cmd.position();
     setRowData(row, cmd, list);
     cmd_list.append(cmd);
     int type = cmd.type();
     //位置增量列表
     if (type==Command::RELA) {
+        posList.append(cmd.position());
         moves.append(cmd.pos());
-    } else {
+    } else if (type==Command::ABS){
+        posList.append(cmd.position());
         moves.append(0);
+
     }
-
-    if(type==Command::ABS)
-        position = cmd.position();
-    else if(type==Command::RELA)
-
     lists.append(list);
+
     row++;
     rows++;
+
     qDebug() << tr("绝对位置 -- %1").arg(position);
     //qDebug() << tr("当前指令 ") << cmd.data().toHex();
-    //cmd.pp();
+
 }
 
 //插入指令
@@ -68,12 +70,15 @@ void CommandItemList::insert(Command &cmd, QStringList &list, int r)
     setRowData(line, cmd, list);
     int type = cmd.type();
     if(type==Command::RELA) {
-        moves.insert(r, cmd.pos());
-    } else {
-        moves.insert(r, 0);
+        moves.insert(line, cmd.pos());
+        long last = posList.at(line-1);
+        posList.insert(line, last+cmd.pos());
+    } else if (type == Command::ABS){
+        moves.insert(line, 0);
+        posList.insert(line, cmd.position());
     }
 
-    cmd_list.insert(r, cmd);
+    cmd_list.insert(r, cmd);\
     lists.insert(r, list);
     rows++;
     this->row = rows;
@@ -100,21 +105,28 @@ void CommandItemList::edit(Command &cmd, int r)
 void CommandItemList::del(int r)
 {
     this->line = r;
+    Command selectcmd = cmd_list.at(line);
+
+    int type = selectcmd.type();
+
+    if (type == Command::RELA) {
+        position -= selectcmd.pos();
+    } else if (type == Command::ABS) {
+
+    }
+
     model->removeRow(line, QModelIndex());
     cmd_list.removeAt(line);
     lists.removeAt(line);
+    moves.removeAt(r);
     rows--;
+
+
+
     this->row = rows;
 
-    Command curr = cmd_list.at(r);
-    int type = curr.type();
-
-    moves.removeAt(r);
-
-    if (position < 0)
-        position = 0;
-
-    qDebug() << tr("删除行 %1 游标 %2").arg(r+1).arg(row+1);
+    qDebug() << tr("绝对位置 -- %1").arg(position);
+    //qDebug() << tr("删除 %1 行 追加行 %2").arg(line+1).arg(row+1);
 }
 
 //清空
@@ -256,7 +268,6 @@ void CommandItemList::write(QJsonObject &json, int r) const
     QStringList alist = lists[r];
     json["title"] = alist.at(0);
     json["content"] = alist.at(1);
-
 
 
     Command acmd = cmd_list[r];
