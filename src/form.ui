@@ -966,13 +966,6 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="stepAct">
-           <property name="text">
-            <string>单步</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QPushButton" name="stopAct">
            <property name="text">
             <string>停止</string>
@@ -1003,20 +996,6 @@
         <widget class="QPushButton" name="insertBtn">
          <property name="text">
           <string>插入</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="upBtn">
-         <property name="text">
-          <string>上移</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="downBtn">
-         <property name="text">
-          <string>下移</string>
          </property>
         </widget>
        </item>

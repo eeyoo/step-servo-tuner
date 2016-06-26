@@ -291,7 +291,6 @@ void MainWindow::openProgFile()
         qDebug() << "load prog file successful.";
     else
         qDebug() << "load failed.";
-    //更新程序form模型
 }
 
 void MainWindow::saveProgFile()
@@ -300,8 +299,7 @@ void MainWindow::saveProgFile()
     QString fileName = QFileDialog::getSaveFileName(this, tr("保存程序文件"),
                                "程序.prog",
                                tr("程序 (*.prog)"));
-    //qDebug() << "保存文件名： " + fileName;
-    //Form指令序列保存至文件流
+
     bool ret = form->saveProgFile(fileName);
 
     //保存为磁盘文件

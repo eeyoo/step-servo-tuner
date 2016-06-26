@@ -41,7 +41,7 @@
 
 QT_USE_NAMESPACE
 
-static const char blankString[] = QT_TRANSLATE_NOOP("SettingsDialog", "N/A");
+static const char blankString[] = QT_TRANSLATE_NOOP(tr("串口设置"), "N/A");
 
 SettingsDialog::SettingsDialog(QWidget *parent) :
     QDialog(parent),

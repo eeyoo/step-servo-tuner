@@ -16,33 +16,31 @@
 
 Form::Form(QWidget *parent) :
     QWidget(parent),
-    index(0), position(0),
-    select_line(-1),mLine(-1),
+    index(0),
+    select_line(-1),
+    mLine(-1),
     ui(new Ui::Form)
 {
     ui->setupUi(this);
     config = new ConfigDialog;
-    itemList = new CommandItemList();
+    itemList = new CommandItemList(this);
 
     int level = config->configs().elecLevel;
     int circle = config->configs().circleLen;
     int div[] = {1,2,4,8,16,32,64,128,256};
     deviceId = config->configs().deviceId;
-    convert(id, deviceId, 2);
-    param = 200 * div[level] / circle;
-    //qDebug() << QString("param %1 pos %2").arg(param).arg(position);
 
-    beta = 0.4 * div[level] / circle; // 200 * 100 / 50000
+    int alpha = 200 * div[level] / circle;
+    double beta = 0.4 * div[level] / circle; // 系数 200*100/50000
 
     int maxSpd = 100 / beta;
     ui->setRunSpd->setMaximum(maxSpd);
-    //qDebug() << "param = " << param;
+
+    cmd = new Command(alpha, beta);
+
     initUI();
     initConnect();
     initModel();
-
-    cmd_list = new QList<QByteArray>;
-    //lines = new QList<CommandLine>;
 
     spd_show(ui->setRunSpd->value());
 
@@ -57,8 +55,8 @@ Form::Form(QWidget *parent) :
 Form::~Form()
 {
     delete ui;
+    delete cmd;
     delete config;
-    delete cmd_list;
     delete itemList;
 }
 
@@ -115,148 +113,70 @@ void Form::dropEvent(QDropEvent *event)
 
 bool Form::saveProgFile(QString fileName) const
 {
-    QFile saveFile(fileName);
-    if(!saveFile.open(QIODevice::WriteOnly)) {
-        //qDebug() << tr("打开文件失败");
-        return false;
-    }
-    QJsonObject json;
-    QJsonArray lineArray;
-
-    foreach (const CommandLine line, lines) {
-        QJsonObject lineObject;
-        line.write(lineObject);
-        lineArray.append(lineObject);
-    }
-    json["list"] = lineArray;
-    QJsonDocument saveDoc(json);
-    saveFile.write(saveDoc.toJson());
-
-    return true;
+    return itemList->save(fileName);
 }
 
 bool Form::loadProgFile(QString fileName)
 {
-    QFile loadFile(fileName);
-    if(!loadFile.open(QIODevice::ReadOnly)) {
-        //qDebug() << tr("打开文件失败");
-        return false;
-    }
-    QByteArray saveData = loadFile.readAll();
-    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-
-    lines.clear();
-
-    QJsonObject json = loadDoc.object();
-    QJsonArray list = json["list"].toArray();
-    for(int i=0; i < list.size(); ++i) {
-        QJsonObject lineObject = list[i].toObject();
-        CommandLine line;
-        line.read(lineObject);
-        lines.append(line);
-    }
-
-    //更新程序模型
-    update_cmd();
-
-    return true;
+    return itemList->load(fileName);
 }
 
-void Form::update_cmd()
+void Form::operate(Command &cmd, QStringList &list)
 {
-    /*
-    cmd_list->clear();
-    moves.clear();
-
-    model->removeRows(0, row, QModelIndex());
-    ui->tableView->setModel(model);
-    row = 0;
-    index = 0;
-    position = 0;
-
-    for(row; row < lines.size(); row++) {
-        CommandLine line = lines.at(row);
-        model->insertRow(row, QModelIndex());
-        model->setData(model->index(row, 0), line.type());
-        model->setData(model->index(row,1), line.content());
-
-        cmd_list->append(line.data());
+    switch (op) {
+    case APP: //默认追加
+        //qDebug() << "========= APP ===========";
+        //指令序列 - 模型
+        itemList->append(cmd, list);
+        break;
+    case EDIT://指令修改
+        //qDebug() << "========= EDIT ===========";
+        break;
+    case INSE://指令插入 默认前查
+        //qDebug() << "========= INSE ===========";
+        itemList->insert(cmd, list, mLine);
+        mLine++;//选中行递增
+        break;
+    default:
+        break;
     }
-    ui->tableView->setModel(model);
-    */
+
+    ui->tableView->setModel(itemList->pmodel());
 }
 
 void Form::on_absAddBtn_clicked()
 {
 
-    position = ui->absMoveDistance->value();
-    int val = position*param;
+    int position = ui->absMoveDistance->value();
 
-    //moves.append(0);
-
-
-    int params[2] = {deviceId, val};
+    int params[2] = {deviceId, position};
     Command acmd(params, Command::ABS);
+    //acmd.pp();
     qDebug() << acmd.data().toHex();
 
     QStringList list;
     list << tr("绝对运动指令") << QString(tr("绝对运行距离至 %1mm")).arg(position);
 
 
-    switch (op) {
-    case APP: //默认追加
-        qDebug() << "========= APP ===========";
-        //指令序列 - 模型
-        itemList->append(&acmd, list);
-        break;
-    case EDIT://指令修改
-        qDebug() << "========= EDIT ===========";
-        break;
-    case INSE://指令插入 默认前查
-        qDebug() << "========= INSE ===========";
-        itemList->insert(&acmd, list, mLine);
-        mLine++;//选中行递增
-        break;
-    default:
-        break;
-    }
-
-    ui->tableView->setModel(itemList->pmodel());
+    operate(acmd, list);
 }
 
 void Form::on_relaAddBtn_clicked()
 {
     int pos = ui->relMoveDistance->value();
-    position += pos;
+    int base = itemList->pos();//获取指令序列当前绝对位置
+
     //moves.append(pos);
 
-    int val = position*param;
-    int params[2] = {deviceId, val};
+    //int val = position*param;
+    int params[3] = {deviceId, pos, base}; //绝对位置 = 增量 + 基准
     Command acmd(params, Command::RELA);
     qDebug() << acmd.data().toHex();
 
     QStringList list;
     list << tr("相对运动指令") << QString(tr("相对运行距离 %1mm")).arg(pos);
 
-    switch (op) {
-    case APP: //默认追加
-        qDebug() << "========= APP ===========";
-        //指令序列 - 模型
-        itemList->append(&acmd, list);
-        break;
-    case EDIT://指令修改
-        qDebug() << "========= EDIT ===========";
-        break;
-    case INSE://指令插入 默认前查
-        qDebug() << "========= INSE ===========";
-        itemList->insert(&acmd, list, mLine);
-        mLine++;//选中行递增
-        break;
-    default:
-        break;
-    }
-
-    ui->tableView->setModel(itemList->pmodel());
+    operate(acmd, list);
 }
 
 void Form::on_setSpdBtn_clicked()
@@ -264,44 +184,38 @@ void Form::on_setSpdBtn_clicked()
     //moves.append(0);
 
     int lpd = ui->setRunSpd->value(); //线速度mm/s - 转速 - 每秒脉冲数
-    int spd = beta * lpd;
     //qDebug() << QString(tr("参数 %1 档位 %2%")).arg(beta).arg(spd);
 
-    int params[2] = {deviceId, spd};
+    int params[2] = {deviceId, lpd};
     Command acmd(params, Command::SPD);
     qDebug() << acmd.data().toHex();
 
     QStringList list;
     list << tr("设置速度指令") << QString(tr("线速度设置为 %1 mm/s")).arg(lpd);
 
-    switch (op) {
-    case APP: //默认追加
-        qDebug() << "========= APP ===========";
-        //指令序列 - 模型
-        itemList->append(&acmd, list);
-        break;
-    case EDIT://指令修改
-        qDebug() << "========= EDIT ===========";
-        break;
-    case INSE://指令插入 默认前查
-        qDebug() << "========= INSE ===========";
-        itemList->insert(&acmd, list, mLine);
-        mLine++;//选中行递增
-        break;
-    default:
-        break;
-    }
-
-    ui->tableView->setModel(itemList->pmodel());
+    operate(acmd, list);
 }
 
+void Form::on_delayAddBtn_clicked()
+{
+    //moves.append(0);
+    int value = ui->delayVal->value();
 
+    int params[2] = {deviceId, value};
+    Command acmd(params, Command::DELAY);
+    qDebug() << acmd.data().toHex();
 
+    QStringList list;
+    list << tr("延时等待指令") << QString(tr("延时等待 %1 毫秒")).arg(value);
+
+    operate(acmd, list);
+}
+/*
 void Form::on_stepAct_clicked()
 {
     //if(index == row)
     //    index = 0;
-/*
+
     if((index >= 0) && (index < row)) {
         emit sendData(cmd_list->at(index));
         ui->tableView->selectRow(index);
@@ -310,11 +224,10 @@ void Form::on_stepAct_clicked()
 
     if(index == jmp_from)
         index = jmp_to;
-*/
     //qDebug() << "row = " << row << " index = " << index;
 
 }
-
+*/
 void Form::spd_show(int lpd)
 {
     int circle = config->configs().circleLen;
@@ -323,26 +236,8 @@ void Form::spd_show(int lpd)
     ui->rpsLab->setText(QString(tr("转速：%1 rps(转每秒)")).arg(rps));
 }
 
-void Form::convert(quint8 *buf, int data, int size)
-{
-    for(int i=0; i<size; i++)
-        buf[i] = data >> (8*i);
-}
-
-void Form::array2qa(QByteArray &data, quint8 *buf, int size)
-{
-    for(int i=0; i<size; i++)
-        data[i] = buf[i];
-}
-
 void Form::on_stopAct_clicked()
 {
-    /*
-    quint8 qStop[10] = {id[0],id[1],EMSTOP_CMD,0x01,0x00,0x00,0x00,0x00,0x00,0x00};
-    QByteArray qa;
-    array2qa(qa, qStop, 10);
-    emit sendData(qa);
-    */
     int params[2] = {deviceId, 0};
     Command stopcmd(params, Command::STOP);
 
@@ -352,68 +247,37 @@ void Form::on_stopAct_clicked()
 
 void Form::on_forwardAct_clicked()
 {
-    /*
-    int ret = (quint8)echo.at(2);
-    if(ret != 0x0f) {
-        QMessageBox::warning(this, tr("提示"), tr("请停止运行"));
-        return;
-    }
-    qDebug() << tr("下载程序成功");
-    */
-    int len = cmd_list->count();
-    quint8 qlen[4];
-    convert(qlen, len, 4);
+    int len = itemList->size();
 
-    quint8 qHead[10] = {id[0],id[1],CMDBATCHHEAD,0x01,0x00,qlen[0],qlen[1],qlen[2],qlen[3],0x00};
-    QByteArray qa;
-    array2qa(qa, qHead, 10);
-    //cmd_list->prepend(qa);
+    int params[2] = {deviceId, len};
+    Command acmd(params, Command::HEAD);
+    qDebug() << acmd.data().toHex();
 
-    //QByteArray data;
-    for(int i=0; i<len; i++)
-        qa.append(cmd_list->at(i));
+    QByteArray qa = acmd.data();
+    itemList->output(qa);
+    qDebug() << qa.toHex();
 
-    //qDebug() << qa.toHex();
-    emit sendData(qa);
-
+    //qDebug() << acmd.data().append(qa).toHex();
+    //emit sendData(qa);
 }
-
 
 void Form::on_opAddBtn_clicked()
 {
     //moves.append(0);
     int param = ui->opParam->value();
-    int opType = ui->opType->currentIndex() + 1; //1-自增 2-自减
+    int opType = ui->opType->currentIndex(); //1-自增 2-自减
 
     int params[3] = {deviceId, opType, param};
     Command acmd(params, Command::OPER);
     qDebug() << acmd.data().toHex();
 
     QStringList list;
-    if(opType == 1)
+    if(opType == 0)
         list << tr("操作参数指令") << QString(tr("编号 %1 参数 ++")).arg(param);
-    else if(opType == 2)
+    else if(opType == 1)
         list << tr("操作参数指令") << QString(tr("编号 %1 参数 --")).arg(param);
 
-    switch (op) {
-    case APP: //默认追加
-        qDebug() << "========= APP ===========";
-        //指令序列 - 模型
-        itemList->append(&acmd, list);
-        break;
-    case EDIT://指令修改
-        qDebug() << "========= EDIT ===========";
-        break;
-    case INSE://指令插入 默认前查
-        qDebug() << "========= INSE ===========";
-        itemList->insert(&acmd, list, mLine);
-        mLine++;//选中行递增
-        break;
-    default:
-        break;
-    }
-
-    ui->tableView->setModel(itemList->pmodel());
+    operate(acmd, list);
 }
 
 void Form::on_jmpAddBtn_clicked()
@@ -422,7 +286,7 @@ void Form::on_jmpAddBtn_clicked()
     int line = ui->jmpLine->value();
 
     int rows = itemList->size();
-    qDebug() << tr("无条件跳转至 %1 行，总行数 %2").arg(line).arg(rows);
+    //qDebug() << tr("无条件跳转至 %1 行，总行数 %2").arg(line).arg(rows);
 
     if(line > rows) {
         QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1 行")).arg(rows));
@@ -436,25 +300,7 @@ void Form::on_jmpAddBtn_clicked()
     QStringList list;
     list << tr("无条件跳转指令") << QString(tr("无条件跳转至 %1 行指令")).arg(line);
 
-    switch (op) {
-    case APP: //默认追加
-        qDebug() << "========= APP ===========";
-        //指令序列 - 模型
-        itemList->append(&acmd, list);
-        break;
-    case EDIT://指令修改
-        qDebug() << "========= EDIT ===========";
-        break;
-    case INSE://指令插入 默认前查
-        qDebug() << "========= INSE ===========";
-        itemList->insert(&acmd, list, mLine);
-        mLine++;//选中行递增
-        break;
-    default:
-        break;
-    }
-
-    ui->tableView->setModel(itemList->pmodel());
+    operate(acmd, list);
 }
 
 void Form::on_cmpAddBtn_clicked()
@@ -469,7 +315,7 @@ void Form::on_cmpAddBtn_clicked()
     }
 
     int param = ui->cmpParam->value();
-    int type = ui->cmpType->currentIndex() + 1;
+    int type = ui->cmpType->currentIndex();
     int value = ui->cmpVal->value();
 
     int params[5] = {deviceId, value, line, param, type};
@@ -478,32 +324,14 @@ void Form::on_cmpAddBtn_clicked()
 
     QStringList list;
     list << tr("有条件跳转指令");
-    if(type == 1)
+    if(type == 0)
         list << QString(tr("编号 %1 参数大于 %2 跳转至 %3 行指令")).arg(param).arg(value).arg(line);
-    if(type == 2)
+    if(type == 1)
         list << QString(tr("编号 %1 参数等于 %2 跳转至 %3 行指令")).arg(param).arg(value).arg(line);
-    if(type == 3)
+    if(type == 2)
         list << QString(tr("编号 %1 参数小于 %2 跳转至 %3 行指令")).arg(param).arg(value).arg(line);
 
-    switch (op) {
-    case APP: //默认追加
-        qDebug() << "========= APP ===========";
-        //指令序列 - 模型
-        itemList->append(&acmd, list);
-        break;
-    case EDIT://指令修改
-        qDebug() << "========= EDIT ===========";
-        break;
-    case INSE://指令插入 默认前查
-        qDebug() << "========= INSE ===========";
-        itemList->insert(&acmd, list, mLine);
-        mLine++;//选中行递增
-        break;
-    default:
-        break;
-    }
-
-    ui->tableView->setModel(itemList->pmodel());
+    operate(acmd, list);
 }
 
 void Form::on_jumpAddBtn_clicked()
@@ -525,13 +353,6 @@ void Form::on_jumpAddBtn_clicked()
     Command acmd(params, Command::IOJMP);
     qDebug() << acmd.data().toHex();
 
-    quint8 pln[2];
-    convert(pln,line-1,2);
-    quint8 ln[] = {id[0],id[1],IOJUMP_CMD,param,0x00,state,0x00,pln[0],pln[1],0x00};
-    QByteArray qa;
-    array2qa(qa, ln, 10);
-    cmd_list->append(qa);
-
     QStringList list;
     list << tr("IO条件跳转指令");
     if(!state)
@@ -539,25 +360,7 @@ void Form::on_jumpAddBtn_clicked()
     else
         list << QString(tr("编号 %1 IO端口低电平跳转至 %2 行指令")).arg(param).arg(line);
 
-    switch (op) {
-    case APP: //默认追加
-        qDebug() << "========= APP ===========";
-        //指令序列 - 模型
-        itemList->append(&acmd, list);
-        break;
-    case EDIT://指令修改
-        qDebug() << "========= EDIT ===========";
-        break;
-    case INSE://指令插入 默认前查
-        qDebug() << "========= INSE ===========";
-        itemList->insert(&acmd, list, mLine);
-        mLine++;//选中行递增
-        break;
-    default:
-        break;
-    }
-
-    ui->tableView->setModel(itemList->pmodel());
+    operate(acmd, list);
 }
 
 void Form::on_inputAddBtn_clicked() //输入等待
@@ -577,25 +380,7 @@ void Form::on_inputAddBtn_clicked() //输入等待
     else
         list << QString(tr("编号 %1 输入端口高电平等待")).arg(param);
 
-    switch (op) {
-    case APP: //默认追加
-        qDebug() << "========= APP ===========";
-        //指令序列 - 模型
-        itemList->append(&acmd, list);
-        break;
-    case EDIT://指令修改
-        qDebug() << "========= EDIT ===========";
-        break;
-    case INSE://指令插入 默认前查
-        qDebug() << "========= INSE ===========";
-        itemList->insert(&acmd, list, mLine);
-        mLine++;//选中行递增
-        break;
-    default:
-        break;
-    }
-
-    ui->tableView->setModel(itemList->pmodel());
+    operate(acmd, list);
 }
 
 void Form::on_outputAddBtn_clicked() //输出主动
@@ -615,65 +400,7 @@ void Form::on_outputAddBtn_clicked() //输出主动
     else
         list << QString(tr("设置编号 %1 输出端口接通")).arg(param);
 
-    switch (op) {
-    case APP: //默认追加
-        qDebug() << "========= APP ===========";
-        //指令序列 - 模型
-        itemList->append(&acmd, list);
-        break;
-    case EDIT://指令修改
-        qDebug() << "========= EDIT ===========";
-        break;
-    case INSE://指令插入 默认前查
-        qDebug() << "========= INSE ===========";
-        itemList->insert(&acmd, list, mLine);
-        mLine++;//选中行递增
-        break;
-    default:
-        break;
-    }
-
-    ui->tableView->setModel(itemList->pmodel());
-}
-
-void Form::on_delayAddBtn_clicked()
-{
-    //moves.append(0);
-    int value = ui->delayVal->value();
-
-    int params[2] = {deviceId, value};
-    Command acmd(params, Command::DELAY);
-    qDebug() << acmd.data().toHex();
-
-    quint8 val[4];
-    convert(val, value, 4);
-    quint8 cmd[] = {id[0],id[1],DELAY_CMD,0x00,0x00,val[0],val[1],val[2],val[3],0x00};
-    QByteArray qa;
-    array2qa(qa, cmd, 10);
-    cmd_list->append(qa);
-
-    QStringList list;
-    list << tr("延时等待指令") << QString(tr("延时等待 %1 毫秒")).arg(value);
-
-    switch (op) {
-    case APP: //默认追加
-        qDebug() << "========= APP ===========";
-        //指令序列 - 模型
-        itemList->append(&acmd, list);
-        break;
-    case EDIT://指令修改
-        qDebug() << "========= EDIT ===========";
-        break;
-    case INSE://指令插入 默认前查
-        qDebug() << "========= INSE ===========";
-        itemList->insert(&acmd, list, mLine);
-        mLine++;//选中行递增
-        break;
-    default:
-        break;
-    }
-
-    ui->tableView->setModel(itemList->pmodel());
+    operate(acmd, list);
 }
 
 void Form::tableDoubleClick(const QModelIndex &/*index*/)
@@ -698,10 +425,10 @@ void Form::tableClick(const QModelIndex &index)
     int nr = index.row();
     select_line = nr;
     mLine = nr;
-    QVariant type = index.data(Qt::UserRole);
-    qDebug() << tr("%1 row clicked. data %2").arg(nr+1).arg(type.toInt());
+    //QVariant type = index.data(Qt::UserRole);
+    //qDebug() << tr("%1 row clicked. data %2").arg(nr+1).arg(type.toInt());
 
-
+    //itemList->linecmd(mLine);
 }
 
 //ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT
@@ -759,62 +486,22 @@ void Form::showToolBox(const QModelIndex &index)
 
 void Form::on_clearBtn_clicked()
 {
-    /*
-    cmd_list->clear();
-    moves.clear();
-
-    model->removeRows(0, row, QModelIndex());
-    ui->tableView->setModel(model);
-    row = 0;
-    index = 0;
-    position = 0;
-    */
     itemList->clear();
 }
 
 void Form::on_deleteBtn_clicked()
 {
-    if(select_line < 0) {
+    if(mLine < 0) {
         QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
         return;
     }
-    /*
-    row--;
-    if(row < 0) row = 0;
 
-    model->removeRow(select_line, QModelIndex());
-    cmd_list->removeAt(select_line);
-    position -= moves.at(select_line);
-    moves.removeAt(select_line);
-    lines.removeAt(select_line);
-    select_line = -1;
-    */
     itemList->del(mLine);
+    qDebug() << tr("%1 行已被删除！").arg(mLine+1);
 
-    qDebug() << tr("%1 行已被删除！").arg(select_line+1);
-
-
+    mLine = -1;
 }
-/*
-void Form::on_editBtn_clicked()
-{
-    if(select_line < 0) {
-        QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
-        return;
-    }
-    //根据需要修改的指令调用指令加载方法
-    op = EDIT;
 
-
-    //do your thing
-    //有些事既然答应了就一鼓作气给搞定，否则一拖再拖，时间成本就就浪费了
-    //抽个大空，把坑填完
-    //修改指令需要知道当前选中行是什么类型指令
-
-
-    select_line = -1; // back default value
-}
-*/
 void Form::on_insertBtn_clicked()
 {
     //默认选中行之前插入指令
@@ -836,46 +523,5 @@ void Form::on_insertBtn_clicked()
         op = INSE;
         quit = true; //允许取消
     }
-/*
-    if (op == QUIT) {
-        ui->insertBtn->setText(tr("插入"));
-        op = APP;
-    } else {
-        op = INSE;
-    }*/
 }
 
-void Form::on_upBtn_clicked()
-{
-    if(select_line < 0) {
-        QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
-        return;
-    }
-    if(select_line == 0) {
-        QMessageBox::information(this, tr("提示"), tr("开始指令行无法上移！"));
-        return;
-    }
-
-    itemList->move(select_line, select_line-1);
-    //上移的操作
-    //model->moveRow(QModelIndex(),select_line,QModelIndex(),select_line-1);
-
-    select_line = -1;
-}
-
-void Form::on_downBtn_clicked()
-{
-    /*
-    if(select_line < 0) {
-        QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
-        return;
-    }
-    if(select_line == row-1) {
-        QMessageBox::information(this, tr("提示"), tr("结束指令行无法下移！"));
-        return;
-    }
-    //下移的操作
-    //model->moveRow(QModelIndex(),select_line,QModelIndex(),select_line+1);
-*/
-    select_line = -1;
-}

@@ -46,7 +46,7 @@ private slots:
 
     void on_forwardAct_clicked(); //打包下载
 
-    void on_stepAct_clicked(); //单步运行
+    //void on_stepAct_clicked(); //单步运行
 
     void on_setSpdBtn_clicked();
 
@@ -72,8 +72,6 @@ private slots:
 
     void showToolBox(const QModelIndex &index);
 
-    void update_cmd();  //更新命令行list
-
 
 
 private slots:
@@ -82,33 +80,24 @@ private slots:
 
     void on_deleteBtn_clicked(); //删除
 
-    //void on_editBtn_clicked();  //修改 ***
-
     void on_insertBtn_clicked(); //插入
-
-    void on_upBtn_clicked();
-
-    void on_downBtn_clicked();
 
 private:
     void initUI();
     void initConnect();
     void initModel();
 
-    void convert(quint8 *buf, int data, int size); //int -> quint8[4]
-    void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
+    void operate(Command &cmd, QStringList &list);
+
+    //void convert(quint8 *buf, int data, int size); //int -> quint8[4]
+    //void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
 
 private:
     Ui::Form *ui;
     CommandItemList *itemList;
+    Command *cmd;
     int index;      //单步运行行
-    long position; //绝对位置
-    QList<QByteArray> *cmd_list; //指令列表
     ConfigDialog *config;
-    int param; //位移转换脉冲数参数
-    quint8 id[2];
-    double beta; //线速度与脉冲转换参数
-    QList<CommandLine> lines; //指令序列
     int select_line;  //选中当前行
     int deviceId;
     int cmdType;
