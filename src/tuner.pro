@@ -11,7 +11,6 @@ SOURCES += \
     command.cpp \
     configdialog.cpp \
     commandline.cpp \
-    commanditemmodel.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -20,7 +19,6 @@ HEADERS += \
     command.h \
     configdialog.h \
     commandline.h \
-    commanditemmodel.h
 
 FORMS += \
     mainwindow.ui \
