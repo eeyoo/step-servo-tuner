@@ -10,8 +10,8 @@ public:
     CommandLine();
     CommandLine(const QString &type, const QString &content, const QByteArray &data);
 
-    void read(const QJsonObject &json);
-    void write(QJsonObject &json) const;
+    void read(const QJsonObject &json); //读取json文件
+    void write(QJsonObject &json) const; //
 
     QString type() const;
     QString content() const;
