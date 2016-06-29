@@ -19,8 +19,8 @@ public:
     explicit Form(QWidget *parent = 0);
     ~Form();
 
-    bool loadProgFile(QString fileName);  //读取json文件并解析出来生成模型和指令序列
-    bool saveProgFile(QString fileName) const; //将模型和指令序列保存为json文件
+    bool loadProgFile(QString fileName);
+    bool saveProgFile(QString fileName) const;
 
     enum OperType {
         APP, EDIT, INSE, QUIT
@@ -28,10 +28,6 @@ public:
 
 public slots:
     void about();
-
-protected:
-    void dragEnterEvent(QDragEnterEvent *event); //拖动事件
-    void dropEvent(QDropEvent *event); //放置事件
 
 signals:
     void sendData(const QByteArray &data);
@@ -89,12 +85,15 @@ private:
 
     void operate(Command &cmd, QStringList &list);
 
+    void operate(Line &line);
+
     //void convert(quint8 *buf, int data, int size); //int -> quint8[4]
     //void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
 
 private:
     Ui::Form *ui;
     CommandItemList *itemList;
+    CommandLine *cl;
     Command *cmd;
     int index;      //单步运行行
     ConfigDialog *config;

@@ -541,38 +541,6 @@ QJsonArray Command::array() const
     for(int i=0; i < ps.size(); i++) {
         arr.append(ps[i]);
     }
-
-/*
-    switch (mType) {
-    case ABS: //2
-    case RELA:
-    case SPD:
-    case DELAY:
-        for(int i=0; i<ps.size(); i++) {
-            arr.append(ps[i]);
-        }
-        //qDebug() << QString("[%1, %2]").arg(ps[0]).arg(ps[1]);
-        //qDebug() << arr[0].toInt() << " " << arr[1].toInt();
-        break;
-    case OPER: //3
-        for(int i=0; i<ps.size(); i++)
-            arr.append(ps[i]);
-        break;
-    case SETOUT: //4
-    case INPUT:
-    case JMP:
-    case IOJMP:
-        for(int i=0; i<ps.size(); i++)
-            arr.append(ps[i]);
-        break;
-    case CMP:
-        for(int i=0; i<ps.size(); i++)
-            arr.append(ps[i]);
-        break;
-    default:
-        break;
-    }
-*/
     return arr;
 }
 

@@ -10,7 +10,9 @@ SOURCES += \
     form.cpp \
     command.cpp \
     configdialog.cpp \
-    commanditemlist.cpp
+    commanditemlist.cpp \
+    line.cpp \
+    commandline.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -18,7 +20,9 @@ HEADERS += \
     form.h \
     command.h \
     configdialog.h \
-    commanditemlist.h
+    commanditemlist.h \
+    line.h \
+    commandline.h
 
 FORMS += \
     mainwindow.ui \
