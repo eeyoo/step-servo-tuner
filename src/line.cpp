@@ -8,7 +8,7 @@ Line::Line()
 
 }
 
-Line::Line(CmdType type, int *params)
+Line::Line(CmdType type, QList<int> params)
 {
     mType = type;
     mParams = params;
@@ -16,10 +16,9 @@ Line::Line(CmdType type, int *params)
 
 Line::Line(QStringList &list)
 {
-    //QMetaEnum meta = QMetaEnum::fromType<CmdType>();
-    //QString s = list[0];
-    //mType = meta.keyToValue(s.toLocal8Bit().data());
-    //mType = (CmdType)list[0];
+    //QString convert to enum type
+    QString s = QString(list[0]).toUpper();
+    str2key(s);
 
     switch (mType) {
     case POS:
@@ -103,20 +102,24 @@ void Line::print(QString &str)
     case DELAY:
     case JMP:
         str = QString("%1 %2").arg(s).arg(mParams[0]);
+        qDebug() << str;
         break;
     case OPER:
     case SETOUT:
     case INPUT:
         //s = "INPUT";
         str = QString("%1 %2 %3").arg(s).arg(mParams[0]).arg(mParams[1]);
+        qDebug() << str;
         break;
     case IOJMP:
         //s = "IOJMP";
         str = QString("%1 %2 %3 %4").arg(s).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]);
+        qDebug() << str;
         break;
     case CMP:
         //s = "CMP";
         str = QString("%1 %2 %3 %4 %5").arg(s).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]).arg(mParams[3]);
+        qDebug() << str;
         break;
     default:
         break;
@@ -162,6 +165,31 @@ QString Line::translate(CmdType type, QString &s)
     }
 
     return s;
+}
+
+//POS, MOV, SETSPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT
+void Line::str2key(QString &s)
+{
+    if (s == "POS")
+        mType = POS;
+    else if (s == "MOV")
+        mType = MOV;
+    else if (s == "SETSPD")
+        mType = SETSPD;
+    else if (s == "OPER")
+        mType = OPER;
+    else if (s == "JMP")
+        mType = JMP;
+    else if (s == "CMP")
+        mType = CMP;
+    else if (s == "IOJMP")
+        mType = IOJMP;
+    else if (s == "DELAY")
+        mType = DELAY;
+    else if (s == "SETOUT")
+        mType = SETOUT;
+    else if (s == "INPUT")
+        mType = INPUT;
 }
 
 void Line::strlist(QStringList &list) const
@@ -231,4 +259,9 @@ void Line::strlist(QStringList &list) const
     default:
         break;
     }
+}
+
+CmdType Line::type()
+{
+    return mType;
 }

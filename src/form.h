@@ -85,7 +85,7 @@ private:
 
     void operate(Command &cmd, QStringList &list);
 
-    void operate(Line &line);
+    void operate();
 
     //void convert(quint8 *buf, int data, int size); //int -> quint8[4]
     //void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
@@ -95,6 +95,7 @@ private:
     CommandItemList *itemList;
     CommandLine *cl;
     Command *cmd;
+    Line *line;
     int index;      //单步运行行
     ConfigDialog *config;
     int select_line;  //选中当前行

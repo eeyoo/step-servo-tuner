@@ -61,6 +61,8 @@ Form::~Form()
     delete cmd;
     delete config;
     delete itemList;
+    delete cl;
+    delete line;
 }
 
 void Form::about()
@@ -113,7 +115,9 @@ bool Form::saveProgFile(QString fileName) const
 bool Form::loadProgFile(QString fileName)
 {
     //return itemList->load(fileName);
-    return cl->read(fileName);
+    bool ret = cl->read(fileName);
+    ui->tableView->setModel(cl->pmodel());
+    return ret;
 }
 
 void Form::operate(Command &cmd, QStringList &list)
@@ -139,7 +143,7 @@ void Form::operate(Command &cmd, QStringList &list)
     ui->tableView->setModel(itemList->pmodel());
 }
 
-void Form::operate(Line &line)
+void Form::operate()
 {
     switch (op) {
     case APP: //默认追加
@@ -172,9 +176,12 @@ void Form::on_absAddBtn_clicked()
     //acmd.pp();
     //qDebug() << acmd.data().toHex();
 
-    int pa[1] = {position};
-    Line ln(POS, pa);
-    ln.print();
+    QList<int> pa;
+    pa << position;
+    //Line ln(POS, pa);
+    line = new Line(POS, pa);
+    //ln.print();
+    line->print();
 
 
     //QStringList list;
@@ -182,7 +189,7 @@ void Form::on_absAddBtn_clicked()
 
 
     //operate(acmd, list);
-    operate(ln);
+    operate();
 }
 
 void Form::on_relaAddBtn_clicked()
@@ -194,11 +201,13 @@ void Form::on_relaAddBtn_clicked()
     //Command acmd(params, Command::RELA);
     //qDebug() << acmd.data().toHex();
 
-    int pa[1] = {pos};
-    Line ln(MOV, pa);
-    ln.print();
+    QList<int> pa;
+    pa << pos;
+    line = new Line(MOV, pa);
+    //ln.print();
+    line->print();
 
-    operate(ln);
+    operate();
 
     //QStringList list;
     //list << tr("相对运动指令") << QString(tr("相对运行距离 %1mm")).arg(pos);
@@ -217,11 +226,13 @@ void Form::on_setSpdBtn_clicked()
     //Command acmd(params, Command::SPD);
     //qDebug() << acmd.data().toHex();
 
-    int pa[1] = {lpd};
-    Line ln(SETSPD, pa);
-    ln.print();
+    QList<int> pa;
+    pa << lpd;
+    line = new Line(SETSPD, pa);
+    //ln.print();
+    line->print();
 
-    operate(ln);
+    operate();
 
     //QStringList list;
     //list << tr("设置速度指令") << QString(tr("线速度设置为 %1 mm/s")).arg(lpd);
@@ -238,11 +249,12 @@ void Form::on_delayAddBtn_clicked()
     //Command acmd(params, Command::DELAY);
     //qDebug() << acmd.data().toHex();
 
-    int pa[1] = {value};
-    Line ln(DELAY, pa);
-    ln.print();
+    QList<int> pa;
+    pa << value;
+    line = new Line(DELAY, pa);
+    line->print();
 
-    operate(ln);
+    operate();
 
     //QStringList list;
     //list << tr("延时等待指令") << QString(tr("延时等待 %1 毫秒")).arg(value);
@@ -310,10 +322,12 @@ void Form::on_opAddBtn_clicked()
     //Command acmd(params, Command::OPER);
     //qDebug() << acmd.data().toHex();
 
-    int pa[2] = {param, opType};
-    Line ln(OPER, pa);
-    ln.print();
-    operate(ln);
+    QList<int> pa;
+    pa << param << opType;
+    //int pa[2] = {param, opType};
+    line = new Line(OPER, pa);
+    line->print();
+    operate();
 
     /*
     QStringList list;
@@ -328,12 +342,12 @@ void Form::on_opAddBtn_clicked()
 
 void Form::on_jmpAddBtn_clicked()
 {
-    int line = ui->jmpLine->value();
+    int val = ui->jmpLine->value();
 
     int rows = cl->size();
     //qDebug() << tr("无条件跳转至 %1 行，总行数 %2").arg(line).arg(rows);
 
-    if(line > rows) {
+    if(val > rows) {
         QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1 行")).arg(rows));
         return;
     }
@@ -342,10 +356,12 @@ void Form::on_jmpAddBtn_clicked()
     //Command acmd(params, Command::JMP);
     //qDebug() << acmd.data().toHex();
 
-    int pa[1] = {line};
-    Line ln(JMP, pa);
-    ln.print();
-    operate(ln);
+    QList<int> pa;
+    pa << val;
+    //int pa[1] = {val};
+    line = new Line(JMP, pa);
+    line->print();
+    operate();
 
     //QStringList list;
     //list << tr("无条件跳转指令") << QString(tr("无条件跳转至 %1 行指令")).arg(line);
@@ -356,10 +372,10 @@ void Form::on_jmpAddBtn_clicked()
 void Form::on_cmpAddBtn_clicked()
 {
     //moves.append(0);
-    int line = ui->cmpLine->value();
+    int val = ui->cmpLine->value();
     int rows = cl->size();
 
-    if(line > rows) {
+    if(val > rows) {
         QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1 行")).arg(rows));
         return;
     }
@@ -372,10 +388,12 @@ void Form::on_cmpAddBtn_clicked()
     //Command acmd(params, Command::CMP);
     //qDebug() << acmd.data().toHex();
 
-    int pa[4] = {param, type, value, line};
-    Line ln(CMP, pa);
-    ln.print();
-    operate(ln);
+    QList<int> pa;
+    pa << param << type << value << val;
+    //int pa[4] = {param, type, value, val};
+    line = new Line(CMP, pa);
+    line->print();
+    operate();
 
     /*
     QStringList list;
@@ -392,9 +410,9 @@ void Form::on_cmpAddBtn_clicked()
 
 void Form::on_jumpAddBtn_clicked()
 {
-    int line = ui->jumpLine->value();
+    int val = ui->jumpLine->value();
     int rows = cl->size();
-    if(line > rows) {
+    if(val > rows) {
         QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1 行")).arg(rows));
         return;
     }
@@ -406,10 +424,12 @@ void Form::on_jumpAddBtn_clicked()
     //Command acmd(params, Command::IOJMP);
     //qDebug() << acmd.data().toHex();
 
-    int pa[3] = {param, state, line};
-    Line ln(IOJMP, pa);
-    ln.print();
-    operate(ln);
+    QList<int> pa;
+    pa << param << state << val;
+    //int pa[3] = {param, state, val};
+    line = new Line(IOJMP, pa);
+    line->print();
+    operate();
 
     /*
     QStringList list;
@@ -431,10 +451,12 @@ void Form::on_inputAddBtn_clicked() //输入等待
     //Command acmd(params, Command::INPUT);
     //qDebug() << acmd.data().toHex();
 
-    int pa[2] = {param, state};
-    Line ln(INPUT, pa);
-    ln.print();
-    operate(ln);
+    QList<int> pa;
+    pa << param << state;
+    //int pa[2] = {param, state};
+    line = new Line(INPUT, pa);
+    line->print();
+    operate();
     /*
     QStringList list;
     list << tr("输入等待指令");
@@ -455,10 +477,12 @@ void Form::on_outputAddBtn_clicked() //输出主动
     //Command acmd(params, Command::SETOUT);
     //qDebug() << acmd.data().toHex();
 
-    int pa[2] = {param, state};
-    Line ln(SETOUT, pa);
-    ln.print();
-    operate(ln);
+    QList<int> pa;
+    pa << param << state;
+    //int pa[2] = {param, state};
+    line = new Line(SETOUT, pa);
+    line->print();
+    operate();
     /*
     QStringList list;
     list << tr("输出设置指令");
@@ -493,64 +517,57 @@ void Form::tableClick(const QModelIndex &index)
     select_line = nr;
     mLine = nr;
 
-    Line line;
-    cl->getRowData(nr, line);
-    line.print();
-    //Line line = (Line)index.data(Qt::UserRole);
-    //line.print();
-
-    //QVariant var = index.data(Qt::UserRole);
-    //Line line = var.value<Line>();
-    //line.print();
-    //qDebug() << tr("%1 row clicked. data %2").arg(nr+1).arg(type.toInt());
-
-    //itemList->linecmd(mLine);
+    //Line line;
+    //line = cl->getRowData(nr);
+    //line->print();
+    cl->getRowData(nr)->print();
 }
 
 //ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT
 void Form::showToolBox(const QModelIndex &index)
 {
-    int toolbox = index.data(Qt::UserRole).toInt();
+    //int toolbox = index.data(Qt::UserRole).toInt();
+    line = cl->getRowData(index.row());
 
-    cmdType = toolbox;
-    switch (toolbox) {
-    case Command::ABS:
+    //cmdType = toolbox;
+    switch (line->type()) {
+    case POS:
         ui->parentToolBox->setCurrentIndex(0);
         ui->moveToolBox->setCurrentIndex(0);
         break;
-    case Command::RELA:
+    case MOV:
         ui->parentToolBox->setCurrentIndex(0);
         ui->moveToolBox->setCurrentIndex(1);
         break;
-    case Command::SPD:
+    case SETSPD:
         ui->parentToolBox->setCurrentIndex(0);
         ui->moveToolBox->setCurrentIndex(2);
         break;
-    case Command::OPER:
+    case OPER:
         ui->parentToolBox->setCurrentIndex(1);
         ui->operateToolBox->setCurrentIndex(0);
         break;
-    case Command::JMP:
+    case JMP:
         ui->parentToolBox->setCurrentIndex(2);
         ui->condToolBox->setCurrentIndex(0);
         break;
-    case Command::CMP:
+    case CMP:
         ui->parentToolBox->setCurrentIndex(2);
         ui->condToolBox->setCurrentIndex(1);
         break;
-    case Command::IOJMP:
+    case IOJMP:
         ui->parentToolBox->setCurrentIndex(2);
         ui->condToolBox->setCurrentIndex(1);
         break;
-    case Command::INPUT:
+    case INPUT:
         ui->parentToolBox->setCurrentIndex(3);
         ui->ioToolBox->setCurrentIndex(0);
         break;
-    case Command::SETOUT:
+    case SETOUT:
         ui->parentToolBox->setCurrentIndex(3);
         ui->ioToolBox->setCurrentIndex(1);
         break;
-    case Command::DELAY:
+    case DELAY:
         ui->parentToolBox->setCurrentIndex(4);
         ui->auxToolBox->setCurrentIndex(0);
         break;
@@ -562,7 +579,8 @@ void Form::showToolBox(const QModelIndex &index)
 
 void Form::on_clearBtn_clicked()
 {
-    itemList->clear();
+    //itemList->clear();
+    cl->clear();
 }
 
 void Form::on_deleteBtn_clicked()
@@ -572,7 +590,8 @@ void Form::on_deleteBtn_clicked()
         return;
     }
 
-    itemList->del(mLine);
+    //itemList->del(mLine);
+    cl->del(mLine);
     qDebug() << tr("%1 行已被删除！").arg(mLine+1);
 
     mLine = -1;

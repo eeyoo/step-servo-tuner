@@ -10,23 +10,23 @@ CommandLine::CommandLine(QObject *parent) :
     model = new QStandardItemModel(0, 2, parent);
     model->setHeaderData(0, Qt::Horizontal, tr("指令类型"));
     model->setHeaderData(1, Qt::Horizontal, tr("指令内容"));
+    line = new Line();
 }
 
 CommandLine::~CommandLine()
 {
     delete model;
+    delete line;
 }
 
-void CommandLine::setRowData(int arow, Line &line)
+void CommandLine::setRowData(int arow)
 {
     QStringList alist;
-    line.strlist(alist);
+    line->strlist(alist);
 
     model->insertRow(arow, QModelIndex());
     model->setData(model->index(arow, 0), alist.at(0), Qt::DisplayRole);
     model->setData(model->index(arow, 1), alist.at(1), Qt::DisplayRole);
-    //model->setData(model->index(arow, 0), line, Qt::UserRole);
-    //model->setData(model->index(arow, 1), line, Qt::UserRole);
 }
 
 
@@ -41,14 +41,14 @@ bool CommandLine::read(const QString &fileName)
 
     clear();
 
-    //read program line then translate to Line data and model data
     QTextStream in(&file);
     while(!in.atEnd()) {
-        QString li = in.readLine();
-        QStringList fields = li.split(" ");// split line string by space char
+        QString str = in.readLine();
+        QStringList fields = str.split(" ");
         Line line(fields);
-        append(line);
+        append(&line);
     }
+
     file.close();
     return true;
 }
@@ -65,9 +65,8 @@ bool CommandLine::write(QString &fileName) const
     for(int i=0; i<lines.size(); i++)
     {
         QString str;
-
-        Line line = lines.at(i);
-        line.print(str);
+        lines.at(i)->print(str);
+        //qDebug() << str;
 
         out << str << "\r\n";
     }
@@ -76,9 +75,10 @@ bool CommandLine::write(QString &fileName) const
     return true;
 }
 
-void CommandLine::append(Line &line)
+void CommandLine::append(Line *aline)
 {
-    setRowData(row, line);
+    line = aline;
+    setRowData(row);
     lines.append(line);
     row++;
     rows++;
@@ -89,6 +89,8 @@ void CommandLine::del(int arow)
     lines.removeAt(arow);
     model->removeRow(arow, QModelIndex());
     rows--;
+    if (rows < 0)
+        rows = 0;
     row = rows;
 }
 
@@ -97,9 +99,9 @@ QAbstractItemModel *CommandLine::pmodel()
     return model;
 }
 
-void CommandLine::getRowData(int arow, Line &line)
+Line *CommandLine::getRowData(int arow)
 {
-    line = lines.at(arow);
+    return lines.at(arow);
 }
 
 void CommandLine::clear()

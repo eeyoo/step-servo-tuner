@@ -15,20 +15,22 @@ class Line
 {
 public:
     explicit Line();
-    Line(CmdType type, int *params);
+    Line(CmdType type, QList<int> params);
     Line(QStringList &list);
 
     void print();
     void strlist(QStringList &list) const;
 
     void print(QString &str);
+    CmdType type();
 
 private:
     QString translate(CmdType type, QString &s);
+    void str2key(QString &s);
 
 private:
     CmdType mType;
-    int *mParams;
+    QList<int> mParams;
 };
 
 #endif // LINE_H

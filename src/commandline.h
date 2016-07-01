@@ -10,7 +10,7 @@ public:
     CommandLine(QObject *parent = 0);
     ~CommandLine();
 
-    void append(Line &line);
+    void append(Line *aline);
     void del(int arow);
     void clear();
 
@@ -19,16 +19,17 @@ public:
 
     QAbstractItemModel *pmodel();
 
-    void getRowData(int arow, Line &line);
+    Line *getRowData(int arow);
 
     int size() const;
 
 private:
-    void setRowData(int arow, Line &line);
+    void setRowData(int arow);
 
 private:
     QAbstractItemModel *model;
-    QList<Line> lines;
+    QList<Line*> lines;
+    Line *line;
 
     int row;
     int rows;
