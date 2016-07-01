@@ -80,8 +80,6 @@ private slots:
 
     void on_deleteBtn_clicked(); //删除
 
-    void on_insertBtn_clicked(); //插入
-
 private:
     void initUI();
     void initConnect();

@@ -502,26 +502,3 @@ void Form::on_deleteBtn_clicked()
     mLine = -1;
 }
 
-void Form::on_insertBtn_clicked()
-{
-    //默认选中行之前插入指令
-    if(select_line < 0) {
-        QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
-        return;
-    }
-
-    if (quit) {
-        op = APP;
-        select_line = -1;
-        ui->insertBtn->setText(tr("插入"));
-        quit = false;
-    }
-
-    if (select_line >= 0) {
-        QMessageBox::information(this, tr("提示"), tr("将在选中行之前插入指令，可以连续插入！"));
-        ui->insertBtn->setText(tr("停止插入"));
-        op = INSE;
-        quit = true; //允许取消
-    }
-}
-
