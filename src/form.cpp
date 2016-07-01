@@ -24,7 +24,7 @@ Form::Form(QWidget *parent) :
 {
     ui->setupUi(this);
     config = new ConfigDialog;
-    itemList = new CommandItemList(this);
+    //itemList = new CommandItemList(this);
 
     int level = config->configs().elecLevel;
     int circle = config->configs().circleLen;
@@ -37,7 +37,7 @@ Form::Form(QWidget *parent) :
     int maxSpd = 100 / beta;
     ui->setRunSpd->setMaximum(maxSpd);
 
-    cmd = new Command(alpha, beta);
+    //cmd = new Command(alpha, beta);
 
     initUI();
     initConnect();
@@ -58,11 +58,8 @@ Form::Form(QWidget *parent) :
 Form::~Form()
 {
     delete ui;
-    delete cmd;
     delete config;
-    delete itemList;
     delete cl;
-    delete line;
 }
 
 void Form::about()
@@ -119,7 +116,7 @@ bool Form::loadProgFile(QString fileName)
     ui->tableView->setModel(cl->pmodel());
     return ret;
 }
-
+/*
 void Form::operate(Command &cmd, QStringList &list)
 {
     switch (op) {
@@ -142,14 +139,14 @@ void Form::operate(Command &cmd, QStringList &list)
 
     ui->tableView->setModel(itemList->pmodel());
 }
-
-void Form::operate()
+*/
+void Form::operate(Line aline)
 {
     switch (op) {
     case APP: //默认追加
         //qDebug() << "========= APP ===========";
         //指令序列 - 模型
-        cl->append(line);
+        cl->append(aline);
         break;
     case EDIT://指令修改
         //qDebug() << "========= EDIT ===========";
@@ -178,18 +175,17 @@ void Form::on_absAddBtn_clicked()
 
     QList<int> pa;
     pa << position;
-    //Line ln(POS, pa);
-    line = new Line(POS, pa);
-    //ln.print();
-    line->print();
-
+    Line ln(POS, pa);
+    //line = new Line(POS, pa);
+    ln.print();
+    operate(ln);
 
     //QStringList list;
     //list << tr("绝对运动指令") << QString(tr("绝对运行距离至 %1mm")).arg(position);
 
 
     //operate(acmd, list);
-    operate();
+
 }
 
 void Form::on_relaAddBtn_clicked()
@@ -203,11 +199,12 @@ void Form::on_relaAddBtn_clicked()
 
     QList<int> pa;
     pa << pos;
-    line = new Line(MOV, pa);
-    //ln.print();
-    line->print();
+    Line ln(MOV, pa);
+    //line = new Line(MOV, pa);
+    ln.print();
+    //line->print();
 
-    operate();
+    operate(ln);
 
     //QStringList list;
     //list << tr("相对运动指令") << QString(tr("相对运行距离 %1mm")).arg(pos);
@@ -228,11 +225,12 @@ void Form::on_setSpdBtn_clicked()
 
     QList<int> pa;
     pa << lpd;
-    line = new Line(SETSPD, pa);
-    //ln.print();
-    line->print();
+    //line = new Line(SETSPD, pa);
+    Line ln(SETSPD, pa);
+    ln.print();
+    //line->print();
 
-    operate();
+    operate(ln);
 
     //QStringList list;
     //list << tr("设置速度指令") << QString(tr("线速度设置为 %1 mm/s")).arg(lpd);
@@ -251,10 +249,12 @@ void Form::on_delayAddBtn_clicked()
 
     QList<int> pa;
     pa << value;
-    line = new Line(DELAY, pa);
-    line->print();
+    //line = new Line(DELAY, pa);
+    Line ln(DELAY, pa);
+    //line->print();
+    ln.print();
 
-    operate();
+    operate(ln);
 
     //QStringList list;
     //list << tr("延时等待指令") << QString(tr("延时等待 %1 毫秒")).arg(value);
@@ -298,6 +298,7 @@ void Form::on_stopAct_clicked()
 
 void Form::on_forwardAct_clicked()
 {
+    /*
     int len = itemList->size();
 
     int params[2] = {deviceId, len};
@@ -307,7 +308,7 @@ void Form::on_forwardAct_clicked()
     QByteArray qa = acmd.data();
     itemList->output(qa);
     qDebug() << qa.toHex();
-
+    */
     //qDebug() << acmd.data().append(qa).toHex();
     //emit sendData(qa);
 }
@@ -325,9 +326,10 @@ void Form::on_opAddBtn_clicked()
     QList<int> pa;
     pa << param << opType;
     //int pa[2] = {param, opType};
-    line = new Line(OPER, pa);
-    line->print();
-    operate();
+    //line = new Line(OPER, pa);
+    //line->print();
+    Line ln(OPER, pa);
+    operate(ln);
 
     /*
     QStringList list;
@@ -358,10 +360,11 @@ void Form::on_jmpAddBtn_clicked()
 
     QList<int> pa;
     pa << val;
+    Line ln(JMP, pa);
     //int pa[1] = {val};
-    line = new Line(JMP, pa);
-    line->print();
-    operate();
+    //line = new Line(JMP, pa);
+    //line->print();
+    operate(ln);
 
     //QStringList list;
     //list << tr("无条件跳转指令") << QString(tr("无条件跳转至 %1 行指令")).arg(line);
@@ -391,9 +394,11 @@ void Form::on_cmpAddBtn_clicked()
     QList<int> pa;
     pa << param << type << value << val;
     //int pa[4] = {param, type, value, val};
-    line = new Line(CMP, pa);
-    line->print();
-    operate();
+    //line = new Line(CMP, pa);
+    //line->print();
+    Line ln(CMP, pa);
+    ln.print();
+    operate(ln);
 
     /*
     QStringList list;
@@ -427,9 +432,11 @@ void Form::on_jumpAddBtn_clicked()
     QList<int> pa;
     pa << param << state << val;
     //int pa[3] = {param, state, val};
-    line = new Line(IOJMP, pa);
-    line->print();
-    operate();
+    //line = new Line(IOJMP, pa);
+    //line->print();
+    Line ln(IOJMP, pa);
+    ln.print();
+    operate(ln);
 
     /*
     QStringList list;
@@ -454,9 +461,10 @@ void Form::on_inputAddBtn_clicked() //输入等待
     QList<int> pa;
     pa << param << state;
     //int pa[2] = {param, state};
-    line = new Line(INPUT, pa);
-    line->print();
-    operate();
+    //line = new Line(INPUT, pa);
+    //line->print();
+    Line ln(INPUT, pa);
+    operate(ln);
     /*
     QStringList list;
     list << tr("输入等待指令");
@@ -480,9 +488,11 @@ void Form::on_outputAddBtn_clicked() //输出主动
     QList<int> pa;
     pa << param << state;
     //int pa[2] = {param, state};
-    line = new Line(SETOUT, pa);
-    line->print();
-    operate();
+    //line = new Line(SETOUT, pa);
+    //line->print();
+    Line ln(SETOUT, pa);
+    ln.print();
+    operate(ln);
     /*
     QStringList list;
     list << tr("输出设置指令");
@@ -520,17 +530,23 @@ void Form::tableClick(const QModelIndex &index)
     //Line line;
     //line = cl->getRowData(nr);
     //line->print();
-    cl->getRowData(nr)->print();
+    Line ln;
+    cl->getRowData(mLine, ln);
+    ln.print();
+    //line = cl->getRowData(mLine);
+    //qDebug() << "line nu -- " << nr;
+    //qDebug() << "line type -- " << line->type();
 }
 
 //ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT
 void Form::showToolBox(const QModelIndex &index)
 {
     //int toolbox = index.data(Qt::UserRole).toInt();
-    line = cl->getRowData(index.row());
+    Line ln;
+    cl->getRowData(index.row(), ln);
 
     //cmdType = toolbox;
-    switch (line->type()) {
+    switch (ln.type()) {
     case POS:
         ui->parentToolBox->setCurrentIndex(0);
         ui->moveToolBox->setCurrentIndex(0);

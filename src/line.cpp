@@ -20,6 +20,7 @@ Line::Line(QStringList &list)
     QString s = QString(list[0]).toUpper();
     str2key(s);
 
+
     switch (mType) {
     case POS:
     case MOV:
@@ -28,6 +29,7 @@ Line::Line(QStringList &list)
     case JMP:
         //qDebug() << QString("%1 %2").arg(s).arg(mParams[0]);
         mParams[0] = QString(list[1]).toInt();
+        qDebug() << QString("type %1 params %2").arg(mType).arg(mParams[0]);
         break;
     case OPER:
     case SETOUT:
@@ -36,6 +38,7 @@ Line::Line(QStringList &list)
         //qDebug() << QString("%1 %2 %3").arg(s).arg(mParams[0]).arg(mParams[1]);
         mParams[0] = QString(list[1]).toInt();
         mParams[1] = QString(list[2]).toInt();
+        //qDebug() << QString("type %1 params %2 %3").arg(mType).arg(mParams[0]).arg(mParams[1]);
         break;
     case IOJMP:
         //s = "IOJMP";
@@ -43,6 +46,7 @@ Line::Line(QStringList &list)
         mParams[0] = QString(list[1]).toInt();
         mParams[1] = QString(list[2]).toInt();
         mParams[2] = QString(list[3]).toInt();
+        //qDebug() << QString("type %1 params %2").arg(mType).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]).arg(mParams[3]);
         break;
     case CMP:
         //s = "CMP";
@@ -51,6 +55,7 @@ Line::Line(QStringList &list)
         mParams[1] = QString(list[2]).toInt();
         mParams[2] = QString(list[3]).toInt();
         mParams[3] = QString(list[4]).toInt();
+        //qDebug() << QString("type %1 params %2").arg(mType).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]).arg(mParams[3]).arg(mParams[4]);
         break;
     default:
         break;
@@ -95,6 +100,7 @@ void Line::print(QString &str)
 {
     QString s;
     translate(mType, s);
+
     switch (mType) {
     case POS:
     case MOV:
@@ -102,31 +108,31 @@ void Line::print(QString &str)
     case DELAY:
     case JMP:
         str = QString("%1 %2").arg(s).arg(mParams[0]);
-        qDebug() << str;
+        //qDebug() << str;
         break;
     case OPER:
     case SETOUT:
     case INPUT:
         //s = "INPUT";
         str = QString("%1 %2 %3").arg(s).arg(mParams[0]).arg(mParams[1]);
-        qDebug() << str;
+        //qDebug() << str;
         break;
     case IOJMP:
         //s = "IOJMP";
         str = QString("%1 %2 %3 %4").arg(s).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]);
-        qDebug() << str;
+        //qDebug() << str;
         break;
     case CMP:
         //s = "CMP";
         str = QString("%1 %2 %3 %4 %5").arg(s).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]).arg(mParams[3]);
-        qDebug() << str;
+        //qDebug() << str;
         break;
     default:
         break;
     }
 }
 
-//ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT
+//POS, MOV, SETSPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT
 QString Line::translate(CmdType type, QString &s)
 {
     switch (type) {

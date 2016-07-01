@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include "commandline.h"
-#include "commanditemlist.h"
 
 namespace Ui {
 class Form;
@@ -83,19 +82,17 @@ private:
     void initConnect();
     void initModel();
 
-    void operate(Command &cmd, QStringList &list);
+    //void operate(Command &cmd, QStringList &list);
 
-    void operate();
+    void operate(Line aline);
 
     //void convert(quint8 *buf, int data, int size); //int -> quint8[4]
     //void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
 
 private:
     Ui::Form *ui;
-    CommandItemList *itemList;
     CommandLine *cl;
-    Command *cmd;
-    Line *line;
+    //Line *line;
     int index;      //单步运行行
     ConfigDialog *config;
     int select_line;  //选中当前行
