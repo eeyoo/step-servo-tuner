@@ -18,6 +18,7 @@ ConfigDialog::ConfigDialog(QWidget *parent) :
     initUI();
     updateConfigs();
     initId = configDatas["device_id"];
+    setWindowTitle(tr("系统配置"));
 }
 
 ConfigDialog::~ConfigDialog()

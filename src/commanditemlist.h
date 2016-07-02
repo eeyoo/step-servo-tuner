@@ -16,10 +16,7 @@ public:
 
     //追加 插入 移动 修改 删除指令
     void append(Command &cmd, QStringList &list);
-    void insert(Command &cmd, QStringList &list, int r);
-    void move(int fromRow, int toRow);
-    void edit(Command &cmd, int r);
-    void del(int r);
+    void del();
     void clear();
     QAbstractItemModel *pmodel();
     int size();
@@ -41,15 +38,14 @@ private:
     QAbstractItemModel *model;
     QList<Command> cmd_list;
     QList<QStringList> lists;
-    QList<long> moves; //相对位置增量
-    QList<long> posList; //记录每行指令的绝对位置
+    QList<int> moves;
 
     Command *cmd;
     //QStringList list;
     int row; //保存追加行
     int line; //保存选中行
     int rows; //保存总行数
-    long position; //指令序列绝对位置
+    int position; //绝对位置
 };
 
 #endif // COMMANDITEMLIST_H

@@ -21,7 +21,7 @@ Command::Command(int *param, CMDTYPE type) :
     //convert(bufData, param, NUMBER_DA);
     //params = param;
     mType = type;
-    //init();
+
     quint8 buf[NUMBER_CMD];
 
     switch (type) {
@@ -124,10 +124,13 @@ void Command::abs(quint8 *buf, int *param)
     quint8 bufID[NUMBER_ID];
     quint8 bufData[NUMBER_DA];
 
+    ps.clear();
     convert(bufID, param[0], NUMBER_ID); //param[0] = id
     ps.append(param[0]);
     ps.append(param[1]);
-    mpos = param[1];
+    ps.append(param[2]);
+    mp = param[1];
+    mpos = param[2];
 
     convert(bufData, mpos*alpha, NUMBER_DA);
     buf[0] = bufID[0];
@@ -150,12 +153,13 @@ void Command::rela(quint8 *buf, int *param)
     quint8 bufData[NUMBER_DA];
 
     convert(bufID, param[0], NUMBER_ID); //param[0] = id
+    ps.clear();
     ps.append(param[0]);
     ps.append(param[1]);
     ps.append(param[2]);
 
     mp = param[1];
-    mpos = mp+param[2]; //pos + base
+    mpos = param[2]; //pos + base
 
     convert(bufData, mpos*alpha, NUMBER_DA);
     buf[0] = bufID[0];
@@ -178,6 +182,7 @@ void Command::spd(quint8 *buf, int *param)
     quint8 bufData[NUMBER_DA];
 
     convert(bufID, param[0], NUMBER_ID); //param[0] = id
+    ps.clear();
     ps.append(param[0]);
     ps.append(param[1]);
 
@@ -203,7 +208,12 @@ void Command::fabs(quint8 *buf, QJsonArray &arr)
     quint8 bufID[NUMBER_ID];
     quint8 bufData[NUMBER_DA];
     int id = arr[0].toInt();
-    mpos = arr[1].toInt();
+    mp = arr[1].toInt();
+    mpos = arr[2].toInt();
+    ps.clear();
+    ps.append(id);
+    ps.append(mp);
+    ps.append(mpos);
 
     convert(bufID, id, NUMBER_ID); //param[0] = id
 
@@ -227,9 +237,12 @@ void Command::frela(quint8 *buf, QJsonArray &arr)
     quint8 bufID[NUMBER_ID];
     quint8 bufData[NUMBER_DA];
     int id = arr[0].toInt();
-
     mp = arr[1].toInt();
-    mpos =  mp+arr[2].toInt();
+    mpos =  arr[2].toInt();
+    ps.clear();
+    ps.append(id);
+    ps.append(mp);
+    ps.append(mpos);
 
     convert(bufID, id, NUMBER_ID); //param[0] = id
     convert(bufData, mpos*alpha, NUMBER_DA);
@@ -254,6 +267,9 @@ void Command::fspd(quint8 *buf, QJsonArray &arr)
     quint8 bufData[NUMBER_DA];
     int id = arr[0].toInt();
     int lsp = arr[1].toInt();
+    ps.clear();
+    ps.append(id);
+    ps.append(lsp);
 
     convert(bufID, id, NUMBER_ID); //param[0] = id
     convert(bufData, lsp*beta, NUMBER_DA);
@@ -281,6 +297,7 @@ void Command::parse(quint8 *buf, int *param, int def)
     quint8 bufHigh[NUMBER_HIGH];
 
     convert(bufID, param[0], NUMBER_ID); //param[0] = id
+    ps.clear();
     ps.append(param[0]);
 
     switch (def) {
@@ -384,10 +401,15 @@ void Command::parse(quint8 *buf, QJsonArray &arr, int def)
     quint8 bufLow[NUMBER_LOW];
     quint8 bufHigh[NUMBER_HIGH];
 
-    convert(bufID, arr[0].toInt(), NUMBER_ID); //param[0] = id
+    int id = arr[0].toInt();
+    convert(bufID, id, NUMBER_ID); //param[0] = id
+    ps.clear();
+    ps.append(id);
 
     switch (def) {
     case DELAY_CMD:
+        //int val = arr[1].toInt();
+        ps.append(arr[1].toInt());
         convert(bufData, arr[1].toInt(), NUMBER_DA);
         buf[0] = bufID[0];
         buf[1] = bufID[1];
@@ -401,6 +423,10 @@ void Command::parse(quint8 *buf, QJsonArray &arr, int def)
         buf[9] = 0x00;
         break;
     case OPERATEPARAM: //3
+        //int op1 = arr[1].toInt();
+        //int op2 = arr[2].toInt();
+        ps.append(arr[1].toInt());
+        ps.append(arr[2].toInt());
         convert(bufData, arr[1].toInt(), NUMBER_DA);
         buf[0] = bufID[0];
         buf[1] = bufID[1];
@@ -415,8 +441,33 @@ void Command::parse(quint8 *buf, QJsonArray &arr, int def)
         break;
     case JMP_CMD://4
     case IOJUMP_CMD:
+        //int jmp1 = arr[1].toInt();
+        //int jmp2 = arr[2].toInt()-1;
+        //int jmp3 = arr[3].toInt();
+        ps.append(arr[1].toInt());
+        ps.append(arr[2].toInt()-1);
+        ps.append(arr[3].toInt());
+        convert(bufLow, arr[1].toInt(), NUMBER_LOW);
+        convert(bufHigh, arr[2].toInt()-1, NUMBER_HIGH);
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = def;
+        buf[3] = arr[3].toInt();
+        buf[4] = 0x00;
+        buf[5] = bufLow[0];
+        buf[6] = bufLow[1];
+        buf[7] = bufHigh[0];
+        buf[8] = bufHigh[1];
+        buf[9] = 0x00;
+        break;
     case INPUT_CMD:
     case SETOUT_CMD:
+        //int io1 = arr[1].toInt();
+        //int io2 = arr[2].toInt();
+        //int io3 = arr[3].toInt();
+        ps.append(arr[1].toInt());
+        ps.append(arr[2].toInt());
+        ps.append(arr[3].toInt());
         convert(bufLow, arr[1].toInt(), NUMBER_LOW);
         convert(bufHigh, arr[2].toInt(), NUMBER_HIGH);
         buf[0] = bufID[0];
@@ -431,8 +482,16 @@ void Command::parse(quint8 *buf, QJsonArray &arr, int def)
         buf[9] = 0x00;
         break;
     case CMP_CMD: //5
+        //int cmp1 = arr[1].toInt();
+        //int cmp2 = arr[2].toInt()-1;
+        //int cmp3 = arr[3].toInt();
+        //int cmp4 = arr[4].toInt();
+        ps.append(arr[1].toInt());
+        ps.append(arr[2].toInt()-1);
+        ps.append(arr[3].toInt());
+        ps.append(arr[4].toInt());
         convert(bufLow, arr[1].toInt(), NUMBER_LOW);
-        convert(bufHigh, arr[2].toInt(), NUMBER_HIGH);
+        convert(bufHigh, arr[2].toInt()-1, NUMBER_HIGH);
         buf[0] = bufID[0];
         buf[1] = bufID[1];
         buf[2] = def;
@@ -451,62 +510,6 @@ void Command::parse(quint8 *buf, QJsonArray &arr, int def)
     array2qa(qa, buf, NUMBER_CMD);
 }
 
-//ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT
-    /*
-void Command::init(int alpha, double beta)
-{
-
-    switch (type) {
-    case ABS:
-        qDebug() << "ABS =================> " << ABS;
-        break;
-    case RELA:
-        qDebug() << "RELA=================> " << RELA;
-        break;
-    case SPD:
-        qDebug() << "SPD =================> " << SPD;
-        break;
-    case OPER:
-        qDebug() << "OPER=================> " << OPER;
-        break;
-    case JMP:
-        qDebug() << "JMP =================> " << JMP;
-        break;
-    case CMP:
-        qDebug() << "CMP =================> " << CMP;
-        break;
-    case IOJMP:
-        qDebug() << "IOJMP================> " << IOJMP;
-        break;
-    case DELAY:
-        qDebug() << "DELAY================> " << DELAY;
-        break;
-    case SETOUT:
-        qDebug() << "SETOUT===============> " << SETOUT;
-        break;
-    case INPUT:
-        qDebug() << "INPUT================> " << INPUT;
-        break;
-    default:
-        break;
-    }
-
-    config = new ConfigDialog;
-
-    int level = config->configs().elecLevel;
-    int circle = config->configs().circleLen;
-    int div[] = {1,2,4,8,16,32,64,128,256};
-
-
-    alpha = 200 * div[level] / circle;
-    beta = 0.4 * div[level] / circle; // 200 * 100 / 50000
-
-    //alpha = 1;
-    //beta = 1.0;
-    this->alpha = alpha;
-    this->beta = beta;
-}
-*/
 Command::~Command()
 {
     //delete config;
@@ -536,43 +539,13 @@ QJsonArray Command::array() const
 
     QJsonArray arr;
 
-    qDebug() << QString("指令类型 %1, 参数个数 %2]").arg(mType).arg(ps.size());
+    //qDebug() << QString("指令类型 %1, 参数个数 %2]").arg(mType).arg(ps.size());
 
     for(int i=0; i < ps.size(); i++) {
+
         arr.append(ps[i]);
     }
 
-/*
-    switch (mType) {
-    case ABS: //2
-    case RELA:
-    case SPD:
-    case DELAY:
-        for(int i=0; i<ps.size(); i++) {
-            arr.append(ps[i]);
-        }
-        //qDebug() << QString("[%1, %2]").arg(ps[0]).arg(ps[1]);
-        //qDebug() << arr[0].toInt() << " " << arr[1].toInt();
-        break;
-    case OPER: //3
-        for(int i=0; i<ps.size(); i++)
-            arr.append(ps[i]);
-        break;
-    case SETOUT: //4
-    case INPUT:
-    case JMP:
-    case IOJMP:
-        for(int i=0; i<ps.size(); i++)
-            arr.append(ps[i]);
-        break;
-    case CMP:
-        for(int i=0; i<ps.size(); i++)
-            arr.append(ps[i]);
-        break;
-    default:
-        break;
-    }
-*/
     return arr;
 }
 

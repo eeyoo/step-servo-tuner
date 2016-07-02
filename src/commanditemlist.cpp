@@ -35,97 +35,46 @@ void CommandItemList::setRowData(int arow, Command &cmd, QStringList &alist)
 //追加指令
 void CommandItemList::append(Command &cmd, QStringList &list)
 {
-    //this->cmd = cmd;
-    //this->list = list;
-    //追加指令为
-    position = cmd.position();
+
     setRowData(row, cmd, list);
     cmd_list.append(cmd);
-    int type = cmd.type();
-    //位置增量列表
-    if (type==Command::RELA) {
-        posList.append(cmd.position());
-        moves.append(cmd.pos());
-    } else if (type==Command::ABS){
-        posList.append(cmd.position());
-        moves.append(0);
-
-    }
     lists.append(list);
+    int type = cmd.type();
+    if (type == Command::ABS) {
+        position = cmd.position();
+    }
+    if (type == Command::RELA) {
+        position = cmd.position();
+    }
+    moves.append(cmd.pos());
+
+
+    //qDebug() << tr("绝对位置 -- %1 row -- %2").arg(position).arg(row+1);
+    //qDebug() << tr("当前指令 ") << cmd.data().toHex();
 
     row++;
     rows++;
 
-    qDebug() << tr("绝对位置 -- %1").arg(position);
-    //qDebug() << tr("当前指令 ") << cmd.data().toHex();
-
 }
 
-//插入指令
-void CommandItemList::insert(Command &cmd, QStringList &list, int r)
+//删除 back to begin
+void CommandItemList::del()
 {
-    this->line = r;
-    //this->cmd = cmd;
-    //this->list = list;
-    setRowData(line, cmd, list);
-    int type = cmd.type();
-    if(type==Command::RELA) {
-        moves.insert(line, cmd.pos());
-        long last = posList.at(line-1);
-        posList.insert(line, last+cmd.pos());
-    } else if (type == Command::ABS){
-        moves.insert(line, 0);
-        posList.insert(line, cmd.position());
-    }
-
-    cmd_list.insert(r, cmd);\
-    lists.insert(r, list);
-    rows++;
-    this->row = rows;
-    qDebug() << tr("绝对位置 -- %1").arg(position);
-}
-
-//移动
-void CommandItemList::move(int fromRow, int toRow)
-{
-    qDebug() << tr("%1 行移动至 %2 行").arg(fromRow).arg(toRow);
-    model->moveRow(model->index(fromRow, 0), fromRow, model->index(toRow, 0), toRow);
-    model->moveRow(model->index(fromRow, 1), fromRow, model->index(toRow, 1), toRow);
-    //cmd_list.move(fromRow, toRow);
-}
-
-//修改
-void CommandItemList::edit(Command &cmd, int r)
-{
-    //this->cmd = cmd;
-    this->line = r;
-}
-
-//删除
-void CommandItemList::del(int r)
-{
-    this->line = r;
-    Command selectcmd = cmd_list.at(line);
-
-    int type = selectcmd.type();
-
-    if (type == Command::RELA) {
-        position -= selectcmd.pos();
-    } else if (type == Command::ABS) {
-
-    }
-
-    model->removeRow(line, QModelIndex());
-    cmd_list.removeAt(line);
-    lists.removeAt(line);
-    moves.removeAt(r);
+    row--;
     rows--;
 
+    model->removeRow(row, QModelIndex());
+    cmd_list.removeAt(row);
+    lists.removeAt(row);
+    moves.removeAt(row);
+    position -= moves.at(row);
 
+    if (row < 0 || rows < 0) {
+        row = 0;
+        rows = 0;
+    }
 
-    this->row = rows;
-
-    qDebug() << tr("绝对位置 -- %1").arg(position);
+    //qDebug() << tr("绝对位置 -- %1 行 -- %2").arg(position).arg(row+1);
     //qDebug() << tr("删除 %1 行 追加行 %2").arg(line+1).arg(row+1);
 }
 
@@ -161,13 +110,6 @@ QByteArray CommandItemList::qa() const
         qa.append(cmd_list[i].data());
     }
     return qa;
-}
-
-void CommandItemList::linecmd(int r)
-{
-    this->line = r;
-    //cmd = cmd_list.at(line);
-    //qDebug() << tr("指令数据 ==> ") << cmd.data().toHex();
 }
 
 void CommandItemList::output(QByteArray &qa)
@@ -247,7 +189,6 @@ bool CommandItemList::save(QString &name)
 void CommandItemList::read(const QJsonObject &json)
 {
     //读取json单元
-
     QStringList alist;
     alist << json["title"].toString()
           << json["content"].toString();
@@ -258,6 +199,7 @@ void CommandItemList::read(const QJsonObject &json)
     QJsonArray array = json["params"].toArray();
 
     Command acmd(array, type);
+    //qDebug() << acmd.data().toHex();
     append(acmd, alist); //追加指令行
 }
 
@@ -272,7 +214,7 @@ void CommandItemList::write(QJsonObject &json, int r) const
 
     Command acmd = cmd_list[r];
     json["type"] = acmd.type();
-    json["params"] = acmd.array();//不同类型指令参数数量不同
+    json["params"] = acmd.array();
     json["data"] = QString::fromLocal8Bit(acmd.data().toHex().data());
 }
 

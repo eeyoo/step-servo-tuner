@@ -62,7 +62,7 @@ Form::~Form()
 
 void Form::about()
 {
-    QMessageBox::about(this, tr("控制器应用程序"),tr("V1.0 版应用程序"));
+    QMessageBox::about(this, tr("控制器应用程序"),tr("==== V1.1 版应用程序 ===\n ---- 2016-7-2 ----"));
 }
 
 void Form::initUI()
@@ -101,16 +101,6 @@ void Form::initModel()
 
 }
 
-void Form::dragEnterEvent(QDragEnterEvent *event)
-{
-
-}
-
-void Form::dropEvent(QDropEvent *event)
-{
-
-}
-
 bool Form::saveProgFile(QString fileName) const
 {
     return itemList->save(fileName);
@@ -118,7 +108,9 @@ bool Form::saveProgFile(QString fileName) const
 
 bool Form::loadProgFile(QString fileName)
 {
-    return itemList->load(fileName);
+    bool ret = itemList->load(fileName);
+    ui->tableView->setModel(itemList->pmodel());
+    return ret;
 }
 
 void Form::operate(Command &cmd, QStringList &list)
@@ -134,8 +126,8 @@ void Form::operate(Command &cmd, QStringList &list)
         break;
     case INSE://指令插入 默认前查
         //qDebug() << "========= INSE ===========";
-        itemList->insert(cmd, list, mLine);
-        mLine++;//选中行递增
+        //itemList->insert(cmd, list, mLine);
+        //mLine++;//选中行递增
         break;
     default:
         break;
@@ -148,11 +140,15 @@ void Form::on_absAddBtn_clicked()
 {
 
     int position = ui->absMoveDistance->value();
+    int base = itemList->pos();
+    int pos = position - base; //绝对位置的偏移量
 
-    int params[2] = {deviceId, position};
+    //qDebug() << QString("偏移 %1 绝对位置 %2").arg(pos).arg(position);
+
+    int params[3] = {deviceId, pos, position};
     Command acmd(params, Command::ABS);
     //acmd.pp();
-    qDebug() << acmd.data().toHex();
+    //qDebug() << acmd.data().toHex();
 
     QStringList list;
     list << tr("绝对运动指令") << QString(tr("绝对运行距离至 %1mm")).arg(position);
@@ -166,12 +162,11 @@ void Form::on_relaAddBtn_clicked()
     int pos = ui->relMoveDistance->value();
     int base = itemList->pos();//获取指令序列当前绝对位置
 
-    //moves.append(pos);
+    //qDebug() << QString("偏移 %1 绝对位置 %2").arg(pos).arg(base+pos);
 
-    //int val = position*param;
-    int params[3] = {deviceId, pos, base}; //绝对位置 = 增量 + 基准
+    int params[3] = {deviceId, pos, base+pos}; //绝对位置 = 增量 + 基准
     Command acmd(params, Command::RELA);
-    qDebug() << acmd.data().toHex();
+    //qDebug() << acmd.data().toHex();
 
     QStringList list;
     list << tr("相对运动指令") << QString(tr("相对运行距离 %1mm")).arg(pos);
@@ -188,7 +183,7 @@ void Form::on_setSpdBtn_clicked()
 
     int params[2] = {deviceId, lpd};
     Command acmd(params, Command::SPD);
-    qDebug() << acmd.data().toHex();
+    //qDebug() << acmd.data().toHex();
 
     QStringList list;
     list << tr("设置速度指令") << QString(tr("线速度设置为 %1 mm/s")).arg(lpd);
@@ -203,7 +198,7 @@ void Form::on_delayAddBtn_clicked()
 
     int params[2] = {deviceId, value};
     Command acmd(params, Command::DELAY);
-    qDebug() << acmd.data().toHex();
+    //qDebug() << acmd.data().toHex();
 
     QStringList list;
     list << tr("延时等待指令") << QString(tr("延时等待 %1 毫秒")).arg(value);
@@ -241,7 +236,7 @@ void Form::on_stopAct_clicked()
     int params[2] = {deviceId, 0};
     Command stopcmd(params, Command::STOP);
 
-    qDebug() << stopcmd.data().toHex();
+    //qDebug() << stopcmd.data().toHex();
     emit sendData(stopcmd.data());
 }
 
@@ -251,25 +246,23 @@ void Form::on_forwardAct_clicked()
 
     int params[2] = {deviceId, len};
     Command acmd(params, Command::HEAD);
-    qDebug() << acmd.data().toHex();
+    //qDebug() << acmd.data().toHex();
 
     QByteArray qa = acmd.data();
     itemList->output(qa);
-    qDebug() << qa.toHex();
+    //qDebug() << qa.toHex();
 
-    //qDebug() << acmd.data().append(qa).toHex();
-    //emit sendData(qa);
+    emit sendData(qa);
 }
 
 void Form::on_opAddBtn_clicked()
 {
-    //moves.append(0);
     int param = ui->opParam->value();
     int opType = ui->opType->currentIndex(); //1-自增 2-自减
 
     int params[3] = {deviceId, opType, param};
     Command acmd(params, Command::OPER);
-    qDebug() << acmd.data().toHex();
+    //qDebug() << acmd.data().toHex();
 
     QStringList list;
     if(opType == 0)
@@ -282,7 +275,6 @@ void Form::on_opAddBtn_clicked()
 
 void Form::on_jmpAddBtn_clicked()
 {
-    //moves.append(0);
     int line = ui->jmpLine->value();
 
     int rows = itemList->size();
@@ -295,7 +287,7 @@ void Form::on_jmpAddBtn_clicked()
 
     int params[4] = {deviceId, 0, line, 0};
     Command acmd(params, Command::JMP);
-    qDebug() << acmd.data().toHex();
+    //qDebug() << acmd.data().toHex();
 
     QStringList list;
     list << tr("无条件跳转指令") << QString(tr("无条件跳转至 %1 行指令")).arg(line);
@@ -305,7 +297,6 @@ void Form::on_jmpAddBtn_clicked()
 
 void Form::on_cmpAddBtn_clicked()
 {
-    //moves.append(0);
     int line = ui->cmpLine->value();
     int rows = itemList->size();
 
@@ -320,7 +311,7 @@ void Form::on_cmpAddBtn_clicked()
 
     int params[5] = {deviceId, value, line, param, type};
     Command acmd(params, Command::CMP);
-    qDebug() << acmd.data().toHex();
+    //qDebug() << acmd.data().toHex();
 
     QStringList list;
     list << tr("有条件跳转指令");
@@ -336,7 +327,6 @@ void Form::on_cmpAddBtn_clicked()
 
 void Form::on_jumpAddBtn_clicked()
 {
-    //moves.append(0);
     int line = ui->jumpLine->value();
     int rows = itemList->size();
     if(line > rows) {
@@ -347,11 +337,9 @@ void Form::on_jumpAddBtn_clicked()
     int param = ui->jumpParam->value();
     int state = ui->ioState->currentIndex();//0-低电平 1-高电平
 
-    //jmp_to = line-1;
-
     int params[4] = {deviceId, state, line, param};
     Command acmd(params, Command::IOJMP);
-    qDebug() << acmd.data().toHex();
+    //qDebug() << acmd.data().toHex();
 
     QStringList list;
     list << tr("IO条件跳转指令");
@@ -365,13 +353,12 @@ void Form::on_jumpAddBtn_clicked()
 
 void Form::on_inputAddBtn_clicked() //输入等待
 {
-    //moves.append(0);
     int param = ui->inputParam->value();
     int state = ui->inputState->currentIndex();
 
     int params[4] = {deviceId, state, 0, param};
     Command acmd(params, Command::INPUT);
-    qDebug() << acmd.data().toHex();
+    //qDebug() << acmd.data().toHex();
 
     QStringList list;
     list << tr("输入等待指令");
@@ -385,13 +372,12 @@ void Form::on_inputAddBtn_clicked() //输入等待
 
 void Form::on_outputAddBtn_clicked() //输出主动
 {
-    //moves.append(0);
     int param = ui->outputParam->value();
     int state = ui->outputState->currentIndex();
 
     int params[4] = {deviceId, state, 0, param};
     Command acmd(params, Command::SETOUT);
-    qDebug() << acmd.data().toHex();
+    //qDebug() << acmd.data().toHex();
 
     QStringList list;
     list << tr("输出设置指令");
@@ -491,14 +477,7 @@ void Form::on_clearBtn_clicked()
 
 void Form::on_deleteBtn_clicked()
 {
-    if(mLine < 0) {
-        QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
-        return;
-    }
-
-    itemList->del(mLine);
-    qDebug() << tr("%1 行已被删除！").arg(mLine+1);
-
-    mLine = -1;
+    itemList->del();
+    //qDebug() << tr("%1 行已被删除！").arg(mLine+1);
 }
 

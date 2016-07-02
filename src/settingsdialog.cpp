@@ -66,6 +66,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     fillPortsInfo();
 
     updateSettings();
+
+    setWindowTitle(tr("串口配置"));
 }
 
 SettingsDialog::~SettingsDialog()

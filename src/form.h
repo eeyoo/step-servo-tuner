@@ -29,10 +29,6 @@ public:
 public slots:
     void about();
 
-protected:
-    void dragEnterEvent(QDragEnterEvent *event); //拖动事件
-    void dropEvent(QDropEvent *event); //放置事件
-
 signals:
     void sendData(const QByteArray &data);
 
@@ -77,7 +73,6 @@ private slots:
 private slots:
 
     void on_clearBtn_clicked();  //清空
-
     void on_deleteBtn_clicked(); //删除
 
 private:

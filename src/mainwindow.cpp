@@ -186,21 +186,7 @@ void MainWindow::readData()
     //qDebug() << QString::fromLatin1(data.toHex().data());
 
     int size = data.size();
-    //if(size)
 
-    //qDebug() << "szie " + size;
-    /*
-    if(size>0) {
-        //qDebug() << "szie " + size;
-        //showStatusMessage(tr("下载数据成功！"));
-        QMessageBox::information(this, tr("下载提示"), tr("下载数据成功！"));
-    } else {
-        //qDebug() << "szie " + size;
-        //showStatusMessage(tr("下载数据失败！"));
-        QMessageBox::information(this, tr("下载提示"), tr("下载数据失败！"));
-    }
-    */
-    //qDebug() << QString::number(size);
     if(size > 2) {
         int ret = (quint8)data.at(2);
         //qDebug() << QString::number(ret);
@@ -261,22 +247,6 @@ void MainWindow::closeAll()
 void MainWindow::closeEvent(QCloseEvent */*e*/)
 {
     closeAll();
-    //qDebug() << "close event";
-}
-
-void MainWindow::mousePressEvent(QMouseEvent *e)
-{
-    //qDebug() << "mouse pressed.";
-}
-
-void MainWindow::mouseReleaseEvent(QMouseEvent *e)
-{
-    //qDebug() << "mouse released.";
-}
-
-void MainWindow::mouseDoubleClickEvent(QMouseEvent *e)
-{
-    //qDebug() << "mouse double clicked.";
 }
 
 void MainWindow::openProgFile()

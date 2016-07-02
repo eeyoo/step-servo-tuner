@@ -66,9 +66,6 @@ public:
 protected:
     void closeEvent(QCloseEvent *);
 
-    void mousePressEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
-    void mouseDoubleClickEvent(QMouseEvent *e);
 
 private slots:
     void openSerialPort();
