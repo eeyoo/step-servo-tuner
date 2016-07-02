@@ -236,8 +236,9 @@ void Form::on_stopAct_clicked()
     int params[2] = {deviceId, 0};
     Command stopcmd(params, Command::STOP);
 
-    //qDebug() << stopcmd.data().toHex();
-    emit sendData(stopcmd.data());
+    //qDebug() << "stop " << stopcmd.data().toHex();
+    //emit sendData(stopcmd.data());
+    emit sendStop(stopcmd.data());
 }
 
 void Form::on_forwardAct_clicked()
@@ -246,11 +247,11 @@ void Form::on_forwardAct_clicked()
 
     int params[2] = {deviceId, len};
     Command acmd(params, Command::HEAD);
-    //qDebug() << acmd.data().toHex();
+    //qDebug() << "head " << acmd.data().toHex();
 
     QByteArray qa = acmd.data();
     itemList->output(qa);
-    //qDebug() << qa.toHex();
+    //qDebug() << "download " << qa.toHex();
 
     emit sendData(qa);
 }

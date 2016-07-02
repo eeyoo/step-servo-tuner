@@ -31,6 +31,7 @@ public slots:
 
 signals:
     void sendData(const QByteArray &data);
+    void sendStop(const QByteArray &data);
 
 private slots:
 

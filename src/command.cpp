@@ -15,11 +15,6 @@ Command::Command(int a, double b)
 Command::Command(int *param, CMDTYPE type) :
     mpos(0), mp(0)
 {
-    //quint8 bufID[NUMBER_ID];
-    //quint8 bufData[NUMBER_DA];
-    //convert(bufID, id, NUMBER_ID);
-    //convert(bufData, param, NUMBER_DA);
-    //params = param;
     mType = type;
 
     quint8 buf[NUMBER_CMD];
@@ -57,8 +52,10 @@ Command::Command(int *param, CMDTYPE type) :
         break;
     case STOP:
         parse(buf, param, EMSTOP_CMD);
+        break;
     case HEAD:
         parse(buf, param, CMDBATCHHEAD);//指令头部
+        break;
     default:        
         break;
     }
@@ -316,6 +313,7 @@ void Command::parse(quint8 *buf, int *param, int def)
         buf[7] = bufData[2];
         buf[8] = bufData[3];
         buf[9] = 0x00;
+        //qDebug() << "stop " << param[1];
         break;
     case OPERATEPARAM: //3
         ps.append(param[1]);
@@ -391,6 +389,7 @@ void Command::parse(quint8 *buf, int *param, int def)
     }
 
     array2qa(qa, buf, NUMBER_CMD);
+    //qDebug() << qa.toHex();
 }
 
 void Command::parse(quint8 *buf, QJsonArray &arr, int def)

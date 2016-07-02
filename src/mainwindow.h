@@ -72,6 +72,7 @@ private slots:
     void closeSerialPort();
     void about();
     void writeData(const QByteArray &data);
+    void writeStop(const QByteArray &data);
     void readData();
     void writeConfig(const QByteArray &data);
     void closeAll();
@@ -93,7 +94,7 @@ private:
     QSerialPort *serial;
     Form *form;
     ConfigDialog *config;   //程序初始化设置界面
-    bool isStopStatus; //设备是否停止默认否 default false
+    bool runStatus;
 };
 
 #endif // MAINWINDOW_H
