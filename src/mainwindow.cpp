@@ -50,7 +50,8 @@
 
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),isStopStatus(false),
+    QMainWindow(parent),
+    runStatus(true),  // 上电运行
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -81,6 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 
     connect(form, SIGNAL(sendData(QByteArray)), this, SLOT(writeData(QByteArray)));
+    connect(form, SIGNAL(sendStop(QByteArray)), this, SLOT(writeStop(QByteArray)));
 
     connect(config, SIGNAL(sendConfig(QByteArray)), this, SLOT(writeConfig(QByteArray)));
 }
@@ -149,6 +151,7 @@ void MainWindow::writeData(const QByteArray &data)
 {
     //串口发送数据 - 缓存写数据
     //showStatusMessage(tr("发送指令数据：") + data.toHex());
+    //qDebug() << data.toHex();
 
     if(!serial->isOpen())
     {
@@ -156,8 +159,21 @@ void MainWindow::writeData(const QByteArray &data)
         return;
     }
     //未接收到停止状态反馈不能下载程序
-    if(!isStopStatus) {
+    if(runStatus) {
         QMessageBox::warning(this, tr("警告"), tr("请停止运行"));
+        return;
+    }
+
+    serial->write(data);
+}
+
+//停止专用
+void MainWindow::writeStop(const QByteArray &data)
+{
+
+    if(!serial->isOpen())
+    {
+        QMessageBox::warning(this,tr("警告"),tr("请打开串口！"));
         return;
     }
 
@@ -182,24 +198,25 @@ void MainWindow::writeConfig(const QByteArray &data)
 void MainWindow::readData()
 {
     //缓存读数据 - 串口接收数据
-    QByteArray data = serial->readAll();
+    QByteArray recv = serial->readAll();
+    int size = recv.size();
     //qDebug() << QString::fromLatin1(data.toHex().data());
 
-    int size = data.size();
 
     if(size > 2) {
-        int ret = (quint8)data.at(2);
+
+        int ret = (quint8) recv.at(2);
         //qDebug() << QString::number(ret);
         switch (ret) {
         case BATCHCONFCMD:
             QMessageBox::information(this, tr("下载提示"), tr("下载配置成功！"));
             break;
         case CMDBATCHHEAD:
-            isStopStatus = false; //设备运行状态
+            runStatus = true; //设备运行状态
             QMessageBox::information(this, tr("下载提示"), tr("下载程序成功！"));
             break;
         case EMSTOP_CMD:
-            isStopStatus = true; //设备停止状态
+            runStatus = false; //设备停止状态
             QMessageBox::information(this, tr("设备状态"), tr("设备已停止"));
         default:
             //QMessageBox::information(this, tr("下载提示"), tr("下载数据成功！"));

@@ -35,5 +35,7 @@ Makefile*
 
 release/
 downloads/
+# windows file
+~$*
 
 
