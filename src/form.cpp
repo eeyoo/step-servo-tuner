@@ -31,7 +31,8 @@ Form::Form(QWidget *parent) :
     deviceId = config->configs().deviceId;
 
     int alpha = 200 * div[level] / circle;
-    double beta = 0.4 * div[level] / circle; // 系数 200*100/50000
+    //double beta = 0.4 * div[level] / circle; // 系数 200*100/50000
+    double beta = 0.1 * div[level] / circle; // 系数 200*100/200000
 
     int maxSpd = 100 / beta;
     ui->setRunSpd->setMaximum(maxSpd);
