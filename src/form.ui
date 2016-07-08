@@ -966,6 +966,13 @@
           </spacer>
          </item>
          <item>
+          <widget class="QPushButton" name="stepAct">
+           <property name="text">
+            <string>单步</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="stopAct">
            <property name="text">
             <string>停止</string>

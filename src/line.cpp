@@ -3,18 +3,20 @@
 #include <QMetaEnum>
 #include <QtCore/QDebug>
 
-Line::Line()
+Line::Line(QObject *parent) : QObject(parent)
 {
 
 }
 
-Line::Line(CmdType type, QList<int> params)
+Line::Line(CmdType type, QList<int> params, QObject *parent) :
+    QObject(parent)
 {
     mType = type;
     mParams = params;
 }
 
-Line::Line(QStringList &list)
+Line::Line(QStringList &list, QObject *parent) :
+    QObject(parent)
 {
     //QString convert to enum type
     QString s = QString(list[0]).toUpper();
@@ -29,7 +31,7 @@ Line::Line(QStringList &list)
     case JMP:
         //qDebug() << QString("%1 %2").arg(s).arg(mParams[0]);
         mParams[0] = QString(list[1]).toInt();
-        qDebug() << QString("type %1 params %2").arg(mType).arg(mParams[0]);
+        //qDebug() << QString("type %1 params %2").arg(mType).arg(mParams[0]);
         break;
     case OPER:
     case SETOUT:

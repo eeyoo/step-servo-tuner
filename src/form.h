@@ -41,7 +41,7 @@ private slots:
 
     void on_forwardAct_clicked(); //打包下载
 
-    //void on_stepAct_clicked(); //单步运行
+    void on_stepAct_clicked(); //单步运行
 
     void on_setSpdBtn_clicked();
 
@@ -85,6 +85,7 @@ private:
     //void operate(Command &cmd, QStringList &list);
 
     void operate(Line aline);
+    void operate(QList<int> pa, CmdType type);
 
     //void convert(quint8 *buf, int data, int size); //int -> quint8[4]
     //void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray

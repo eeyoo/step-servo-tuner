@@ -11,12 +11,13 @@ enum CmdType {
     POS, MOV, SETSPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT
 };
 
-class Line
+class Line : public QObject
 {
+    Q_OBJECT
 public:
-    explicit Line();
-    Line(CmdType type, QList<int> params);
-    Line(QStringList &list);
+    explicit Line(QObject *parent = 0);
+    Line(CmdType type, QList<int> params, QObject *parent = 0);
+    Line(QStringList &list, QObject *parent = 0);
 
     void print();
     void strlist(QStringList &list) const;
