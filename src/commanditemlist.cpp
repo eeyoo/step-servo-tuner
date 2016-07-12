@@ -46,6 +46,9 @@ void CommandItemList::append(Command &cmd, QStringList &list)
     if (type == Command::RELA) {
         position = cmd.position();
     }
+    if (type == Command::HOME) {
+        position = 0;
+    }
     moves.append(cmd.pos());
 
 

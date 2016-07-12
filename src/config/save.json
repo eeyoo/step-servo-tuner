@@ -45,6 +45,14 @@
             "value": 3
         },
         {
+            "name": "left_limit_config",
+            "value": 0
+        },
+        {
+            "name": "left_limit_enable",
+            "value": 1
+        },
+        {
             "name": "max_current",
             "value": 4.5
         },
@@ -67,6 +75,14 @@
         {
             "name": "positive_max",
             "value": 1000
+        },
+        {
+            "name": "right_limit_config",
+            "value": 1
+        },
+        {
+            "name": "right_limit_enable",
+            "value": 0
         },
         {
             "name": "rs485_baud",

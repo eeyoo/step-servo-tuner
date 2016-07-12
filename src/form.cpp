@@ -32,9 +32,9 @@ Form::Form(QWidget *parent) :
 
     int alpha = 200 * div[level] / circle;
     //double beta = 0.4 * div[level] / circle; // 系数 200*100/50000
-    double beta = 0.1 * div[level] / circle; // 系数 200*100/200000
+    double beta = 200 * div[level] / circle; //乘以线速度就是每秒脉冲数，最大值200k
 
-    int maxSpd = 100 / beta;
+    int maxSpd = 200000 / beta; //最大线速度
     ui->setRunSpd->setMaximum(maxSpd);
 
     cmd = new Command(alpha, beta);
@@ -63,7 +63,7 @@ Form::~Form()
 
 void Form::about()
 {
-    QMessageBox::about(this, tr("控制器应用程序"),tr("==== V1.1 版应用程序 ===\n ---- 2016-7-2 ----"));
+    QMessageBox::about(this, tr("控制器应用程序"),tr("==== V1.2 版应用程序 ===\n ---- 2016-7-10 ----"));
 }
 
 void Form::initUI()
@@ -137,6 +137,20 @@ void Form::operate(Command &cmd, QStringList &list)
     ui->tableView->setModel(itemList->pmodel());
 }
 
+void Form::on_homeAddBtn_clicked()
+{
+    int base = itemList->pos();
+    int pos = 0 - base; //绝对位置的偏移量
+
+    int params[2] = {deviceId, pos};
+    Command acmd(params, Command::HOME);
+
+    QStringList list;
+    list << tr("零点设置指令") << QString(tr("当前位置设置为零点位置"));
+
+    operate(acmd, list);
+}
+
 void Form::on_absAddBtn_clicked()
 {
 
@@ -181,6 +195,7 @@ void Form::on_setSpdBtn_clicked()
 
     int lpd = ui->setRunSpd->value(); //线速度mm/s - 转速 - 每秒脉冲数
     //qDebug() << QString(tr("参数 %1 档位 %2%")).arg(beta).arg(spd);
+    //线速度转成角速度转成频率
 
     int params[2] = {deviceId, lpd};
     Command acmd(params, Command::SPD);
@@ -465,6 +480,10 @@ void Form::showToolBox(const QModelIndex &index)
     case Command::DELAY:
         ui->parentToolBox->setCurrentIndex(4);
         ui->auxToolBox->setCurrentIndex(0);
+        break;
+    case Command::HOME:
+        ui->parentToolBox->setCurrentIndex(4);
+        ui->auxToolBox->setCurrentIndex(1);
         break;
     default:
         break;

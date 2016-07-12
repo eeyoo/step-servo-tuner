@@ -56,6 +56,9 @@ Command::Command(int *param, CMDTYPE type) :
     case HEAD:
         parse(buf, param, CMDBATCHHEAD);//指令头部
         break;
+    case HOME:
+        parse(buf, param, HOME_CMD);
+        break;
     default:        
         break;
     }
@@ -158,10 +161,10 @@ void Command::rela(quint8 *buf, int *param)
     mp = param[1];
     mpos = param[2]; //pos + base
 
-    convert(bufData, mpos*alpha, NUMBER_DA);
+    convert(bufData, mp*alpha, NUMBER_DA);
     buf[0] = bufID[0];
     buf[1] = bufID[1];
-    buf[2] = ABS_MOVE_CMD;
+    buf[2] = REL_MOVE_CMD;
     buf[3] = 0x01;
     buf[4] = 0x00;
     buf[5] = bufData[0];
@@ -242,11 +245,11 @@ void Command::frela(quint8 *buf, QJsonArray &arr)
     ps.append(mpos);
 
     convert(bufID, id, NUMBER_ID); //param[0] = id
-    convert(bufData, mpos*alpha, NUMBER_DA);
+    convert(bufData, mp*alpha, NUMBER_DA);
 
     buf[0] = bufID[0];
     buf[1] = bufID[1];
-    buf[2] = ABS_MOVE_CMD;
+    buf[2] = REL_MOVE_CMD;
     buf[3] = 0x01;
     buf[4] = 0x00;
     buf[5] = bufData[0];
@@ -298,6 +301,21 @@ void Command::parse(quint8 *buf, int *param, int def)
     ps.append(param[0]);
 
     switch (def) {
+    case HOME_CMD:
+        ps.append(param[1]);
+        mp = param[1];
+        mpos = 0;
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = def;
+        buf[3] = 0x01;
+        buf[4] = 0x00;
+        buf[5] = 0x00;
+        buf[6] = 0x00;
+        buf[7] = 0x00;
+        buf[8] = 0x00;
+        buf[9] = 0x00;
+        break;
     case DELAY_CMD: //2
     case EMSTOP_CMD:
     case CMDBATCHHEAD:
@@ -406,6 +424,21 @@ void Command::parse(quint8 *buf, QJsonArray &arr, int def)
     ps.append(id);
 
     switch (def) {
+    case HOME_CMD:
+        ps.append(arr[1].toInt());
+        mp = ps.at(1);
+        mpos = 0;
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = def;
+        buf[3] = 0x01;
+        buf[4] = 0x00;
+        buf[5] = 0x00;
+        buf[6] = 0x00;
+        buf[7] = 0x00;
+        buf[8] = 0x00;
+        buf[9] = 0x00;
+        break;
     case DELAY_CMD:
         //int val = arr[1].toInt();
         ps.append(arr[1].toInt());

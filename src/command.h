@@ -8,6 +8,7 @@
  */
 
 #define ABS_MOVE_CMD 0x01 //绝对运动
+#define REL_MOVE_CMD 0x02 //相对运动
 #define SETMOVESPCMD 0x03 //目标速度
 
 #define OPERATEPARAM 0x31 //操作参数命令 1)++  2)--
@@ -15,6 +16,7 @@
 #define CMP_CMD      0x33 //有条件跳转 1)> 2)== 3<
 #define IOJUMP_CMD   0x34 //IO条件跳转 0-低电平 1-高电平 仅包括1-4号端口
 #define DELAY_CMD    0x35 //延时等待单位毫秒
+#define HOME_CMD     0x36 //回到零点
 
 #define SETOUT_CMD   0x40 //设置输出IO端口值
 #define INPUT_CMD    0x41 //输入IO端口等待指令
@@ -29,6 +31,7 @@
 #define SETCANBAUDRT 0xa8 //CAN波特率
 #define SETDEVICEID  0xa9 //设备ID - CAN ID
 #define SETMOTORDIRE 0xaa //电机逻辑正方向
+#define SETLIMITPOS  0xab //设置左右限位
 
 #define SETMOTDIVCMD 0xb1 //设置电机细分 1,2,4,8,32,64,128,256
 #define SETCUGEARCMD 0xb2 //设置电机电流档位 1-32
@@ -64,7 +67,7 @@ class Command
 {
 public:
     enum CMDTYPE {
-        ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT, STOP, HEAD
+        ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT, STOP, HEAD, HOME
     };
     explicit Command(int a, double b);
 

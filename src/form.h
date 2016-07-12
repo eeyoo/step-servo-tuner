@@ -76,6 +76,8 @@ private slots:
     void on_clearBtn_clicked();  //清空
     void on_deleteBtn_clicked(); //删除
 
+    void on_homeAddBtn_clicked();
+
 private:
     void initUI();
     void initConnect();
