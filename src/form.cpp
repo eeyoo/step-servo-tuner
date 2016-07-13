@@ -61,6 +61,7 @@ Form::~Form()
     delete ui;
     delete config;
     delete cl;
+    delete line;
 }
 
 void Form::about()
@@ -112,7 +113,7 @@ bool Form::saveProgFile(QString fileName) const
 
 bool Form::loadProgFile(QString fileName)
 {
-    //return itemList->load(fileName);
+
     bool ret = cl->read(fileName);
     ui->tableView->setModel(cl->pmodel());
     return ret;
@@ -141,13 +142,13 @@ void Form::operate(Command &cmd, QStringList &list)
     ui->tableView->setModel(itemList->pmodel());
 }
 */
-void Form::operate(Line aline)
+void Form::operate(Line *ln)
 {
     switch (op) {
     case APP: //默认追加
         //qDebug() << "========= APP ===========";
         //指令序列 - 模型
-        cl->append(&aline);
+        cl->append(ln);
         break;
     case EDIT://指令修改
         //qDebug() << "========= EDIT ===========";
@@ -166,12 +167,11 @@ void Form::operate(Line aline)
 
 void Form::operate(QList<int> pa, CmdType type)
 {
-    Line ln(type, pa);
-    ln.print();
+    line = new Line(pa, type);
 
     switch (op) {
     case APP: //默认追加
-        cl->append(&ln);
+        cl->append(line);
         break;
     case EDIT://指令修改
         break;
@@ -419,31 +419,19 @@ void Form::tableClick(const QModelIndex &index)
     select_line = nr;
     mLine = nr;
 
-    //cl->getRowData(nr)->print();
-
-
-    //Line line;
-    //line = cl->getRowData(nr);
-    //line->print();
-    //Line ln;
-    //cl->getRowData(mLine, ln);
-    //ln.print();
-    //line = cl->getRowData(mLine);
-    //qDebug() << "line nu -- " << nr;
-    //qDebug() << "line type -- " << line->type();
+    line = cl->getRowData(nr);
+    line->print();
 }
 
 //ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT
 void Form::showToolBox(const QModelIndex &index)
 {
     //int toolbox = index.data(Qt::UserRole).toInt();
-    //Line ln;
-    //cl->getRowData(index.row(), ln);
-    int r = index.row();
 
-    //cmdType = toolbox;
-    //line = cl->getRowData(index.row());
-    switch (cl->getRowData(r)->type()) {
+    line = cl->getRowData(index.row());
+
+
+    switch (line->type()) {
     case POS:
         ui->parentToolBox->setCurrentIndex(0);
         ui->moveToolBox->setCurrentIndex(0);

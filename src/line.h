@@ -5,19 +5,19 @@
  * @brief The line class
  * 指令行
  */
+
 #include <QObject>
 
 enum CmdType {
     POS, MOV, SETSPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT
 };
 
-class Line : public QObject
+class Line
 {
-    Q_OBJECT
 public:
-    explicit Line(QObject *parent = 0);
-    Line(CmdType type, QList<int> params, QObject *parent = 0);
-    Line(QStringList &list, QObject *parent = 0);
+    explicit Line();
+    Line(QList<int> params, CmdType type);
+    Line(QStringList &list);
 
     void print();
     void strlist(QStringList &list) const;

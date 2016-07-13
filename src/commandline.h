@@ -19,7 +19,7 @@ public:
 
     QAbstractItemModel *pmodel();
 
-    Line *getRowData(int arow) const;
+    Line* getRowData(int arow) const;
 
     int size() const;
 
@@ -30,7 +30,7 @@ private:
 
 private:
     QAbstractItemModel *model;
-    QList<Line*> lines;
+    QList<Line *> *lines;
     Line *line;
 
     int row;

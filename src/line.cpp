@@ -1,27 +1,24 @@
 #include "line.h"
 
-#include <QMetaEnum>
 #include <QtCore/QDebug>
 
-Line::Line(QObject *parent) : QObject(parent)
+Line::Line()
 {
 
 }
 
-Line::Line(CmdType type, QList<int> params, QObject *parent) :
-    QObject(parent)
+Line::Line(QList<int> params, CmdType type)
 {
     mType = type;
     mParams = params;
 }
 
-Line::Line(QStringList &list, QObject *parent) :
-    QObject(parent)
+Line::Line(QStringList &list)
 {
     //QString convert to enum type
     QString s = QString(list[0]).toUpper();
     str2key(s);
-
+    //qDebug() << QString("type %1 -- %2").arg(s).arg(mType);
 
     switch (mType) {
     case POS:

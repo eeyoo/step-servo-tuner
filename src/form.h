@@ -84,7 +84,7 @@ private:
 
     //void operate(Command &cmd, QStringList &list);
 
-    void operate(Line aline);
+    void operate(Line *ln);
     void operate(QList<int> pa, CmdType type);
 
     //void convert(quint8 *buf, int data, int size); //int -> quint8[4]
@@ -93,7 +93,7 @@ private:
 private:
     Ui::Form *ui;
     CommandLine *cl;
-    //Line *line;
+    Line *line;
     int index;      //单步运行行
     ConfigDialog *config;
     int select_line;  //选中当前行

@@ -13,23 +13,21 @@ CommandLine::CommandLine(QObject *parent) :
 
     //lines = new QList<Line>();
     //qDebug() << "lines size = " << lines.size();
-    line = new Line(this);
+    line = new Line();
+    lines = new QList<Line*>;
 }
 
 CommandLine::~CommandLine()
 {
     delete model;
     delete line;
-    //delete lines;
-    while(!lines.isEmpty())
-        delete lines.takeFirst();
+    delete lines;
 }
 
 void CommandLine::setRowData(int arow, Line *line)
 {
     QStringList alist;
     line->strlist(alist);
-    //aline.strlist(alist);
 
     model->insertRow(arow, QModelIndex());
     model->setData(model->index(arow, 0), alist.at(0), Qt::DisplayRole);
@@ -48,17 +46,15 @@ bool CommandLine::read(const QString &fileName)
 
     clear();
     //qDebug() << QString("row %1 rows %2").arg(row).arg(rows);
-
+    //line = new Line();
     QTextStream in(&file);
     while(!in.atEnd()) {
         QString str = in.readLine();
         //qDebug() << "str -- " << str;
         QStringList fields = str.split(" ");
-        Line line(fields);
-        //aline.print();
-        append(&line);
-
-        //qDebug() << "== append line ==";
+        line = new Line(fields);
+        //line->print();
+        append(line);
     }
 
     file.close();
@@ -78,12 +74,7 @@ bool CommandLine::write(QString &fileName) const
     for(int i=0; i<rows; i++)
     {
         QString str;
-        //lines.at(i)->print(str);
-        //qDebug() << str;
-        //lines->at(i).print(str);
-        //Line ln = lines->at(i);
-        //ln.print(str);
-        lines.at(i)->print(str);
+        lines->at(i)->print(str);
         if (i == rows-1)
             out << str;
         else
@@ -98,17 +89,15 @@ bool CommandLine::write(QString &fileName) const
 void CommandLine::append(Line *ln)
 {
     setRowData(row, ln);
-    //lines.append(aline);
-    //lines->append(ln);
-    lines.append(ln);
+    lines->append(ln);
     row++;
     rows++;
 }
 
 void CommandLine::del(int arow)
 {
-    lines.removeAt(arow);
-    //lines->removeAt(arow);
+    //lines.removeAt(arow);
+    lines->removeAt(arow);
     model->removeRow(arow, QModelIndex());
     rows--;
     if (rows < 0)
@@ -129,14 +118,17 @@ Line* CommandLine::getRowData(int arow) const
     //aline = lines->at(arow);
     //line->print();
     //qDebug() << "type -- " << line->type();
-    return lines.value(arow);
+    //return lines.value(arow);
+    //ln = lines->at(arow);
+    //ln.print();
+    return lines->at(arow);
 }
 
 void CommandLine::clear()
 {
     model->removeRows(0, rows, QModelIndex());
-    lines.clear();
-    //lines->clear();
+    //lines.clear();
+    lines->clear();
     row = 0;
     rows = 0;
 }
