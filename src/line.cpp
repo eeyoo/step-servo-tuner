@@ -243,9 +243,9 @@ void Line::strlist(QStringList &list) const
         //s = "IOJMP";
         list << "IO条件跳转指令";
         if(!mParams[1])
-            list << QString("编号 %1 IO端口高电平跳转至 %2 行").arg(mParams[0]).arg(mParams[2]);
-        else
             list << QString("编号 %1 IO端口低电平跳转至 %2 行").arg(mParams[0]).arg(mParams[2]);
+        else
+            list << QString("编号 %1 IO端口高电平跳转至 %2 行").arg(mParams[0]).arg(mParams[2]);
         break;
     case INPUT:
         list << "输入等待指令";
@@ -269,4 +269,192 @@ void Line::strlist(QStringList &list) const
 CmdType Line::type()
 {
     return mType;
+}
+
+void Line::convert(quint8 *buf, int data, int size)
+{
+    for(int i=0; i<size; i++)
+        buf[i] = data >> (8*i);
+}
+
+void Line::array2qa(QByteArray &data, quint8 *buf, int size)
+{
+    for(int i=0; i<size; i++)
+        data[i] = buf[i];
+}
+
+QByteArray Line::data() const
+{
+    QByteArray qa;
+    quint8 buf[NUMBER_CMD];
+
+    quint8 bufID[NUMBER_ID];
+    quint8 bufData[NUMBER_DA];
+    quint8 bufLow[NUMBER_LOW];
+    quint8 bufHigh[NUMBER_HIGH];
+
+    convert(bufID, deviceId, NUMBER_ID);
+
+    switch (mType) {
+    case POS:
+        convert(bufData, alpha * mParams[0], NUMBER_DA);
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = ABS_MOVE_CMD;
+        buf[3] = 0x01;
+        buf[4] = 0x00;
+        buf[5] = bufData[0];
+        buf[6] = bufData[1];
+        buf[7] = bufData[2];
+        buf[8] = bufData[3];
+        buf[9] = 0x00;
+        break;
+    case MOV:
+        convert(bufData, alpha * mParams[0], NUMBER_DA);
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = REL_MOVE_CMD;
+        buf[3] = 0x01;
+        buf[4] = 0x00;
+        buf[5] = bufData[0];
+        buf[6] = bufData[1];
+        buf[7] = bufData[2];
+        buf[8] = bufData[3];
+        buf[9] = 0x00;
+        break;
+    case SETSPD:
+        convert(bufData, beta * mParams[0], NUMBER_DA);
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = SETMOVESPCMD;
+        buf[3] = 0x01;
+        buf[4] = 0x00;
+        buf[5] = bufData[0];
+        buf[6] = bufData[1];
+        buf[7] = bufData[2];
+        buf[8] = bufData[3];
+        buf[9] = 0x00;
+        break;
+    case DELAY:
+        convert(bufData, mParams[0], NUMBER_DA);
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = DELAY_CMD;
+        buf[3] = 0x01;
+        buf[4] = 0x00;
+        buf[5] = bufData[0];
+        buf[6] = bufData[1];
+        buf[7] = bufData[2];
+        buf[8] = bufData[3];
+        buf[9] = 0x00;
+        break;
+    case OPER:
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = OPERATEPARAM;
+        buf[3] = mParams[0];
+        buf[4] = 0x00;
+        buf[5] = mParams[1]+1;
+        buf[6] = 0x00;
+        buf[7] = 0x00;
+        buf[8] = 0x00;
+        buf[9] = 0x00;
+        break;
+    case JMP:
+        convert(bufHigh, mParams[0]-1, NUMBER_HIGH); //下位机0行开始
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = JMP_CMD;
+        buf[3] = mParams[0];
+        buf[4] = 0x00;
+        buf[5] = 0x00;
+        buf[6] = 0x00;
+        buf[7] = bufHigh[0];
+        buf[8] = bufHigh[1];
+        buf[9] = 0x00;
+        break;
+    case CMP:
+        convert(bufLow, mParams[2], NUMBER_LOW);
+        convert(bufHigh, mParams[3]-1, NUMBER_HIGH); //下位机0行开始
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = CMP_CMD;
+        buf[3] = mParams[0];
+        buf[4] = mParams[1]+1;
+        buf[5] = bufLow[0];
+        buf[6] = bufLow[1];
+        buf[7] = bufHigh[0];
+        buf[8] = bufHigh[1];
+        buf[9] = 0x00;
+        break;
+    case IOJMP:
+        convert(bufLow, mParams[1], NUMBER_LOW);
+        convert(bufHigh, mParams[2]-1, NUMBER_HIGH); //下位机0行开始
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = IOJUMP_CMD;
+        buf[3] = mParams[0];
+        buf[4] = 0x00;
+        buf[5] = bufLow[0];
+        buf[6] = bufLow[1];
+        buf[7] = bufHigh[0];
+        buf[8] = bufHigh[1];
+        buf[9] = 0x00;
+        break;
+    case INPUT:
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = INPUT_CMD;
+        buf[3] = mParams[0];
+        buf[4] = 0x00;
+        buf[5] = mParams[1];
+        buf[6] = 0x00;
+        buf[7] = 0x00;
+        buf[8] = 0x00;
+        buf[9] = 0x00;
+        break;
+    case SETOUT:
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = SETOUT_CMD;
+        buf[3] = mParams[0];
+        buf[4] = 0x00;
+        buf[5] = mParams[1];
+        buf[6] = 0x00;
+        buf[7] = 0x00;
+        buf[8] = 0x00;
+        buf[9] = 0x00;
+        break;
+    case HEAD:
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = CMDBATCHHEAD;
+        buf[3] = 0x00;
+        buf[4] = 0x00;
+        buf[5] = mParams[0];
+        buf[6] = 0x00;
+        buf[7] = 0x00;
+        buf[8] = 0x00;
+        buf[9] = 0x00;
+        break;
+    case STOP:
+        convert(bufData, mParams[0], NUMBER_DA);
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = EMSTOP_CMD;
+        buf[3] = 0x00;
+        buf[4] = 0x00;
+        buf[5] = bufData[0];
+        buf[6] = bufData[1];
+        buf[7] = bufData[2];
+        buf[8] = bufData[3];
+        buf[9] = 0x00;
+        break;
+    default:
+        break;
+    }
+
+    array2qa(qa, buf, NUMBER_CMD);
+
+    return qa;
 }

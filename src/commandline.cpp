@@ -143,3 +143,15 @@ void CommandLine::show()
     //qDebug() << "size -- " << lines->size();
 
 }
+
+QByteArray CommandLine::getCmdData()
+{
+    QByteArray qa;
+
+    for (int i=0; i<rows; i++) {
+        line = lines->at(i);
+        qa.append(line->data());
+    }
+
+    return qa;
+}

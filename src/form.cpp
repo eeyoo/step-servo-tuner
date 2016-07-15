@@ -18,8 +18,7 @@
 Form::Form(QWidget *parent) :
     QWidget(parent),
     index(0),
-    select_line(-1),
-    mLine(-1),
+    row(-1),
     ui(new Ui::Form)
 {
     ui->setupUi(this);
@@ -52,7 +51,7 @@ Form::Form(QWidget *parent) :
     op = APP;
     quit = false;
 
-    //line = new Line();
+    line = new Line(alpha, beta, deviceId);
     cl = new CommandLine(this);
 }
 
@@ -107,7 +106,6 @@ void Form::initModel()
 
 bool Form::saveProgFile(QString fileName) const
 {
-    //return itemList->save(fileName);
     return cl->write(fileName);
 }
 
@@ -244,7 +242,7 @@ void Form::on_delayAddBtn_clicked()
 
 void Form::on_stepAct_clicked()
 {
-    cl->show();
+    //cl->show();
 
 }
 
@@ -258,11 +256,16 @@ void Form::spd_show(int lpd)
 
 void Form::on_stopAct_clicked()
 {
-    int params[2] = {deviceId, 0};
-    Command stopcmd(params, Command::STOP);
+    //int params[2] = {deviceId, 0};
+    //Command stopcmd(params, Command::STOP);
 
-    qDebug() << stopcmd.data().toHex();
-    emit sendData(stopcmd.data());
+    QList<int> pa;
+    pa << 0;
+    //operate(pa, DELAY);
+    line = new Line(pa, STOP);
+
+    qDebug() << line->data().toHex();
+    //emit sendData(stopcmd.data());
 }
 
 void Form::on_forwardAct_clicked()
@@ -280,6 +283,14 @@ void Form::on_forwardAct_clicked()
     */
     //qDebug() << acmd.data().append(qa).toHex();
     //emit sendData(qa);
+    //cl->getCmdData();
+    QByteArray qa;
+    QList<int> pa;
+    pa << cl->size();
+    line = new Line(pa, HEAD);
+    qa.append(line->data());
+    qa.append(cl->getCmdData());
+    qDebug() << qa.toHex();
 }
 
 void Form::on_opAddBtn_clicked()
@@ -287,10 +298,6 @@ void Form::on_opAddBtn_clicked()
     //moves.append(0);
     int param = ui->opParam->value();
     int opType = ui->opType->currentIndex(); //1-自增 2-自减
-
-    //int params[3] = {deviceId, opType, param};
-    //Command acmd(params, Command::OPER);
-    //qDebug() << acmd.data().toHex();
 
     QList<int> pa;
     pa << param << opType;
@@ -309,10 +316,6 @@ void Form::on_jmpAddBtn_clicked()
         QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1 行")).arg(rows));
         return;
     }
-
-    //int params[4] = {deviceId, 0, line, 0};
-    //Command acmd(params, Command::JMP);
-    //qDebug() << acmd.data().toHex();
 
     QList<int> pa;
     pa << val;
@@ -335,10 +338,6 @@ void Form::on_cmpAddBtn_clicked()
     int type = ui->cmpType->currentIndex();
     int value = ui->cmpVal->value();
 
-    //int params[5] = {deviceId, value, line, param, type};
-    //Command acmd(params, Command::CMP);
-    //qDebug() << acmd.data().toHex();
-
     QList<int> pa;
     pa << param << type << value << val;
 
@@ -357,10 +356,6 @@ void Form::on_jumpAddBtn_clicked()
     int param = ui->jumpParam->value();
     int state = ui->ioState->currentIndex();//0-低电平 1-高电平
 
-    //int params[4] = {deviceId, state, line, param};
-    //Command acmd(params, Command::IOJMP);
-    //qDebug() << acmd.data().toHex();
-
     QList<int> pa;
     pa << param << state << val;
 
@@ -372,10 +367,6 @@ void Form::on_inputAddBtn_clicked() //输入等待
     int param = ui->inputParam->value();
     int state = ui->inputState->currentIndex();
 
-    //int params[4] = {deviceId, state, 0, param};
-    //Command acmd(params, Command::INPUT);
-    //qDebug() << acmd.data().toHex();
-
     QList<int> pa;
     pa << param << state;
 
@@ -386,10 +377,6 @@ void Form::on_outputAddBtn_clicked() //主动输出
 {
     int param = ui->outputParam->value();
     int state = ui->outputState->currentIndex();
-
-    //int params[4] = {deviceId, state, 0, param};
-    //Command acmd(params, Command::SETOUT);
-    //qDebug() << acmd.data().toHex();
 
     QList<int> pa;
     pa << param << state;
@@ -416,10 +403,9 @@ void Form::tableDoubleClick(const QModelIndex &/*index*/)
 void Form::tableClick(const QModelIndex &index)
 {
     int nr = index.row();
-    select_line = nr;
-    mLine = nr;
+    row = nr;
 
-    line = cl->getRowData(nr);
+    line = cl->getRowData(row);
     line->print();
 }
 
@@ -458,7 +444,7 @@ void Form::showToolBox(const QModelIndex &index)
         break;
     case IOJMP:
         ui->parentToolBox->setCurrentIndex(2);
-        ui->condToolBox->setCurrentIndex(1);
+        ui->condToolBox->setCurrentIndex(2);
         break;
     case INPUT:
         ui->parentToolBox->setCurrentIndex(3);
@@ -485,33 +471,33 @@ void Form::on_clearBtn_clicked()
 
 void Form::on_deleteBtn_clicked()
 {
-    if(mLine < 0) {
+    if(row < 0) {
         QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
         return;
     }
 
-    cl->del(mLine);
-    qDebug() << tr("%1 行已被删除！").arg(mLine+1);
+    cl->del(row);
+    qDebug() << tr("%1 行已被删除！").arg(row+1);
 
-    mLine = -1;
+    row = -1;
 }
 
 void Form::on_insertBtn_clicked()
 {
     //默认选中行之前插入指令
-    if(select_line < 0) {
+    if(row < 0) {
         QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
         return;
     }
 
     if (quit) {
         op = APP;
-        select_line = -1;
+        row = -1;
         ui->insertBtn->setText(tr("插入"));
         quit = false;
     }
 
-    if (select_line >= 0) {
+    if (row >= 0) {
         QMessageBox::information(this, tr("提示"), tr("将在选中行之前插入指令，可以连续插入！"));
         ui->insertBtn->setText(tr("停止插入"));
         op = INSE;

@@ -25,6 +25,8 @@ public:
 
     void show();
 
+    QByteArray getCmdData();
+
 private:
     void setRowData(int arow, Line *line);
 

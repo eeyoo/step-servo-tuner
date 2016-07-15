@@ -8,19 +8,19 @@ SOURCES += \
     mainwindow.cpp \
     settingsdialog.cpp \
     form.cpp \
-    command.cpp \
     configdialog.cpp \
     line.cpp \
     commandline.cpp
+
 
 HEADERS += \
     mainwindow.h \
     settingsdialog.h \
     form.h \
-    command.h \
     configdialog.h \
     line.h \
     commandline.h
+
 
 FORMS += \
     mainwindow.ui \

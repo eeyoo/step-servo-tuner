@@ -8,6 +8,7 @@
  */
 
 #define ABS_MOVE_CMD 0x01 //绝对运动
+#define REL_MOVE_CMD 0x02 //相对运动
 #define SETMOVESPCMD 0x03 //目标速度
 
 #define OPERATEPARAM 0x31 //操作参数命令 1)++  2)--
@@ -56,8 +57,6 @@ typedef struct {
     quint8 check;      //校验
 } Cmd;
 */
-static int alpha = 1; //位移转换脉冲数参数
-static double beta = 1.0; //线速度与脉冲转换参数
 
 class QJsonArray;
 class Command

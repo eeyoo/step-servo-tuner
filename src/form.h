@@ -96,12 +96,11 @@ private:
     Line *line;
     int index;      //单步运行行
     ConfigDialog *config;
-    int select_line;  //选中当前行
     int deviceId;
     int cmdType;
     OperType op;
     bool quit;
-    int mLine;
+    int row; //选中行
 };
 
 #endif // FORM_H
