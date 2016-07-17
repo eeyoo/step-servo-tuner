@@ -61,6 +61,7 @@ typedef struct {
 */
 static int alpha = 1; //位移转换脉冲数参数
 static double beta = 1.0; //线速度与脉冲转换参数
+//static int level = 1; //细分等级
 
 class QJsonArray;
 class Command

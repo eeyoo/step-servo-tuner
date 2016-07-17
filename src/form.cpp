@@ -38,10 +38,14 @@ Form::Form(QWidget *parent) :
      * 细分为256时，速度设置最大每秒脉冲为400k（否则还是200k不变），实际下发数值（每秒脉冲数）减半
      */
     int maxSpd = 200000 / beta; //最大线速度
+    qDebug() << QString("level %1 and spd %2").arg(level).arg(maxSpd);
+
     if (level == 8) {
         maxSpd = 400000 / beta;
+        beta = beta / 2;
     }
 
+    qDebug() << "max spd == " << maxSpd;
     ui->setRunSpd->setMaximum(maxSpd);
 
     cmd = new Command(alpha, beta);
@@ -70,7 +74,7 @@ Form::~Form()
 
 void Form::about()
 {
-    QMessageBox::about(this, tr("控制器应用程序"),tr("==== V1.2 版应用程序 ===\n ---- 2016-7-10 ----"));
+    QMessageBox::about(this, tr("控制器应用程序"),tr("==== V1.3 版应用程序 ===\n ---- 2016-7-15 ----"));
 }
 
 void Form::initUI()
