@@ -94,13 +94,23 @@ void CommandLine::append(Line *ln)
     rows++;
 }
 
+void CommandLine::insert(Line *ln, int arow)
+{
+    //row = arow;
+    qDebug() << QString("插入指令行 %1").arg(arow);
+    setRowData(arow, ln);
+    lines->insert(arow, ln);
+    row++;
+    rows++;
+}
+
 void CommandLine::del(int arow)
 {
     //lines.removeAt(arow);
     lines->removeAt(arow);
     model->removeRow(arow, QModelIndex());
     rows--;
-    if (rows < 0)
+    if(rows < 0)
         rows = 0;
     row = rows;
 }
@@ -152,6 +162,6 @@ QByteArray CommandLine::getCmdData()
         line = lines->at(i);
         qa.append(line->data());
     }
-
+    //qDebug() << qa.toHex();
     return qa;
 }

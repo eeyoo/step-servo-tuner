@@ -47,6 +47,9 @@
 #define NUMBER_CMD   0x0a
 #define NUMBER_HIGH  0x02
 #define NUMBER_LOW   0x02
+static int alpha; //位移转换脉冲数参数
+static double beta; //线速度与脉冲转换参数
+static int deviceId; //设备ID
 
 enum CmdType {
     POS, MOV, SETSPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT, HEAD, STOP
@@ -56,11 +59,7 @@ class Line
 {
 public:
     explicit Line();
-    Line(int a, double b, int id) {
-        alpha = a;
-        beta = b;
-        deviceId = id;
-    }
+    Line(int a, double b, int id);
 
     Line(QList<int> params, CmdType type);
     Line(QStringList &list);
@@ -77,16 +76,13 @@ private:
     QString translate(CmdType type, QString &s);
     void str2key(QString &s);
 
-    void convert(quint8 *buf, int data, int size); //int -> quint8[4]
-    void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
+    static void convert(quint8 *buf, int data, int size); //int -> quint8[4]
+    static void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
 
 private:
     CmdType mType;
     QList<int> mParams;
 
-    static int alpha; //位移转换脉冲数参数
-    static double beta; //线速度与脉冲转换参数
-    static int deviceId; //设备ID
 };
 
 #endif // LINE_H

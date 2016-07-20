@@ -96,11 +96,13 @@ private:
     Line *line;
     int index;      //单步运行行
     ConfigDialog *config;
-    int deviceId;
+    //int deviceId;
     int cmdType;
     OperType op;
     bool quit;
     int row; //选中行
+    int runLine; //单步执行行
+    int insertLine; //插入指令行
 };
 
 #endif // FORM_H

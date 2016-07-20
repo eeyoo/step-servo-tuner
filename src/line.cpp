@@ -13,6 +13,12 @@ Line::Line(QList<int> params, CmdType type)
     mParams = params;
 }
 
+Line::Line(int a, double b, int id) {
+    alpha = a;
+    beta = b;
+    deviceId = id;
+}
+
 Line::Line(QStringList &list)
 {
     //QString convert to enum type
@@ -293,6 +299,8 @@ QByteArray Line::data() const
     quint8 bufLow[NUMBER_LOW];
     quint8 bufHigh[NUMBER_HIGH];
 
+    //qDebug() << QString("alpha %1, beta %2, id %3").arg(alpha).arg(beta).arg(deviceId);
+
     convert(bufID, deviceId, NUMBER_ID);
 
     switch (mType) {
@@ -359,19 +367,21 @@ QByteArray Line::data() const
         buf[7] = 0x00;
         buf[8] = 0x00;
         buf[9] = 0x00;
+        //qDebug() << QString("OPER: p0 %1, p1 %2").arg(mParams[0]).arg(mParams[1]);
         break;
     case JMP:
         convert(bufHigh, mParams[0]-1, NUMBER_HIGH); //下位机0行开始
         buf[0] = bufID[0];
         buf[1] = bufID[1];
         buf[2] = JMP_CMD;
-        buf[3] = mParams[0];
+        buf[3] = 0x00;
         buf[4] = 0x00;
         buf[5] = 0x00;
         buf[6] = 0x00;
         buf[7] = bufHigh[0];
         buf[8] = bufHigh[1];
         buf[9] = 0x00;
+        //qDebug() << QString("JMP: p0 %1").arg(mParams[0]);
         break;
     case CMP:
         convert(bufLow, mParams[2], NUMBER_LOW);
@@ -386,6 +396,7 @@ QByteArray Line::data() const
         buf[7] = bufHigh[0];
         buf[8] = bufHigh[1];
         buf[9] = 0x00;
+        //qDebug() << QString("CMP: p0 %1, p1 %2, p2 %3, p3 %4").arg(mParams[0]).arg(mParams[1]).arg(mParams[2]).arg(mParams[3]);
         break;
     case IOJMP:
         convert(bufLow, mParams[1], NUMBER_LOW);
@@ -400,6 +411,7 @@ QByteArray Line::data() const
         buf[7] = bufHigh[0];
         buf[8] = bufHigh[1];
         buf[9] = 0x00;
+        //qDebug() << QString("IOJMP: p0 %1, p1 %2, p2 %3").arg(mParams[0]).arg(mParams[1]).arg(mParams[2]);
         break;
     case INPUT:
         buf[0] = bufID[0];
@@ -412,6 +424,7 @@ QByteArray Line::data() const
         buf[7] = 0x00;
         buf[8] = 0x00;
         buf[9] = 0x00;
+        //qDebug() << QString("INPUT: p0 %1, p1 %2").arg(mParams[0]).arg(mParams[1]);
         break;
     case SETOUT:
         buf[0] = bufID[0];
@@ -424,6 +437,7 @@ QByteArray Line::data() const
         buf[7] = 0x00;
         buf[8] = 0x00;
         buf[9] = 0x00;
+        //qDebug() << QString("SETOUT: p0 %1, p1 %2").arg(mParams[0]).arg(mParams[1]);
         break;
     case HEAD:
         buf[0] = bufID[0];

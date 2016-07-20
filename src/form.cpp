@@ -18,7 +18,8 @@
 Form::Form(QWidget *parent) :
     QWidget(parent),
     index(0),
-    row(-1),
+    row(-1), runLine(-1),
+    insertLine(-1),
     ui(new Ui::Form)
 {
     ui->setupUi(this);
@@ -28,7 +29,7 @@ Form::Form(QWidget *parent) :
     int level = config->configs().elecLevel;
     int circle = config->configs().circleLen;
     int div[] = {1,2,4,8,16,32,64,128,256};
-    deviceId = config->configs().deviceId;
+    int deviceId = config->configs().deviceId;
 
     int alpha = 200 * div[level] / circle;
     double beta = 0.4 * div[level] / circle; // 系数 200*100/50000
@@ -174,6 +175,10 @@ void Form::operate(QList<int> pa, CmdType type)
     case EDIT://指令修改
         break;
     case INSE://指令插入 默认前查
+        cl->insert(line, insertLine);
+
+        //ui->tableView->selectRow(insertLine);
+        insertLine++;
         break;
     default:
         break;
@@ -242,7 +247,26 @@ void Form::on_delayAddBtn_clicked()
 
 void Form::on_stepAct_clicked()
 {
-    //cl->show();
+    //cl->show();    
+
+    if (runLine == -1) {
+        QMessageBox::warning(this, tr("警告"), QString(tr("为选中指令行")));
+        return;
+    }
+
+    //runLine = row;
+    int limit = cl->size() - 1;
+
+    if(runLine > limit) {
+        runLine = limit;
+    }
+
+    ui->tableView->selectRow(runLine);
+    //qDebug() << QString("run line %1 rows %2").arg(runLine).arg(limit);
+    //qDebug() << cl->getRowData(runLine)->data().toHex();
+
+
+    runLine++;
 
 }
 
@@ -289,6 +313,10 @@ void Form::on_forwardAct_clicked()
     pa << cl->size();
     line = new Line(pa, HEAD);
     qa.append(line->data());
+
+    //qDebug() << line->data().toHex();
+    //qDebug() << QString("alpha %1, beta %2, id %3").arg(alpha).arg(beta).arg(deviceId);
+
     qa.append(cl->getCmdData());
     qDebug() << qa.toHex();
 }
@@ -311,6 +339,10 @@ void Form::on_jmpAddBtn_clicked()
 
     int rows = cl->size();
     //qDebug() << tr("无条件跳转至 %1 行，总行数 %2").arg(line).arg(rows);
+    if(rows == 0) {
+        QMessageBox::warning(this, tr("警告"), QString(tr("请插入指令行")));
+        return;
+    }
 
     if(val > rows) {
         QMessageBox::warning(this, tr("警告"), QString(tr("跳转行不能超过 %1 行")).arg(rows));
@@ -404,6 +436,8 @@ void Form::tableClick(const QModelIndex &index)
 {
     int nr = index.row();
     row = nr;
+    runLine = nr;
+    insertLine = nr;
 
     line = cl->getRowData(row);
     line->print();
@@ -467,6 +501,9 @@ void Form::showToolBox(const QModelIndex &index)
 void Form::on_clearBtn_clicked()
 {
     cl->clear();
+    row = -1;
+    runLine = -1;
+    insertLine = -1;
 }
 
 void Form::on_deleteBtn_clicked()
@@ -485,13 +522,28 @@ void Form::on_deleteBtn_clicked()
 void Form::on_insertBtn_clicked()
 {
     //默认选中行之前插入指令
-    if(row < 0) {
+    if(insertLine == -1) { //未选中行提醒
         QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
         return;
+    } else {
+        if(!quit) {//非退出插入状态
+            QMessageBox::information(this, tr("提示"), tr("将在选中行之前插入指令，可以连续插入！"));
+            ui->insertBtn->setText(tr("停止插入"));
+            op = INSE; //切换为插入指令模式
+            //runLine = row-1; //插入至选中行之前
+            //insertLine = row;
+            quit = true;
+            qDebug() << QString("选中行 %1").arg(row);
+        } else {//退出插入状态
+            ui->insertBtn->setText(tr("插入"));
+            op = APP;
+            insertLine = -1;
+            quit = false;
+        }
     }
-
+/*
     if (quit) {
-        op = APP;
+        op = APP; //追加指令模式
         row = -1;
         ui->insertBtn->setText(tr("插入"));
         quit = false;
@@ -500,8 +552,10 @@ void Form::on_insertBtn_clicked()
     if (row >= 0) {
         QMessageBox::information(this, tr("提示"), tr("将在选中行之前插入指令，可以连续插入！"));
         ui->insertBtn->setText(tr("停止插入"));
-        op = INSE;
+        op = INSE; //插入指令模式
+        row++;
         quit = true; //允许取消
     }
+    */
 }
 

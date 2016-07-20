@@ -12,6 +12,7 @@ public:
 
     void append(Line *ln);
     void del(int arow);
+    void insert(Line *ln, int arow);
     void clear();
 
     bool read(const QString &fileName); //读取程序文件
@@ -35,7 +36,7 @@ private:
     QList<Line *> *lines;
     Line *line;
 
-    int row;
+    int row; //追加指令游标
     int rows;
 };
 
