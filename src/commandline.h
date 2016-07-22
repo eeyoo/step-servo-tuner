@@ -7,7 +7,7 @@
 class CommandLine : public QObject
 {
 public:
-    CommandLine(QObject *parent = 0);
+    explicit CommandLine(QObject *parent = 0);
     ~CommandLine();
 
     void append(Line *ln);

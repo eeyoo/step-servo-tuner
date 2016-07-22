@@ -11,8 +11,6 @@ CommandLine::CommandLine(QObject *parent) :
     model->setHeaderData(0, Qt::Horizontal, tr("指令类型"));
     model->setHeaderData(1, Qt::Horizontal, tr("指令内容"));
 
-    //lines = new QList<Line>();
-    //qDebug() << "lines size = " << lines.size();
     line = new Line();
     lines = new QList<Line*>;
 }
@@ -50,13 +48,17 @@ bool CommandLine::read(const QString &fileName)
     QTextStream in(&file);
     while(!in.atEnd()) {
         QString str = in.readLine();
-        //qDebug() << "str -- " << str;
+
         QStringList fields = str.split(" ");
-        line = new Line(fields);
+
+        //line = new Line(fields);
         //line->print();
-        append(line);
+        Line ln(fields);
+        ln.print();
+        append(&ln);
     }
 
+    //qDebug() << "read file success =============";
     file.close();
     return true;
 }
@@ -75,6 +77,7 @@ bool CommandLine::write(QString &fileName) const
     {
         QString str;
         lines->at(i)->print(str);
+
         if (i == rows-1)
             out << str;
         else
@@ -88,10 +91,12 @@ bool CommandLine::write(QString &fileName) const
 
 void CommandLine::append(Line *ln)
 {
+    //qDebug() << QString("row %1 rows %2").arg(row).arg(rows);
     setRowData(row, ln);
     lines->append(ln);
     row++;
     rows++;
+
 }
 
 void CommandLine::insert(Line *ln, int arow)
@@ -131,13 +136,15 @@ Line* CommandLine::getRowData(int arow) const
     //return lines.value(arow);
     //ln = lines->at(arow);
     //ln.print();
+    lines->at(arow)->print();
+    //line->print();
     return lines->at(arow);
 }
 
 void CommandLine::clear()
 {
     model->removeRows(0, rows, QModelIndex());
-    //lines.clear();
+
     lines->clear();
     row = 0;
     rows = 0;

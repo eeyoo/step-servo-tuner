@@ -87,17 +87,12 @@ private:
     void operate(Line *ln);
     void operate(QList<int> pa, CmdType type);
 
-    //void convert(quint8 *buf, int data, int size); //int -> quint8[4]
-    //void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
-
 private:
     Ui::Form *ui;
     CommandLine *cl;
     Line *line;
-    int index;      //单步运行行
     ConfigDialog *config;
-    //int deviceId;
-    int cmdType;
+
     OperType op;
     bool quit;
     int row; //选中行

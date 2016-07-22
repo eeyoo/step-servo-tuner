@@ -32,35 +32,39 @@ Line::Line(QStringList &list)
     case SETSPD:
     case DELAY:
     case JMP:
-        //qDebug() << QString("%1 %2").arg(s).arg(mParams[0]);
-        mParams[0] = QString(list[1]).toInt();
-        //qDebug() << QString("type %1 params %2").arg(mType).arg(mParams[0]);
+        //mParams[0] = QString(list[1]).toInt();
+        //int val = QString(list[1]).toInt();
+        mParams.append(QString(list[1]).toInt());
+        //qDebug() << QString("type %1 params %2").arg(s).arg(mParams[0]);
         break;
     case OPER:
     case SETOUT:
     case INPUT:
-        //s = "INPUT";
-        //qDebug() << QString("%1 %2 %3").arg(s).arg(mParams[0]).arg(mParams[1]);
-        mParams[0] = QString(list[1]).toInt();
-        mParams[1] = QString(list[2]).toInt();
-        //qDebug() << QString("type %1 params %2 %3").arg(mType).arg(mParams[0]).arg(mParams[1]);
+        mParams.append(QString(list[1]).toInt());
+        mParams.append(QString(list[2]).toInt());
+        //mParams[0] = QString(list[1]).toInt();
+        //mParams[1] = QString(list[2]).toInt();
+        //qDebug() << QString("type %1 params %2 %3").arg(s).arg(mParams[0]).arg(mParams[1]);
         break;
     case IOJMP:
-        //s = "IOJMP";
-        //qDebug() << QString("%1 %2 %3 %4").arg(s).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]);
-        mParams[0] = QString(list[1]).toInt();
-        mParams[1] = QString(list[2]).toInt();
-        mParams[2] = QString(list[3]).toInt();
-        //qDebug() << QString("type %1 params %2").arg(mType).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]).arg(mParams[3]);
+        mParams.append(QString(list[1]).toInt());
+        mParams.append(QString(list[2]).toInt());
+        mParams.append(QString(list[3]).toInt());
+        //mParams[0] = QString(list[1]).toInt();
+        //mParams[1] = QString(list[2]).toInt();
+        //mParams[2] = QString(list[3]).toInt();
+        //qDebug() << QString("type %1 params %2 %3 %4").arg(s).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]);
         break;
     case CMP:
-        //s = "CMP";
-        //qDebug() << QString("%1 %2 %3 %4 %5").arg(s).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]).arg(mParams[3]);
-        mParams[0] = QString(list[1]).toInt();
-        mParams[1] = QString(list[2]).toInt();
-        mParams[2] = QString(list[3]).toInt();
-        mParams[3] = QString(list[4]).toInt();
-        //qDebug() << QString("type %1 params %2").arg(mType).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]).arg(mParams[3]).arg(mParams[4]);
+        mParams.append(QString(list[1]).toInt());
+        mParams.append(QString(list[2]).toInt());
+        mParams.append(QString(list[3]).toInt());
+        mParams.append(QString(list[4]).toInt());
+        //mParams[0] = QString(list[1]).toInt();
+        //mParams[1] = QString(list[2]).toInt();
+        //mParams[2] = QString(list[3]).toInt();
+        //mParams[3] = QString(list[4]).toInt();
+        //qDebug() << QString("type %1 params %2 %3 %4 %5").arg(s).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]).arg(mParams[3]);
         break;
     default:
         break;

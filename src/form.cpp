@@ -17,14 +17,12 @@
 
 Form::Form(QWidget *parent) :
     QWidget(parent),
-    index(0),
     row(-1), runLine(-1),
     insertLine(-1),
     ui(new Ui::Form)
 {
     ui->setupUi(this);
     config = new ConfigDialog;
-    //itemList = new CommandItemList(this);
 
     int level = config->configs().elecLevel;
     int circle = config->configs().circleLen;
@@ -48,7 +46,6 @@ Form::Form(QWidget *parent) :
     ui->parentToolBox->setCurrentIndex(0);
     ui->moveToolBox->setCurrentIndex(0);
 
-    cmdType = -1;
     op = APP;
     quit = false;
 
@@ -114,6 +111,7 @@ bool Form::loadProgFile(QString fileName)
 {
 
     bool ret = cl->read(fileName);
+
     ui->tableView->setModel(cl->pmodel());
     return ret;
 }
