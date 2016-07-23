@@ -101,6 +101,10 @@ void Line::print(QString &str)
     translate(mType, s);
 
     switch (mType) {
+    case HOME:
+        str = QString("%1").arg(s);
+        //qDebug() << str;
+        break;
     case POS:
     case MOV:
     case SETSPD:
@@ -165,6 +169,9 @@ QString Line::translate(CmdType type, QString &s)
     case INPUT:
         s = "INPUT";
         break;
+    case HOME:
+        s = "SETHOME";
+        break;
     default:
         break;
     }
@@ -195,6 +202,8 @@ void Line::str2key(QString &s)
         mType = SETOUT;
     else if (s == "INPUT")
         mType = INPUT;
+    else if (s == "SETHOME")
+        mType = HOME;
 }
 
 void Line::strlist(QStringList &list) const
@@ -217,6 +226,9 @@ void Line::strlist(QStringList &list) const
     case DELAY:
         //s = "DELAY";
         list << "延时等待指令" << QString("延时等待 %1 毫秒").arg(mParams[0]);
+        break;
+    case HOME:
+        list << "零点设置指令" << QString("当前位置设置为零点位置");
         break;
     case OPER:
         //s = "OPER";
@@ -342,6 +354,19 @@ QByteArray Line::data() const
         buf[0] = bufID[0];
         buf[1] = bufID[1];
         buf[2] = DELAY_CMD;
+        buf[3] = 0x01;
+        buf[4] = 0x00;
+        buf[5] = bufData[0];
+        buf[6] = bufData[1];
+        buf[7] = bufData[2];
+        buf[8] = bufData[3];
+        buf[9] = 0x00;
+        break;
+    case HOME:
+        convert(bufData, mParams[0], NUMBER_DA);
+        buf[0] = bufID[0];
+        buf[1] = bufID[1];
+        buf[2] = HOME_CMD;
         buf[3] = 0x01;
         buf[4] = 0x00;
         buf[5] = bufData[0];

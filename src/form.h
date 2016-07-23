@@ -60,6 +60,8 @@ private slots:
 
     void on_delayAddBtn_clicked();
 
+    void on_homeAddBtn_clicked();
+
     void spd_show(int);
 
     void tableDoubleClick(const QModelIndex &); //双击事件
@@ -75,8 +77,6 @@ private slots:
     void on_clearBtn_clicked();  //清空
     void on_deleteBtn_clicked(); //删除
     void on_insertBtn_clicked(); //插入
-
-    void on_homeAddBtn_clicked();
 
 private:
     void initUI();

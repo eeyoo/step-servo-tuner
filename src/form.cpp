@@ -171,22 +171,6 @@ void Form::operate(Line *ln)
     ui->tableView->setModel(cl->pmodel());
 }
 
-void Form::on_homeAddBtn_clicked()
-{
-    /*
-    int base = itemList->pos();
-    int pos = 0 - base; //绝对位置的偏移量
-
-    int params[2] = {deviceId, pos};
-    Command acmd(params, Command::HOME);
-
-    QStringList list;
-    list << tr("零点设置指令") << QString(tr("当前位置设置为零点位置"));
-
-    operate(acmd, list);
-    */
-}
-
 void Form::operate(QList<int> pa, CmdType type)
 {
     line = new Line(pa, type);
@@ -254,11 +238,30 @@ void Form::on_delayAddBtn_clicked()
 
 }
 
+void Form::on_homeAddBtn_clicked()
+{
+    QList<int> pa;
+    pa << 0;
+    operate(pa, HOME);
+    /*
+    int base = itemList->pos();
+    int pos = 0 - base; //绝对位置的偏移量
+
+    int params[2] = {deviceId, pos};
+    Command acmd(params, Command::HOME);
+
+    QStringList list;
+    list << tr("零点设置指令") << QString(tr("当前位置设置为零点位置"));
+
+    operate(acmd, list);
+    */
+}
+
 void Form::on_stepAct_clicked()
 {
     //cl->show();
     if (runLine == -1) {
-        QMessageBox::warning(this, tr("警告"), QString(tr("为选中指令行")));
+        QMessageBox::warning(this, tr("警告"), QString(tr("请选中指令行")));
         return;
     }
 
@@ -270,7 +273,8 @@ void Form::on_stepAct_clicked()
 
     ui->tableView->selectRow(runLine);
     //qDebug() << QString("run line %1 rows %2").arg(runLine).arg(limit);
-    qDebug() << cl->getRowData(runLine)->data().toHex();
+    //qDebug() << cl->getRowData(runLine)->data().toHex();
+    sendData(cl->getRowData(runLine)->data());
 
     runLine++;
 
@@ -294,7 +298,6 @@ void Form::on_stopAct_clicked()
     //qDebug() << "stop " << stopcmd.data().toHex();
     //emit sendData(stopcmd.data());
     emit sendStop(line->data());
-
 }
 
 void Form::on_forwardAct_clicked()
@@ -308,7 +311,7 @@ void Form::on_forwardAct_clicked()
     qa.append(line->data());
     qa.append(cl->getCmdData());
 
-    qDebug() << qa.toHex();
+    //qDebug() << qa.toHex();
     emit sendData(qa);
 }
 
