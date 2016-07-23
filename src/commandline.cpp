@@ -48,14 +48,14 @@ bool CommandLine::read(const QString &fileName)
     QTextStream in(&file);
     while(!in.atEnd()) {
         QString str = in.readLine();
-
         QStringList fields = str.split(" ");
 
-        //line = new Line(fields);
+        line = new Line(fields);
         //line->print();
-        Line ln(fields);
-        ln.print();
-        append(&ln);
+        //Line ln(fields);
+        //ln.print();
+        //append(&ln);
+        append(line);
     }
 
     //qDebug() << "read file success =============";
@@ -72,7 +72,6 @@ bool CommandLine::write(QString &fileName) const
     }
 
     QTextStream out(&file);
-
     for(int i=0; i<rows; i++)
     {
         QString str;
@@ -83,7 +82,6 @@ bool CommandLine::write(QString &fileName) const
         else
             out << str << "\r\n";
     }
-
 
     file.close();
     return true;
@@ -102,7 +100,7 @@ void CommandLine::append(Line *ln)
 void CommandLine::insert(Line *ln, int arow)
 {
     //row = arow;
-    qDebug() << QString("插入指令行 %1").arg(arow);
+    //qDebug() << QString("插入指令行 %1").arg(arow);
     setRowData(arow, ln);
     lines->insert(arow, ln);
     row++;
@@ -136,7 +134,7 @@ Line* CommandLine::getRowData(int arow) const
     //return lines.value(arow);
     //ln = lines->at(arow);
     //ln.print();
-    lines->at(arow)->print();
+    //lines->at(arow)->print();
     //line->print();
     return lines->at(arow);
 }
@@ -155,10 +153,15 @@ int CommandLine::size() const
     return rows;
 }
 
+int CommandLine::getRow() const
+{
+    return row;
+}
+
 void CommandLine::show()
 {
     //qDebug() << "size -- " << lines->size();
-
+    qDebug() << QString("row %1 rows %2").arg(row).arg(rows);
 }
 
 QByteArray CommandLine::getCmdData()

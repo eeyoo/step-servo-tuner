@@ -25,6 +25,7 @@ Line::Line(QStringList &list)
     QString s = QString(list[0]).toUpper();
     str2key(s);
     //qDebug() << QString("type %1 -- %2").arg(s).arg(mType);
+    mParams.clear();
 
     switch (mType) {
     case POS:
@@ -32,38 +33,27 @@ Line::Line(QStringList &list)
     case SETSPD:
     case DELAY:
     case JMP:
-        //mParams[0] = QString(list[1]).toInt();
-        //int val = QString(list[1]).toInt();
-        mParams.append(QString(list[1]).toInt());
+        mParams << QString(list[1]).toInt();
         //qDebug() << QString("type %1 params %2").arg(s).arg(mParams[0]);
         break;
     case OPER:
     case SETOUT:
     case INPUT:
-        mParams.append(QString(list[1]).toInt());
-        mParams.append(QString(list[2]).toInt());
-        //mParams[0] = QString(list[1]).toInt();
-        //mParams[1] = QString(list[2]).toInt();
+        mParams << QString(list[1]).toInt();
+        mParams << QString(list[2]).toInt();
         //qDebug() << QString("type %1 params %2 %3").arg(s).arg(mParams[0]).arg(mParams[1]);
         break;
     case IOJMP:
-        mParams.append(QString(list[1]).toInt());
-        mParams.append(QString(list[2]).toInt());
-        mParams.append(QString(list[3]).toInt());
-        //mParams[0] = QString(list[1]).toInt();
-        //mParams[1] = QString(list[2]).toInt();
-        //mParams[2] = QString(list[3]).toInt();
+        mParams << QString(list[1]).toInt();
+        mParams << QString(list[2]).toInt();
+        mParams << QString(list[3]).toInt();
         //qDebug() << QString("type %1 params %2 %3 %4").arg(s).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]);
         break;
     case CMP:
-        mParams.append(QString(list[1]).toInt());
-        mParams.append(QString(list[2]).toInt());
-        mParams.append(QString(list[3]).toInt());
-        mParams.append(QString(list[4]).toInt());
-        //mParams[0] = QString(list[1]).toInt();
-        //mParams[1] = QString(list[2]).toInt();
-        //mParams[2] = QString(list[3]).toInt();
-        //mParams[3] = QString(list[4]).toInt();
+        mParams << QString(list[1]).toInt();
+        mParams << QString(list[2]).toInt();
+        mParams << QString(list[3]).toInt();
+        mParams << QString(list[4]).toInt();
         //qDebug() << QString("type %1 params %2 %3 %4 %5").arg(s).arg(mParams[0]).arg(mParams[1]).arg(mParams[2]).arg(mParams[3]);
         break;
     default:
@@ -444,15 +434,16 @@ QByteArray Line::data() const
         //qDebug() << QString("SETOUT: p0 %1, p1 %2").arg(mParams[0]).arg(mParams[1]);
         break;
     case HEAD:
+        convert(bufData, mParams[0], NUMBER_DA);
         buf[0] = bufID[0];
         buf[1] = bufID[1];
         buf[2] = CMDBATCHHEAD;
         buf[3] = 0x00;
         buf[4] = 0x00;
-        buf[5] = mParams[0];
-        buf[6] = 0x00;
-        buf[7] = 0x00;
-        buf[8] = 0x00;
+        buf[5] = bufData[0];
+        buf[6] = bufData[1];
+        buf[7] = bufData[2];
+        buf[8] = bufData[3];
         buf[9] = 0x00;
         break;
     case STOP:

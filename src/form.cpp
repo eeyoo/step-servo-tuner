@@ -168,13 +168,12 @@ void Form::operate(QList<int> pa, CmdType type)
 
     switch (op) {
     case APP: //默认追加
-        cl->append(line);
+        cl->append(line);        
         break;
     case EDIT://指令修改
         break;
     case INSE://指令插入 默认前查
         cl->insert(line, insertLine);
-
         //ui->tableView->selectRow(insertLine);
         insertLine++;
         break;
@@ -183,17 +182,13 @@ void Form::operate(QList<int> pa, CmdType type)
     }
 
     ui->tableView->setModel(cl->pmodel());
+    //qDebug() << QString("app line %1").arg(cl->getRow());
+    //ui->tableView->selectRow(cl->getRow());
 }
 
 void Form::on_absAddBtn_clicked()
 {
-
     int position = ui->absMoveDistance->value();
-
-    //int params[2] = {deviceId, position};
-    //Command acmd(params, Command::ABS);
-    //acmd.pp();
-    //qDebug() << acmd.data().toHex();
 
     QList<int> pa;
     pa << position;
@@ -204,26 +199,14 @@ void Form::on_absAddBtn_clicked()
 void Form::on_relaAddBtn_clicked()
 {
     int pos = ui->relMoveDistance->value();
-    //int base = itemList->pos();//获取指令序列当前绝对位置
-
-    //int params[3] = {deviceId, pos, base}; //绝对位置 = 增量 + 基准
-    //Command acmd(params, Command::RELA);
-    //qDebug() << acmd.data().toHex();
 
     QList<int> pa;
     pa << pos;
     operate(pa, MOV);
-
-    //QStringList list;
-    //list << tr("相对运动指令") << QString(tr("相对运行距离 %1mm")).arg(pos);
-
-    //operate(acmd, list);
 }
 
 void Form::on_setSpdBtn_clicked()
 {
-    //moves.append(0);
-
     int lpd = ui->setRunSpd->value(); //线速度mm/s - 转速 - 每秒脉冲数
 
     QList<int> pa;
@@ -235,7 +218,6 @@ void Form::on_setSpdBtn_clicked()
 
 void Form::on_delayAddBtn_clicked()
 {
-
     int value = ui->delayVal->value();
 
     QList<int> pa;
@@ -245,14 +227,12 @@ void Form::on_delayAddBtn_clicked()
 
 void Form::on_stepAct_clicked()
 {
-    //cl->show();    
-
+    //cl->show();
     if (runLine == -1) {
         QMessageBox::warning(this, tr("警告"), QString(tr("为选中指令行")));
         return;
     }
 
-    //runLine = row;
     int limit = cl->size() - 1;
 
     if(runLine > limit) {
@@ -261,8 +241,7 @@ void Form::on_stepAct_clicked()
 
     ui->tableView->selectRow(runLine);
     //qDebug() << QString("run line %1 rows %2").arg(runLine).arg(limit);
-    //qDebug() << cl->getRowData(runLine)->data().toHex();
-
+    qDebug() << cl->getRowData(runLine)->data().toHex();
 
     runLine++;
 
@@ -278,50 +257,30 @@ void Form::spd_show(int lpd)
 
 void Form::on_stopAct_clicked()
 {
-    //int params[2] = {deviceId, 0};
-    //Command stopcmd(params, Command::STOP);
-
     QList<int> pa;
     pa << 0;
-    //operate(pa, DELAY);
     line = new Line(pa, STOP);
 
     qDebug() << line->data().toHex();
-    //emit sendData(stopcmd.data());
+    //emit sendData(line->data());
 }
 
 void Form::on_forwardAct_clicked()
 {
-    /*
-    int len = itemList->size();
-
-    int params[2] = {deviceId, len};
-    Command acmd(params, Command::HEAD);
-    qDebug() << acmd.data().toHex();
-
-    QByteArray qa = acmd.data();
-    itemList->output(qa);
-    qDebug() << qa.toHex();
-    */
-    //qDebug() << acmd.data().append(qa).toHex();
-    //emit sendData(qa);
-    //cl->getCmdData();
     QByteArray qa;
     QList<int> pa;
     pa << cl->size();
     line = new Line(pa, HEAD);
+    //line->print();
+    //qDebug() << cl->size();
     qa.append(line->data());
-
-    //qDebug() << line->data().toHex();
-    //qDebug() << QString("alpha %1, beta %2, id %3").arg(alpha).arg(beta).arg(deviceId);
-
     qa.append(cl->getCmdData());
+
     qDebug() << qa.toHex();
 }
 
 void Form::on_opAddBtn_clicked()
 {
-    //moves.append(0);
     int param = ui->opParam->value();
     int opType = ui->opType->currentIndex(); //1-自增 2-自减
 
@@ -355,7 +314,6 @@ void Form::on_jmpAddBtn_clicked()
 
 void Form::on_cmpAddBtn_clicked()
 {
-    //moves.append(0);
     int val = ui->cmpLine->value();
     int rows = cl->size();
 
@@ -437,17 +395,14 @@ void Form::tableClick(const QModelIndex &index)
     runLine = nr;
     insertLine = nr;
 
-    line = cl->getRowData(row);
-    line->print();
+    //line = cl->getRowData(row);
+    //line->print();
 }
 
 //ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT
 void Form::showToolBox(const QModelIndex &index)
 {
-    //int toolbox = index.data(Qt::UserRole).toInt();
-
     line = cl->getRowData(index.row());
-
 
     switch (line->type()) {
     case POS:
@@ -512,7 +467,7 @@ void Form::on_deleteBtn_clicked()
     }
 
     cl->del(row);
-    qDebug() << tr("%1 行已被删除！").arg(row+1);
+    //qDebug() << tr("%1 行已被删除！").arg(row+1);
 
     row = -1;
 }
@@ -528,10 +483,8 @@ void Form::on_insertBtn_clicked()
             QMessageBox::information(this, tr("提示"), tr("将在选中行之前插入指令，可以连续插入！"));
             ui->insertBtn->setText(tr("停止插入"));
             op = INSE; //切换为插入指令模式
-            //runLine = row-1; //插入至选中行之前
-            //insertLine = row;
             quit = true;
-            qDebug() << QString("选中行 %1").arg(row);
+            //qDebug() << QString("选中行 %1").arg(row);
         } else {//退出插入状态
             ui->insertBtn->setText(tr("插入"));
             op = APP;
@@ -539,21 +492,5 @@ void Form::on_insertBtn_clicked()
             quit = false;
         }
     }
-/*
-    if (quit) {
-        op = APP; //追加指令模式
-        row = -1;
-        ui->insertBtn->setText(tr("插入"));
-        quit = false;
-    }
-
-    if (row >= 0) {
-        QMessageBox::information(this, tr("提示"), tr("将在选中行之前插入指令，可以连续插入！"));
-        ui->insertBtn->setText(tr("停止插入"));
-        op = INSE; //插入指令模式
-        row++;
-        quit = true; //允许取消
-    }
-    */
 }
 

@@ -23,6 +23,7 @@ public:
     Line* getRowData(int arow) const;
 
     int size() const;
+    int getRow() const;
 
     void show();
 
