@@ -37,7 +37,6 @@
 #include "console.h"
 #include "settingsdialog.h"
 #include "form.h"
-#include "command.h"
 #include "configdialog.h"
 
 #include <QMessageBox>

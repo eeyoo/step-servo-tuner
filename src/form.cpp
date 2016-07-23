@@ -30,12 +30,22 @@ Form::Form(QWidget *parent) :
     int deviceId = config->configs().deviceId;
 
     int alpha = 200 * div[level] / circle;
-    double beta = 0.4 * div[level] / circle; // 系数 200*100/50000
+    //double beta = 0.4 * div[level] / circle; // 系数 200*100/50000
+    double beta = 200 * div[level] / circle; //乘以线速度就是每秒脉冲数，最大值200k
 
-    int maxSpd = 100 / beta;
+    /*
+     * 细分为256时，速度设置最大每秒脉冲为400k（否则还是200k不变），实际下发数值（每秒脉冲数）减半
+     */
+    int maxSpd = 200000 / beta; //最大线速度
+    //qDebug() << QString("level %1 and spd %2").arg(level).arg(maxSpd);
+
+    if (level == 8) {
+        maxSpd = 400000 / beta;
+        beta = beta / 2;
+    }
+
+    //qDebug() << "max spd == " << maxSpd;
     ui->setRunSpd->setMaximum(maxSpd);
-
-    //cmd = new Command(alpha, beta);
 
     initUI();
     initConnect();
@@ -63,7 +73,7 @@ Form::~Form()
 
 void Form::about()
 {
-    QMessageBox::about(this, tr("控制器应用程序"),tr("==== V1.1 版应用程序 ===\n ---- 2016-7-2 ----"));
+    QMessageBox::about(this, tr("控制器应用程序"),tr("==== V2.0 版应用程序 ===\n ---- 2016-7-23 ----"));
 }
 
 void Form::initUI()
@@ -161,6 +171,22 @@ void Form::operate(Line *ln)
     ui->tableView->setModel(cl->pmodel());
 }
 
+void Form::on_homeAddBtn_clicked()
+{
+    /*
+    int base = itemList->pos();
+    int pos = 0 - base; //绝对位置的偏移量
+
+    int params[2] = {deviceId, pos};
+    Command acmd(params, Command::HOME);
+
+    QStringList list;
+    list << tr("零点设置指令") << QString(tr("当前位置设置为零点位置"));
+
+    operate(acmd, list);
+    */
+}
+
 void Form::operate(QList<int> pa, CmdType type)
 {
     line = new Line(pa, type);
@@ -209,7 +235,8 @@ void Form::on_setSpdBtn_clicked()
 {
     int lpd = ui->setRunSpd->value(); //线速度mm/s - 转速 - 每秒脉冲数
 
-
+    //qDebug() << QString(tr("参数 %1 档位 %2%")).arg(beta).arg(spd);
+    //线速度转成角速度转成频率
     QList<int> pa;
     pa << lpd;
 
@@ -451,6 +478,10 @@ void Form::showToolBox(const QModelIndex &index)
     case DELAY:
         ui->parentToolBox->setCurrentIndex(4);
         ui->auxToolBox->setCurrentIndex(0);
+        break;
+    case HOME:
+        ui->parentToolBox->setCurrentIndex(4);
+        ui->auxToolBox->setCurrentIndex(1);
         break;
     default:
         break;

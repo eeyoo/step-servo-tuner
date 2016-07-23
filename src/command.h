@@ -1,12 +1,11 @@
-#ifndef LINE_H
-#define LINE_H
-
-/**
- * @brief The line class
- * 指令行
- */
+#ifndef COMMAND_H
+#define COMMAND_H
 
 #include <QObject>
+//#include <QByteArray>
+/**
+ * @brief 指令基类
+ */
 
 #define ABS_MOVE_CMD 0x01 //绝对运动
 #define REL_MOVE_CMD 0x02 //相对运动
@@ -17,7 +16,6 @@
 #define CMP_CMD      0x33 //有条件跳转 1)> 2)== 3<
 #define IOJUMP_CMD   0x34 //IO条件跳转 0-低电平 1-高电平 仅包括1-4号端口
 #define DELAY_CMD    0x35 //延时等待单位毫秒
-#define HOME_CMD     0x36 //回到零点
 
 #define SETOUT_CMD   0x40 //设置输出IO端口值
 #define INPUT_CMD    0x41 //输入IO端口等待指令
@@ -32,7 +30,6 @@
 #define SETCANBAUDRT 0xa8 //CAN波特率
 #define SETDEVICEID  0xa9 //设备ID - CAN ID
 #define SETMOTORDIRE 0xaa //电机逻辑正方向
-#define SETLIMITPOS  0xab //设置左右限位
 
 #define SETMOTDIVCMD 0xb1 //设置电机细分 1,2,4,8,32,64,128,256
 #define SETCUGEARCMD 0xb2 //设置电机电流档位 1-32
@@ -50,43 +47,67 @@
 #define NUMBER_HIGH  0x02
 #define NUMBER_LOW   0x02
 
-static int alpha; //位移转换脉冲数参数
-static double beta; //线速度与脉冲转换参数
-static int deviceId; //设备ID
+/*
+typedef struct {
+    quint8 id[2];      //命令ID
+    quint8 master;     //命令码
+    quint8 slave;      //子命令
+    quint8 reserve;    //保留
+    quint8 data[4];    //数据
+    quint8 check;      //校验
+} Cmd;
+*/
 
-enum CmdType {
-    POS, MOV, SETSPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT, HEAD, STOP, HOME
-};
-
-class Line
+class QJsonArray;
+class Command
 {
 public:
-    explicit Line();
-    Line(int a, double b, int id);
+    enum CMDTYPE {
+        ABS, RELA, SPD, OPER, JMP, CMP, IOJMP, DELAY, SETOUT, INPUT, STOP, HEAD
+    };
+    explicit Command(int a, double b);
+
+    Command(int *param, CMDTYPE type);
+    Command(QJsonArray &arr, int type);
+
+    //Command(QByteArray &param, CMDTYPE type);
+    ~Command();
 
 
-    Line(QList<int> params, CmdType type);
-    Line(QStringList &list);
+    QByteArray data() const; //指令转换为字符数据
+    Command::CMDTYPE type();
+    QJsonArray array() const;
+    void pp();
 
-    void print();
-    void strlist(QStringList &list) const;
-
-    void print(QString &str);
-    CmdType type();
-
-    QByteArray data() const;
-
-private:
-    QString translate(CmdType type, QString &s);
-    void str2key(QString &s);
-
-    static void convert(quint8 *buf, int data, int size); //int -> quint8[4]
-    static void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
+    long position();
+    long pos();
 
 private:
-    CmdType mType;
-    QList<int> mParams;
+    //void init(int alpha, double beta); //初始化参数
 
+    void parse(quint8 *buf, int *param, int def);
+    void parse(quint8 *buf, QJsonArray &arr, int def);
+
+    void convert(quint8 *buf, int data, int size); //int -> quint8[4]
+    void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
+
+    void abs(quint8 *buf, int *param);
+    void rela(quint8 *buf, int *param);
+    void spd(quint8 *buf, int *param);
+
+    void fabs(quint8 *buf, QJsonArray &arr);
+    void frela(quint8 *buf, QJsonArray &arr);
+    void fspd(quint8 *buf, QJsonArray &arr);
+
+private:
+    //quint8 array[NUMBER_CMD];
+    //ConfigDialog *config;
+    QByteArray qa;
+    CMDTYPE mType;
+    //int *params;
+    long mpos;
+    long mp;
+    QList<int> ps; //参数列表
 };
 
-#endif // LINE_H
+#endif // COMMAND_H

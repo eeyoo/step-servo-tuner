@@ -859,15 +859,15 @@
        <item>
         <widget class="QToolBox" name="auxToolBox">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="delayPage">
           <property name="geometry">
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>162</width>
-            <height>244</height>
+            <width>290</width>
+            <height>334</height>
            </rect>
           </property>
           <attribute name="label">
@@ -910,6 +910,27 @@
            </item>
            <item>
             <widget class="QPushButton" name="delayAddBtn">
+             <property name="text">
+              <string>确定</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="page_2">
+          <attribute name="label">
+           <string>设置零点</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_18">
+           <item>
+            <widget class="QLabel" name="label_18">
+             <property name="text">
+              <string>提示：将当前位置设置为零点位置。</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="homeAddBtn">
              <property name="text">
               <string>确定</string>
              </property>
