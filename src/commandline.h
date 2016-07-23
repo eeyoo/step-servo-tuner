@@ -1,26 +1,44 @@
 #ifndef COMMANDLINE_H
 #define COMMANDLINE_H
-#include <QString>
-#include <QByteArray>
-#include <QJsonObject>
+#include <QAbstractItemModel>
 
-class CommandLine
+#include "line.h"
+
+class CommandLine : public QObject
 {
 public:
-    CommandLine();
-    CommandLine(const QString &type, const QString &content, const QByteArray &data);
+    explicit CommandLine(QObject *parent = 0);
+    ~CommandLine();
 
-    void read(const QJsonObject &json); //读取json文件
-    void write(QJsonObject &json) const; //
+    void append(Line *ln);
+    void del(int arow);
+    void insert(Line *ln, int arow);
+    void clear();
 
-    QString type() const;
-    QString content() const;
-    QByteArray data() const;
+    bool read(const QString &fileName); //读取程序文件
+    bool write(QString &fileName) const; //写入程序文件
+
+    QAbstractItemModel *pmodel();
+
+    Line* getRowData(int arow) const;
+
+    int size() const;
+    int getRow() const;
+
+    void show();
+
+    QByteArray getCmdData();
 
 private:
-    QString mType;
-    QString mContent;
-    QByteArray mData;
+    void setRowData(int arow, Line *line);
+
+private:
+    QAbstractItemModel *model;
+    QList<Line *> *lines;
+    Line *line;
+
+    int row; //追加指令游标
+    int rows;
 };
 
 #endif // COMMANDLINE_H

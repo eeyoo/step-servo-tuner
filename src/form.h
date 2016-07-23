@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include "commandline.h"
-#include "commanditemlist.h"
 
 namespace Ui {
 class Form;
@@ -19,8 +18,8 @@ public:
     explicit Form(QWidget *parent = 0);
     ~Form();
 
-    bool loadProgFile(QString fileName);  //读取json文件并解析出来生成模型和指令序列
-    bool saveProgFile(QString fileName) const; //将模型和指令序列保存为json文件
+    bool loadProgFile(QString fileName);
+    bool saveProgFile(QString fileName) const;
 
     enum OperType {
         APP, EDIT, INSE, QUIT
@@ -43,7 +42,7 @@ private slots:
 
     void on_forwardAct_clicked(); //打包下载
 
-    //void on_stepAct_clicked(); //单步运行
+    void on_stepAct_clicked(); //单步运行
 
     void on_setSpdBtn_clicked();
 
@@ -75,29 +74,29 @@ private slots:
 
     void on_clearBtn_clicked();  //清空
     void on_deleteBtn_clicked(); //删除
+    void on_insertBtn_clicked(); //插入
 
 private:
     void initUI();
     void initConnect();
     void initModel();
 
-    void operate(Command &cmd, QStringList &list);
+    //void operate(Command &cmd, QStringList &list);
 
-    //void convert(quint8 *buf, int data, int size); //int -> quint8[4]
-    //void array2qa(QByteArray &data, quint8 *buf, int size); //quint8[4] -> QByteArray
+    void operate(Line *ln);
+    void operate(QList<int> pa, CmdType type);
 
 private:
     Ui::Form *ui;
-    CommandItemList *itemList;
-    Command *cmd;
-    int index;      //单步运行行
+    CommandLine *cl;
+    Line *line;
     ConfigDialog *config;
-    int select_line;  //选中当前行
-    int deviceId;
-    int cmdType;
+
     OperType op;
     bool quit;
-    int mLine;
+    int row; //选中行
+    int runLine; //单步执行行
+    int insertLine; //插入指令行
 };
 
 #endif // FORM_H
