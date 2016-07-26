@@ -84,6 +84,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(form, SIGNAL(sendStop(QByteArray)), this, SLOT(writeStop(QByteArray)));
 
     connect(config, SIGNAL(sendConfig(QByteArray)), this, SLOT(writeConfig(QByteArray)));
+
+    connect(config, SIGNAL(changeConfigs()), this, SLOT(updateConfigs()));
 }
 
 MainWindow::~MainWindow()
@@ -92,6 +94,13 @@ MainWindow::~MainWindow()
     delete config;
     delete form;
     delete ui;
+}
+
+void MainWindow::updateConfigs()
+{
+    //qDebug() << "mainwindow test slots";
+    ConfigDialog::Configs c = config->configs();
+    form->updateConfigs(c.elecLevel, c.circleLen, c.deviceId);
 }
 
 void MainWindow::openSerialPort()

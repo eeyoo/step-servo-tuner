@@ -56,11 +56,15 @@ Form::Form(QWidget *parent) :
     ui->parentToolBox->setCurrentIndex(0);
     ui->moveToolBox->setCurrentIndex(0);
 
+    line = new Line(alpha, beta, deviceId);
+    line->test();
+    //line = new Line;
+    cl = new CommandLine(this);
+
     op = APP;
     quit = false;
 
-    line = new Line(alpha, beta, deviceId);
-    cl = new CommandLine(this);
+    //connect(config, SIGNAL(changeConfigs()), this, SLOT(updateConfigs()));
 }
 
 Form::~Form()
@@ -533,5 +537,37 @@ void Form::on_insertBtn_clicked()
             quit = false;
         }
     }
+}
+
+void Form::updateConfigs(int level, int circle, int deviceId)
+{
+    //qDebug() << "update configs";
+
+    //level = c->configs().elecLevel;
+    //circle = c->configs().circleLen;
+    //deviceId = c->configs().deviceId;
+
+    int div[] = {1,2,4,8,16,32,64,128,256};
+    int alpha = 200 * div[level] / circle;
+    //double beta = 0.4 * div[level] / circle; // 系数 200*100/50000
+    int beta = 200 * div[level] / circle; //乘以线速度就是每秒脉冲数，最大值200k
+
+    /*
+     * 细分为256时，速度设置最大每秒脉冲为400k（否则还是200k不变），实际下发数值（每秒脉冲数）减半
+     */
+    int maxSpd = 200000 / beta; //最大线速度
+    //qDebug() << QString("level %1 and spd %2").arg(level).arg(maxSpd);
+
+    if (level == 8) {
+        maxSpd = 400000 / beta;
+        beta = beta / 2;
+    }
+
+    //qDebug() << "max spd == " << maxSpd;
+    ui->setRunSpd->setMaximum(maxSpd);
+
+    //qDebug() << QString("%1 %2 %3").arg(alpha).arg(beta).arg(deviceId);
+    line = new Line(alpha, beta, deviceId);
+    //line->test();
 }
 

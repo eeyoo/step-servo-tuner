@@ -24,6 +24,8 @@ public:
     enum OperType {
         APP, EDIT, INSE, QUIT
     };
+    //更新配置参数
+    void updateConfigs(int level, int circle, int deviceId);
 
 public slots:
     void about();
@@ -71,9 +73,7 @@ private slots:
     void showToolBox(const QModelIndex &index);
 
 
-
 private slots:
-
     void on_clearBtn_clicked();  //清空
     void on_deleteBtn_clicked(); //删除
     void on_insertBtn_clicked(); //插入

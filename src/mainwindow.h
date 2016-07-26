@@ -82,6 +82,8 @@ private slots:
 
     void handleError(QSerialPort::SerialPortError error);
 
+    void updateConfigs();
+
 private:
     void initActionsConnections();
 

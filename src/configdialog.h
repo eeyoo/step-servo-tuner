@@ -8,6 +8,9 @@
 #define CMPCURRHIGH  6.2   //最大电流档位值(A) 0.31V/0.05Om
 #define CMPCURRLOW   3.3   //最小电流档位值(A) 0.165V/0.05Om
 
+#define SMI57XXXX 0  //SMI57系列控制器
+#define SMI42XXXX 1  //SMI42系列控制器
+
 namespace Ui {
 class ConfigDialog;
 }
@@ -17,21 +20,6 @@ class ConfigDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ConfigDialog(QWidget *parent = 0);
-    ~ConfigDialog();
-    void receiveDate(const QByteArray &data);
-
-    enum SaveFormat {
-        Json, Binary
-    };
-
-    enum PaneType {
-        SMI57XXXX, SMI42XXXX
-    };
-
-    bool loadConfigFile(SaveFormat saveFormat);
-    bool saveConfigFile(SaveFormat saveFormat) const;
-
     struct Configs {
         int elecCtrl; //待机电流
         //int volLevel; //参考电压 310mv - 0 165mv - 1
@@ -53,16 +41,28 @@ public:
         int countIn;    //输入端口数
         int leftLimitEn; //左限位使能
         int leftLimitCfg; //左限位设置
-        int rightLimitEn; //右限位使能
+        int rightLimitEn; //右限位使能int
         int rightLimitCfg;//右限位设置
-        PaneType pane;  //板型
+        int pane;  //控制器类型
     };
+
+    explicit ConfigDialog(QWidget *parent = 0);
+    ~ConfigDialog();
+    void receiveDate(const QByteArray &data);
+
+    enum SaveFormat {
+        Json, Binary
+    };
+
+    bool loadConfigFile(SaveFormat saveFormat);
+    bool saveConfigFile(SaveFormat saveFormat) const;    
 
     Configs configs() const;
     void tip(); //提示重新载入软件
 
 signals:
     void sendConfig(const QByteArray &data);
+    void changeConfigs();
 
 private slots:
     void on_writeSerialBtn_clicked();
@@ -72,6 +72,8 @@ private slots:
     void on_readConfigBtn_clicked();
 
     void on_resetBtn_clicked();
+
+    void on_applyBtn_clicked();
 
 private:
     quint32 power(int index); //return 2^index

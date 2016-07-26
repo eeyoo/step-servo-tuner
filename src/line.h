@@ -76,6 +76,8 @@ public:
 
     QByteArray data() const;
 
+    void test();
+
 private:
     QString translate(CmdType type, QString &s);
     void str2key(QString &s);

@@ -48,7 +48,7 @@ int ConfigDialog::level(double base, double cmp)
 
 void ConfigDialog::on_writeSerialBtn_clicked()
 {
-    updateConfigs(); //更新Map struct
+    updateConfigs(); //更新配置数据
 
     int n = currentConfigs.elecLevel;
     int temp[] = {1,2,4,8,16,32,64,128,256};
@@ -469,4 +469,12 @@ void ConfigDialog::on_resetBtn_clicked()
 
     setUI();
 
+}
+
+void ConfigDialog::on_applyBtn_clicked()
+{
+    //配置生效发出配置更改信号
+    //qDebug() << "emit change config signal";
+    updateConfigs();
+    emit changeConfigs();
 }
