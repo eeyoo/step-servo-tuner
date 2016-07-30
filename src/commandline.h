@@ -4,6 +4,9 @@
 
 #include "line.h"
 
+/**
+ * @brief 指令组类
+ */
 class CommandLine : public QObject
 {
 public:

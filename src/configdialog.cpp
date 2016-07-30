@@ -475,6 +475,15 @@ void ConfigDialog::on_applyBtn_clicked()
 {
     //配置生效发出配置更改信号
     //qDebug() << "emit change config signal";
-    updateConfigs();
-    emit changeConfigs();
+    int ret = QMessageBox::warning(this, tr("配置参数"), tr("是否确定修改当前参数并立即生效?\n"),
+                                   QMessageBox::Ok | QMessageBox::Cancel);
+
+    if(ret == QMessageBox::Ok) {
+        updateConfigs();
+        emit changeConfigs();
+    } else if(ret == QMessageBox::Cancel){
+        return;
+    }
+
+
 }

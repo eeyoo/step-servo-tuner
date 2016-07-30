@@ -57,7 +57,7 @@ Form::Form(QWidget *parent) :
     ui->moveToolBox->setCurrentIndex(0);
 
     line = new Line(alpha, beta, deviceId);
-    line->test();
+    //line->test();
     //line = new Line;
     cl = new CommandLine(this);
 
@@ -543,10 +543,6 @@ void Form::updateConfigs(int level, int circle, int deviceId)
 {
     //qDebug() << "update configs";
 
-    //level = c->configs().elecLevel;
-    //circle = c->configs().circleLen;
-    //deviceId = c->configs().deviceId;
-
     int div[] = {1,2,4,8,16,32,64,128,256};
     int alpha = 200 * div[level] / circle;
     //double beta = 0.4 * div[level] / circle; // 系数 200*100/50000
@@ -566,8 +562,6 @@ void Form::updateConfigs(int level, int circle, int deviceId)
     //qDebug() << "max spd == " << maxSpd;
     ui->setRunSpd->setMaximum(maxSpd);
 
-    //qDebug() << QString("%1 %2 %3").arg(alpha).arg(beta).arg(deviceId);
     line = new Line(alpha, beta, deviceId);
-    //line->test();
 }
 

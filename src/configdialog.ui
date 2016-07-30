@@ -633,11 +633,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>机械参数配置</string>
-      </attribute>
-     </widget>
     </widget>
    </item>
    <item>

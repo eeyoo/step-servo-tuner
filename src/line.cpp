@@ -19,11 +19,6 @@ Line::Line(int a, double b, int id) {
     deviceId = id;
 }
 
-void Line::test()
-{
-    qDebug() << QString("%1 %2 %3").arg(alpha).arg(beta).arg(deviceId);
-}
-
 Line::Line(QStringList &list)
 {
     //QString convert to enum type

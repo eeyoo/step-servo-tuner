@@ -3,7 +3,7 @@
 
 /**
  * @brief The line class
- * 指令行
+ * 指令行类
  */
 
 #include <QObject>
@@ -76,7 +76,7 @@ public:
 
     QByteArray data() const;
 
-    void test();
+    //void test();
 
 private:
     QString translate(CmdType type, QString &s);
