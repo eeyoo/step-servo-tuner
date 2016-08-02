@@ -451,7 +451,7 @@ void ConfigDialog::initConnect()
 
 void ConfigDialog::tip()
 {
-    QMessageBox::information(this,tr("提示对话框"),tr("修改配置参数后需重启软件生效！"));
+    QMessageBox::information(this,tr("下载配置参数"),tr("配置参数将下载至控制器生效！"));
 }
 
 void ConfigDialog::on_resetBtn_clicked()
@@ -482,6 +482,8 @@ void ConfigDialog::on_applyBtn_clicked()
         updateConfigs();
         emit changeConfigs();
     } else if(ret == QMessageBox::Cancel){
+        //恢复配置参数
+        on_readConfigBtn_clicked();
         return;
     }
 

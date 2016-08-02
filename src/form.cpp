@@ -77,7 +77,7 @@ Form::~Form()
 
 void Form::about()
 {
-    QMessageBox::about(this, tr("控制器应用程序"),tr("==== V2.0 版应用程序 ===\n ---- 2016-7-23 ----"));
+    QMessageBox::about(this, tr("控制器应用程序"),tr("==== V2.1 版应用程序 ===\n ---- 2016-7-30 ----"));
 }
 
 void Form::initUI()
