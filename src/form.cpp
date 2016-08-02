@@ -17,8 +17,10 @@
 
 Form::Form(QWidget *parent) :
     QWidget(parent),
-    row(-1), runLine(-1),
+    row(-1),
+    runLine(-1),
     insertLine(-1),
+    updateLine(-1),
     ui(new Ui::Form)
 {
     ui->setupUi(this);
@@ -183,7 +185,10 @@ void Form::operate(QList<int> pa, CmdType type)
     case APP: //默认追加
         cl->append(line);        
         break;
-    case EDIT://指令修改
+    case EDIT://修改指令参数
+        cl->edit(line, updateLine);
+        op = APP;
+        updateLine = -1;
         break;
     case INSE://指令插入 默认前查
         cl->insert(line, insertLine);
@@ -435,6 +440,7 @@ void Form::tableClick(const QModelIndex &index)
     row = nr;
     runLine = nr;
     insertLine = nr;
+    updateLine = nr;
 
     //line = cl->getRowData(row);
     //line->print();
@@ -525,7 +531,7 @@ void Form::on_insertBtn_clicked()
         return;
     } else {
         if(!quit) {//非退出插入状态
-            QMessageBox::information(this, tr("提示"), tr("将在选中行之前插入指令，可以连续插入！"));
+            QMessageBox::information(this, tr("提示"), QString(tr("将在第%1行指令前插入指令，可以连续插入！").arg(insertLine+1)));
             ui->insertBtn->setText(tr("停止插入"));
             op = INSE; //切换为插入指令模式
             quit = true;
@@ -536,6 +542,18 @@ void Form::on_insertBtn_clicked()
             insertLine = -1;
             quit = false;
         }
+    }
+}
+
+void Form::on_editBtn_clicked()
+{
+    //选中指令行校验
+    if(updateLine == -1) { //未选中行提醒
+        QMessageBox::information(this, tr("提示"), tr("请选择指令行！"));
+        return;
+    } else {
+        QMessageBox::information(this, tr("提示"), QString(tr("请修改第%1行指令，可以是其他类型指令！")).arg(updateLine+1));
+        op = EDIT; //切换至修改模式
     }
 }
 
@@ -564,4 +582,3 @@ void Form::updateConfigs(int level, int circle, int deviceId)
 
     line = new Line(alpha, beta, deviceId);
 }
-

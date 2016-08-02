@@ -101,8 +101,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>162</width>
-            <height>192</height>
+            <width>259</width>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
@@ -160,8 +160,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>162</width>
-            <height>192</height>
+            <width>259</width>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
@@ -230,8 +230,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>180</width>
-        <height>288</height>
+        <width>277</width>
+        <height>404</height>
        </rect>
       </property>
       <attribute name="label">
@@ -248,8 +248,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>162</width>
-            <height>244</height>
+            <width>259</width>
+            <height>360</height>
            </rect>
           </property>
           <attribute name="label">
@@ -339,8 +339,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>180</width>
-        <height>288</height>
+        <width>277</width>
+        <height>404</height>
        </rect>
       </property>
       <attribute name="label">
@@ -542,8 +542,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>188</width>
-            <height>175</height>
+            <width>259</width>
+            <height>308</height>
            </rect>
           </property>
           <attribute name="label">
@@ -646,8 +646,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>180</width>
-        <height>288</height>
+        <width>277</width>
+        <height>404</height>
        </rect>
       </property>
       <attribute name="label">
@@ -754,8 +754,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>162</width>
-            <height>218</height>
+            <width>259</width>
+            <height>334</height>
            </rect>
           </property>
           <attribute name="label">
@@ -848,8 +848,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>180</width>
-        <height>288</height>
+        <width>277</width>
+        <height>404</height>
        </rect>
       </property>
       <attribute name="label">
@@ -866,8 +866,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>290</width>
-            <height>334</height>
+            <width>150</width>
+            <height>75</height>
            </rect>
           </property>
           <attribute name="label">
@@ -918,6 +918,14 @@
           </layout>
          </widget>
          <widget class="QWidget" name="page_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>259</width>
+            <height>334</height>
+           </rect>
+          </property>
           <attribute name="label">
            <string>设置零点</string>
           </attribute>
@@ -1018,6 +1026,13 @@
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_5">
+     <item>
+      <widget class="QPushButton" name="editBtn">
+       <property name="text">
+        <string>修改</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QPushButton" name="insertBtn">
        <property name="text">
