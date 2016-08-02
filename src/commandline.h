@@ -16,6 +16,7 @@ public:
     void append(Line *ln);
     void del(int arow);
     void insert(Line *ln, int arow);
+    void edit(Line *ln, int arow);
     void clear();
 
     bool read(const QString &fileName); //读取程序文件

@@ -107,6 +107,14 @@ void CommandLine::insert(Line *ln, int arow)
     rows++;
 }
 
+void CommandLine::edit(Line *ln, int arow)
+{
+    //修改指令行
+    //先删除再插入
+    del(arow);
+    insert(ln, arow);
+}
+
 void CommandLine::del(int arow)
 {
     //lines.removeAt(arow);

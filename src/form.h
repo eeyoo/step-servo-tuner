@@ -77,6 +77,7 @@ private slots:
     void on_clearBtn_clicked();  //清空
     void on_deleteBtn_clicked(); //删除
     void on_insertBtn_clicked(); //插入
+    void on_editBtn_clicked();   //修改
 
 private:
     void initUI();
@@ -99,6 +100,7 @@ private:
     int row; //选中行
     int runLine; //单步执行行
     int insertLine; //插入指令行
+    int updateLine; //修改指令行
 };
 
 #endif // FORM_H
