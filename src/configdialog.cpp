@@ -480,6 +480,10 @@ void ConfigDialog::on_applyBtn_clicked()
 
     if(ret == QMessageBox::Ok) {
         updateConfigs();
+        int changedId = currentConfigs.deviceId;
+        if (changedId != initId) {
+            QMessageBox::information(this,tr("提示"),QString(tr("设备ID将被修改为%1").arg(changedId)));
+        }
         emit changeConfigs();
     } else if(ret == QMessageBox::Cancel){
         //恢复配置参数
